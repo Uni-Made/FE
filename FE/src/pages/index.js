@@ -6,4 +6,5 @@ export { default as DefaultMyPage } from "./DefaultMyPage/DefaultMyPage";
 export { default as MaderMyPage } from "./MaderMyPage/MaderMyPage";
 export { default as ProductDetailPage } from "./ProductDetail/ProductDetailPage";
 export { default as ProductListPage } from "./ProductList/ProductListPage";
+export { default as PurchaseFormPage } from "./Purchase/PurchaseFormPage";
 export { default as NotFoundPage } from "./NotFound/NotFoundPage";
