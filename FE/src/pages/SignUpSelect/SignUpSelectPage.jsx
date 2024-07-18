@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Title, Text, SellerButton, BuyerButton } from './SignUpSelectPage.style';
-import Header from '../SignUp/Header';
+import SignUpHeader from '../SignUp/SignUpHeader';
 
 function SignUpSelectPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function SignUpSelectPage() {
 
   return (
       <>
-        <Header />
+        <SignUpHeader />
 
         <Title>Uni-Made</Title>
         <Text>메이더가 되어 상품을 판매하시나요?</Text>
