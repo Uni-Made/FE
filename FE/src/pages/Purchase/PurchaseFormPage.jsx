@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../ProductList/components/Navbar";
 import * as S from "./PurchaseFormPage.style";
 import Input from "./components/Input";
 
 function PurchaseFormPage() {
-  const handleButtonClick = (e) => {
+  const [isErrors, setIsErrors] = useState({
+    name: true,
+    phoneNumber: true,
+    address: true,
+    detailAddress: true,
+  });
+  // TODO: 위 4개 영역 유효성 검사 로직 함수 작성 + 각 input change로 적용
+  const [isLeftBtnSelected, setIsLeftBtnSelected] = useState(true);
+
+  const handleLeftBtnClick = (e) => {
     e.preventDefault();
+    setIsLeftBtnSelected(true);
+  };
+
+  const handleRightBtnClick = (e) => {
+    e.preventDefault();
+    setIsLeftBtnSelected(false);
   };
 
   return (
@@ -21,18 +36,49 @@ function PurchaseFormPage() {
         <Input Placeholder={"이름"} />
         <Input Placeholder={"전화번호"} />
         <S.MainToggleBox>
-          <S.MainToggleBoxButton onClick={handleButtonClick}>
+          <S.MainToggleBoxButton
+            onClick={handleLeftBtnClick}
+            isSelected={isLeftBtnSelected}
+          >
             온라인 수령
           </S.MainToggleBoxButton>
-          <S.MainToggleBoxButton onClick={handleButtonClick}>
+          <S.MainToggleBoxButton
+            onClick={handleRightBtnClick}
+            isSelected={!isLeftBtnSelected}
+          >
             오프라인 수령
           </S.MainToggleBoxButton>
         </S.MainToggleBox>
         <Input Placeholder={"주소"} />
         <Input Placeholder={"상세주소"} />
-        <S.MainErrorText></S.MainErrorText>
+        <S.MainErrorText>주소와 상세주소를 입력해주세요.</S.MainErrorText>
         <S.PrivacyBox>
-          <S.PrivacyToggleBox></S.PrivacyToggleBox>
+          <S.PrivacyBoxTerms>
+            개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을
+            채워주세요. 개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다.
+            내용을 채워주세요. 개인정보 수집 및 이용 약관 내용이 들어갈
+            자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용 약관 내용이
+            들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용 약관
+            내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용
+            약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및
+            이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집
+            및 이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보
+            수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요.
+            개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을
+            채워주세요. 개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다.
+            내용을 채워주세요. 개인정보 수집 및 이용 약관 내용이 들어갈
+            자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용 약관 내용이
+            들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용 약관
+            내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및 이용
+            약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집 및
+            이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보 수집
+            및 이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요. 개인정보
+            수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을 채워주세요.
+          </S.PrivacyBoxTerms>
+          <S.PrivacyToggleBox>
+            <input type="checkbox" />
+            <div>개인정보 수집 및 이용에 동의합니다.</div>
+          </S.PrivacyToggleBox>
         </S.PrivacyBox>
         <S.PurchaseButton>구매하기</S.PurchaseButton>
       </S.MainBox>
