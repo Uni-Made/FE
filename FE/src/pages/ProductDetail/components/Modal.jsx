@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 // 오버레이 컴포넌트 추가
@@ -69,6 +70,12 @@ const Button = styled.button`
 `;
 
 export default function Modal({ showModal, handleClose }) {
+  const navigate = useNavigate();
+  const params = useParams();
+  const handleYesBtnClick = () => {
+    handleClose();
+    navigate("/product/:" + params + "/purchase");
+  }
   return (
     <>
       <ModalOverlay show={showModal} />
@@ -84,7 +91,7 @@ export default function Modal({ showModal, handleClose }) {
         <PriceText>총 58,000원</PriceText>
         <h3>상품을 구매하시겠습니까?</h3>
         <ButtonContainer>
-          <Button primary onClick={handleClose}>
+          <Button primary onClick={handleYesBtnClick}>
             예
           </Button>
           <Button onClick={handleClose}>아니오</Button>

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Navbar from "../ProductList/components/Navbar";
 import * as S from "./PurchaseFormPage.style";
 import Input from "./components/Input";
+import { useNavigate, useParams } from "react-router-dom";
 
 function PurchaseFormPage() {
+  const navigate = useNavigate();
+  const {params} = useParams();
   const [isErrors, setIsErrors] = useState({
     name: true,
     phoneNumber: true,
@@ -21,6 +24,12 @@ function PurchaseFormPage() {
   const handleRightBtnClick = (e) => {
     e.preventDefault();
     setIsLeftBtnSelected(false);
+  };
+
+  const handlePurchaseBtnClick = (e) => {
+    e.preventDefault();
+    // TODO: purchase API 요청 로직
+    navigate("/product/:" + params + "/purchase/success"); 
   };
 
   return (
@@ -80,7 +89,7 @@ function PurchaseFormPage() {
             <div>개인정보 수집 및 이용에 동의합니다.</div>
           </S.PrivacyToggleBox>
         </S.PrivacyBox>
-        <S.PurchaseButton>구매하기</S.PurchaseButton>
+        <S.PurchaseButton onClick={handlePurchaseBtnClick}>구매하기</S.PurchaseButton>
       </S.MainBox>
     </S.Container>
   );

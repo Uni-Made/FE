@@ -11,9 +11,14 @@ function ProductDetailPage() {
   const [showModal, setShowModal] = useState(false);
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
+  // modal 제어 함수들
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleHeartClick = () => setIsHeartFilled(!isHeartFilled);
+
+  const handleHeartClick = () => {
+    setIsHeartFilled(!isHeartFilled);
+    //TODO: 찜 목록 추가/제거 api 적용 
+  }
 
   return (
     <>
