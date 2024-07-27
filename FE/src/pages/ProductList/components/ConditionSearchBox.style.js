@@ -90,7 +90,7 @@ export const SearchInput = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 70%;
+  width: 60%;
 `;
 
 export const SearchIcon = styled(CiSearch)`

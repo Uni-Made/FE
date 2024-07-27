@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -72,23 +73,26 @@ const Button = styled.button`
 export default function Modal({ showModal, handleClose }) {
   const navigate = useNavigate();
   const params = useParams();
+  const { selectedOptions, totalPrice } = useSelector(
+    (state) => state.purchase
+  );
+  console.log(selectedOptions);
+
   const handleYesBtnClick = () => {
     handleClose();
     navigate("/product/:" + params + "/purchase");
-  }
+  };
   return (
     <>
       <ModalOverlay show={showModal} />
       <ModalContainer show={showModal}>
-        <OptionTextBox>
-          <p>파란색 | M사이즈 </p>
-          <p>1개</p>
-        </OptionTextBox>
-        <OptionTextBox>
-          <p>흰색 | XL사이즈 </p>
-          <p>1개</p>
-        </OptionTextBox>
-        <PriceText>총 58,000원</PriceText>
+        {selectedOptions.map((option, idx) => (
+          <OptionTextBox key={idx}>
+            <p>{option.optionName} </p>
+            <p>{option.amount}개</p>
+          </OptionTextBox>
+        ))}
+        <PriceText>총 {totalPrice}원</PriceText>
         <h3>상품을 구매하시겠습니까?</h3>
         <ButtonContainer>
           <Button primary onClick={handleYesBtnClick}>

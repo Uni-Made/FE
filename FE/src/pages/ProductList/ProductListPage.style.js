@@ -20,7 +20,7 @@ const ListBox = styled.div`
   width: 70vw;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
 `;
 

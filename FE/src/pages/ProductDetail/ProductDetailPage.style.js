@@ -68,6 +68,7 @@ const RightDetailBox = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 20px;
+  align-items: baseline;
 `;
 const RightDetailBoxItem = styled.div``;
 
