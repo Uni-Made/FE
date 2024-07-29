@@ -9,6 +9,8 @@ import {
   ProductListPage,
   ProductDetailPage,
   NotFoundPage,
+  ProductDetailPageSell,
+  ProductDetailPageSold,
 } from "../pages";
 
 const Router = [
@@ -24,6 +26,8 @@ const Router = [
       { path: "maderMyPage", element: <MaderMyPage /> },
       { path: "product/list", element: <ProductListPage /> },
       { path: "product/:productId", element: <ProductDetailPage /> },
+      { path: "productDetailPageSell", element: <ProductDetailPageSell />},
+      { path: "productDetailPageSold", element: <ProductDetailPageSold />},
     ],
     errorElement: <NotFoundPage />,
   },
