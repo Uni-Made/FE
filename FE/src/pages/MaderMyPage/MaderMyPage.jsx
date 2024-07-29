@@ -51,9 +51,9 @@ const renderProductList = (title, isSoldOut, navigate) => {
 
   const onClickProduct = (product) => {
     if (isSoldOut) {
-      navigate('/product-detail-solded', { state: { product } });
+      navigate('/productDetailPageSold', { state: { product } });
     } else {
-      navigate('/product-detail-sell', { state: { product } });
+      navigate('/productDetailPageSell', { state: { product } });
     }
   };
 

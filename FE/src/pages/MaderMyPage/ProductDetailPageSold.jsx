@@ -9,63 +9,40 @@ import {
   PRODUCT_SUB_INFO,
   PRODUCT_PRICE,
   BUTTON,
+  BUTTON_GRAY,
   TAB_CONTAINER,
   TAB,
-  TAB_CONTENT,
-  BUTTON_CONTAINER,
-  SELECT,
-  IMAGE_SCROLL_CONTAINER,
-  SMALL_PRODUCT_IMAGE
+  TAB_CONTENT
 } from './ProductDetailPage.style';
 
 const ProductDetailPageSold = () => {
   const [activeTab, setActiveTab] = useState('details');
-  const [mainImage, setMainImage] = useState('default_image_url'); // 기본 이미지 URL로 대체
-  const [activeImage, setActiveImage] = useState('default_image_url');
-
-  const handleImageClick = (imageUrl) => {
-    setMainImage(imageUrl);
-    setActiveImage(imageUrl);
-  };
+  const [mainImage, setMainImage] = useState(null);
 
   return (
     <OUTER_CONTAINER>
       <CONTAINER>
         <PRODUCT_CONTAINER>
-          <PRODUCT_IMAGE imageUrl={mainImage} />
+          <PRODUCT_IMAGE style={{ backgroundColor: mainImage }} />
           <PRODUCT_DETAILS>
             <PRODUCT_NAME>연세 하키티</PRODUCT_NAME>
             <PRODUCT_SUB_INFO>판매 종료</PRODUCT_SUB_INFO>
             <PRODUCT_PRICE>29,000원</PRODUCT_PRICE>
-            <SELECT>
+            <select>
               <option>옵션 1 확인</option>
-            </SELECT>
-            <SELECT>
+            </select>
+            <select>
               <option>옵션 2 확인</option>
-            </SELECT>
-            <BUTTON_CONTAINER>
-              <BUTTON disabled>수정</BUTTON>
-              <BUTTON>판매 재등록</BUTTON>
-            </BUTTON_CONTAINER>
+            </select>
+            <BUTTON_GRAY>수정</BUTTON_GRAY>
+            <BUTTON>판매 재등록</BUTTON>
           </PRODUCT_DETAILS>
         </PRODUCT_CONTAINER>
-        <IMAGE_SCROLL_CONTAINER>
-          <SMALL_PRODUCT_IMAGE 
-            imageUrl="image_url_1" 
-            active={activeImage === 'image_url_1'}
-            onClick={() => handleImageClick('image_url_1')} 
-          />
-          <SMALL_PRODUCT_IMAGE 
-            imageUrl="image_url_2" 
-            active={activeImage === 'image_url_2'}
-            onClick={() => handleImageClick('image_url_2')} 
-          />
-          <SMALL_PRODUCT_IMAGE 
-            imageUrl="image_url_3" 
-            active={activeImage === 'image_url_3'}
-            onClick={() => handleImageClick('image_url_3')} 
-          />
-        </IMAGE_SCROLL_CONTAINER>
+        <div style={{ display: 'flex', overflowX: 'scroll', marginBottom: '20px' }}>
+          <PRODUCT_IMAGE style={{ width: '60px', height: '60px', backgroundColor: '#0019f4' }} onClick={() => setMainImage('#0019f4')} />
+          <PRODUCT_IMAGE style={{ width: '60px', height: '60px', backgroundColor: '#0a3711' }} onClick={() => setMainImage('#0a3711')} />
+          <PRODUCT_IMAGE style={{ width: '60px', height: '60px', backgroundColor: '#d1180b' }} onClick={() => setMainImage('#d1180b')} />
+        </div>
         <TAB_CONTAINER>
           <TAB
             active={activeTab === 'details'}

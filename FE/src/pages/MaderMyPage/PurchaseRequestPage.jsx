@@ -54,7 +54,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const PurchaseRequestModal = ({ onClose }) => {
+const PurchaseRequestPage = ({ onClose }) => {
   return (
     <ModalOverlay>
       <ModalContent>
@@ -95,4 +95,4 @@ const PurchaseRequestModal = ({ onClose }) => {
   );
 };
 
-export default PurchaseRequestModal;
+export default PurchaseRequestPage;
