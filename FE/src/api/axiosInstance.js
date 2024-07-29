@@ -1,4 +1,4 @@
-import axios from "axios";
+{/*import axios from "axios";
 
 // const BASE_URL = "";
 
@@ -28,3 +28,22 @@ const axiosApi = (url) => {
 
 export const defaultInstance = axiosApi(BASE_URL);
 // export const authInstance = axiosAuthApi(BASE_URL);
+*/}
+
+import axios from 'axios';
+
+const BASE_URL = "http://15.165.185.157:8080";
+
+const axiosApi = (url) => {
+  const instance = axios.create({
+    baseURL: url,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return instance;
+};
+
+// 기본 내보내기 설정
+const axiosInstance = axiosApi(BASE_URL);
+export default axiosInstance;
