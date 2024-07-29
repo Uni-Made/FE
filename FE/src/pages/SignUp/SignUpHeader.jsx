@@ -7,40 +7,39 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 // 헤더 컨테이너 스타일
 const HeaderContainer = styled.header`
   background-color: #fff;
-  padding: 15px; /* 좌우 패딩 추가 */
+  padding: 15px; 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%; /* 화면의 가로 폭에 맞춤 */
-  box-sizing: border-box; /* 패딩을 포함한 박스 크기 계산 */
+  width: 100%; 
+  box-sizing: border-box;
 `;
 
 // 타이틀 스타일
 const TitleLink = styled(Link)`
   font-family: 'Inspiration', cursive;
-  font-size: 2.5rem; /* 40px에 해당하는 값 */
+  font-size: 2.5rem;
   font-weight: 400;
   background: linear-gradient(90deg, #FF0099 0%, #00DDDD 100%);
   -webkit-background-clip: text;
   color: transparent;
-  margin: 0 20px; /* 간격 조정 */
+  margin: 0 20px; 
 
-  text-decoration: none; /* 링크 스타일 제거 */
+  text-decoration: none;
   display: flex;
   align-items: center;
   height: 100%;
   min-width: max-content;
 
-  /* 미디어 쿼리 추가 */
   @media (max-width: 1200px) {
-    font-size: 2rem; /* 32px에 해당하는 값 */
-    margin: 0 15px; /* 간격 조정 */
+    font-size: 2rem;
+    margin: 0 15px; 
     
   }
 
   @media (max-width: 768px) {
     font-size: 1.5rem; 
-    margin: 0 5px; /* 간격 조정 */
+    margin: 0 5px;
   }
 `;
 
@@ -48,16 +47,16 @@ const TitleLink = styled(Link)`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  flex-shrink: 0; /* 크기가 줄어들지 않도록 설정 */
-  height: 100%; /* 높이 고정 */
+  flex-shrink: 0;
+  height: 100%; 
 `;
 
 // 링크 스타일
 const NavLink = styled(Link)`
-  padding: 0 15px; /* 좌우 패딩 추가 */
+  padding: 0 15px; 
   text-decoration: none;
   color: #333;
-  font-size: 1.3rem; /* 25px에 해당하는 값 */
+  font-size: 1.25rem;
   display: flex;
   align-items: center;
   height: 100%;
@@ -67,18 +66,18 @@ const NavLink = styled(Link)`
 
   /* 미디어 쿼리 추가 */
   @media (max-width: 1200px) {
-    font-size: 1.3rem;
-    padding: 0 10px; /* 미디어 쿼리에 맞게 패딩 조정 */
+    font-size: 1.25rem;
+    padding: 0 10px;
   }
 
   @media (max-width: 768px) {
     font-size: 1.0rem; 
-    padding: 0 5px; /* 미디어 쿼리에 맞게 패딩 조정 */
+    padding: 0 5px;
   }
 
   @media (max-width: 480px) {
     font-size: 0.8rem; 
-    padding: 0 3px; /* 미디어 쿼리에 맞게 패딩 조정 */
+    padding: 0 3px;
   }
 `;
 
@@ -88,20 +87,20 @@ const SearchInputContainer = styled.div`
   flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
   margin: 10px;
   display: flex;
-  align-items: center; /* 중앙 정렬 */
+  align-items: center;
 
 `;
 
 const SearchInput = styled.input`
-  padding: 0.5rem 3rem 0.5rem 1rem; /* 패딩 값 조정 */
+  padding: 0.5rem 3rem 0.5rem 1rem;
   border-radius: 15px;
   border: 2px solid rgba(244, 244, 244, 1);
   background-color: rgba(244, 244, 244, 1);
   flex-grow: 1;
   flex-shrink: 1;
   max-width: 1500px;
-  height: 45px; /* 고정된 높이 */
-  font-size: 1rem; /* 폰트 사이즈 조정 */
+  height: 45px;
+  font-size: 1rem;
   &:focus {
     outline: none;
     border-color: rgba(244, 244, 244, 1);
@@ -131,7 +130,7 @@ const SearchButton = styled.button`
 const Header = () => {
   return (
     <HeaderContainer>
-      <TitleLink to="/">Uni-Made</TitleLink>
+      <TitleLink to="/"> Uni-Made </TitleLink>
       <SearchInputContainer>
         <SearchInput type="text" />
         <SearchButton>

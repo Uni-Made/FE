@@ -18,7 +18,7 @@ function SignUpSelectPage() {
       <>
         <SignUpHeader />
 
-        <Title>Uni-Made</Title>
+        <Title> Uni-Made </Title>
         <Text>메이더가 되어 상품을 판매하시나요?</Text>
         <SellerButton onClick={handleSellerSignUp}><span>판매자</span> 회원가입</SellerButton>
         <Text>메이더들이 만든 상품을 구매하시나요?</Text>

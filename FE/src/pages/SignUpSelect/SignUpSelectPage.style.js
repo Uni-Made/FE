@@ -10,8 +10,16 @@ export const Title = styled.h1`
   -webkit-background-clip: text;
   color: transparent;
   margin: 40px 0 20px 0;
-  @media (max-width: 768px) {
-    font-size: 150px; 
+  @media (max-width: 650px) {
+    font-size: 170px; 
+  }
+  @media (max-width: 550px) {
+    font-size: 130px; 
+  }
+  @media (max-width: 395px) {
+    font-size: 100px; 
+    line-height: 180px;
+
   }
 `;
 
@@ -57,9 +65,15 @@ const BaseButton = styled.button`
   &:active {
     opacity: 0.5;
   }
+  @media (max-width: 590px) {
+    width: 80%;
+    
+  }
   @media (max-width: 425px) {
     font-size: 20px; 
+    
   }
+
 `;
 
 export const SellerButton = styled(BaseButton)`
