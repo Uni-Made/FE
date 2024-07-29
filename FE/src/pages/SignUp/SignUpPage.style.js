@@ -8,7 +8,7 @@ export const Container = styled.div`
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 `;
 
@@ -127,10 +127,21 @@ export const CheckboxContainer = styled.div`
   width: 100%;
   justify-content: flex-start;
   margin-left: 30%;
+  @media (max-width: 550px) {
+    gap: 5px;
+  }
 `;
 
 export const CheckboxLabel = styled.label`
   font-size: 25px;
+  white-space: nowrap;
+
+  @media (max-width: 550px) {
+    font-size: 20px; 
+  }
+  @media (max-width: 450px) {
+    font-size: 17px; 
+  }
 `;
 
 export const CheckboxInput = styled.input.attrs({ type: 'checkbox' }).withConfig({
@@ -145,7 +156,12 @@ export const CheckboxInput = styled.input.attrs({ type: 'checkbox' }).withConfig
   margin-right: 10px;
   margin-top: 10px;
   cursor: pointer;
-
+  @media (max-width: 550px) {
+    margin-left: -10px;
+  }
+  @media (max-width: 375px) {
+    margin-left: -30px;
+  }
   &:checked::before {
     content: '';
     position: absolute;
@@ -176,6 +192,17 @@ export const Text = styled.p`
   text-align: center;
   margin: 20px 0;
   width: max-content;
+  @media (max-width: 700px) {
+    font-size: 22px;
+  }
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
+  @media (max-width: 530px) {
+    font-size: 15px;
+    margin:10px 0;
+
+  }
 `;
 
 export const LastButton = styled.button`

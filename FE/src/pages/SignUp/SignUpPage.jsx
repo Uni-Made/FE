@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance'; 
+
 import {
   Container, NumTitle, Title, Input, InputWithButton, ButtonInInput,
   Select, Button, SelectGroup, InputWrapper, ErrorMessage,
@@ -13,9 +15,11 @@ function SignUpPage() {
   const { userType } = location.state || { userType: 'buyer' };
   const isSeller = userType === 'seller';
 
-  const [currentStep, setCurrentStep] = useState(1); // 현재 단계를 추적하는 상태
+  const [currentStep, setCurrentStep] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [gender, setGender] = useState('MALE');
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
@@ -27,8 +31,7 @@ function SignUpPage() {
     privacy: false,
     marketing: false,
   });
-
-  // 비밀번호 검증 함수
+  const [isAuthCodeVerified, setIsAuthCodeVerified] = useState(false); 
   const validatePassword = (password) => {
     const minLength = 8;
     const hasLetter = /[a-zA-Z]/.test(password);
@@ -38,13 +41,49 @@ function SignUpPage() {
     return password.length >= minLength && hasLetter && hasNumber && hasSpecialChar;
   };
 
-  // 이메일 검증 함수
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // 회원가입 정보 입력 단계 완료 버튼 클릭 시 이벤트 핸들러
+  const requestAuthCode = async () => {
+    try {
+      const response = await axiosInstance.post('/auth/sms', null, {
+        params: { phone }
+      });
+      console.log('인증 요청 응답:', response.data);
+      if (response.data.code === 'SUCCESS') {
+        alert('인증번호가 발송되었습니다.');
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error('인증번호 요청 중 오류:', error);
+      alert('인증번호 요청 중 오류가 발생했습니다.');
+    }
+  };
+
+  const verifyAuthCode = async () => {
+    console.log('요청 데이터:', { phoneNumber: phone, certificationNumber: authCode });
+
+    try {
+      const response = await axiosInstance.post('/auth/sms/verify', {
+        phoneNumber: phone,
+        certificationNumber: authCode
+      });
+      console.log('인증 확인 응답:', response.data);
+      if (response.data.result) {
+        alert('인증이 완료되었습니다.');
+        setIsAuthCodeVerified(true); // 인증 완료 상태 업데이트
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error('인증번호 확인 중 오류:', error);
+      alert('인증번호 확인 중 오류가 발생했습니다.');
+    }
+  };
+
   const handleSignUpInfoSubmit = () => {
     let newErrors = {};
 
@@ -71,12 +110,18 @@ function SignUpPage() {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      setCurrentStep(2); // 현재 단계를 2로 변경
+    // 인증이 완료되지 않았으면 단계 이동을 막습니다.
+    if (Object.keys(newErrors).length === 0 && isAuthCodeVerified) {
+      console.log('현재 단계: 1');
+      console.log('userType:', userType);
+      
+      setCurrentStep(2);
+    } else if (!isAuthCodeVerified) {
+      alert('전화번호 인증을 완료해주세요.');
     }
   };
 
-  // 체크박스 상태 변경 핸들러
+
   const handleChange = (e) => {
     setCheckedItems({
       ...checkedItems,
@@ -84,116 +129,143 @@ function SignUpPage() {
     });
   };
 
-  // 모든 필수 체크박스가 선택되었는지 확인하는 함수
   const isCheckedAllRequired = checkedItems.age && checkedItems.terms && checkedItems.privacy;
 
-  // 회원가입 완료 버튼 클릭 시 이벤트 핸들러
-  const handleApprovalPage = () => {
+  const handleApprovalPage = async () => {
+    console.log('체크박스 상태:', checkedItems);
+    console.log('필수 동의', isCheckedAllRequired);
+  
     if (isCheckedAllRequired) {
-      setCurrentStep(3); // 현재 단계를 3으로 변경
+      try {
+        const payload = {
+          name,
+          email,
+          gender,
+          phone,
+          socialId: email, 
+          provider: "NORMAL"
+        };
+    
+        const endpoint = isSeller ? `/auth/seller/signup` : `/auth/buyers/signup`;
+        console.log('현재 단계: 2');
+        console.log('userType:', userType);
+        console.log('payload:', payload);
+        const response = await axiosInstance.post(endpoint, payload);
+
+        console.log('회원가입 API 응답:', response.data); 
+        if (response.data.code === 'OK') {
+          setCurrentStep(3);
+        } else {
+          alert(response.data.message);
+        }
+      } catch (error) {
+        console.error('회원가입 중 오류:', error);
+        if (error.response) {
+          console.error('응답 데이터:', error.response.data);
+          alert(`회원가입 중 오류가 발생했습니다. ${error.response.data.message}`);
+        } else {
+          alert('회원가입 중 오류가 발생했습니다.');
+        }
+      }
+    } else {
+      alert('필수 이용약관을 모두 동의해주세요.');
     }
   };
+  
 
-  // 메인 페이지로 돌아가는 버튼 클릭 시 이벤트 핸들러
   const handleMain = () => {
-    navigate('/'); // 메인 페이지로 이동
+    navigate('/'); 
   };
+
   const handleLogin = () => {
-    navigate('/login'); // 메인 페이지로 이동
+    navigate('/login'); 
   };
+
   return (
     <>
-    <SignUpHeader />
+      <SignUpHeader />
+      <Container>
+        {currentStep === 1 && (
+          <>
+            <NumTitle isSeller={isSeller}>1</NumTitle>
+            <Title>정보 입력하기</Title>
+            <InputWrapper>
+              <Input 
+                type="text" 
+                placeholder="이름" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+              />
+              <ErrorMessage isSeller={isSeller}>{errors.name}</ErrorMessage>
+            </InputWrapper>
+            <InputWrapper>
+              <Input 
+                type="email" 
+                placeholder="Email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+              />
+              <ErrorMessage isSeller={isSeller}>{errors.email}</ErrorMessage>
+            </InputWrapper>
+            <InputWrapper>
+              <Input 
+                type="password" 
+                placeholder="비밀번호" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+              />
+              <ErrorMessage isSeller={isSeller}>{errors.password}</ErrorMessage>
+            </InputWrapper>
+            <InputWrapper>
+              <Input 
+                type="password" 
+                placeholder="비밀번호 확인" 
+                value={confirmPassword} 
+                onChange={(e) => setConfirmPassword(e.target.value)} 
+              />
+              <ErrorMessage isSeller={isSeller}>{errors.confirmPassword}</ErrorMessage>
+            </InputWrapper>
+            <SelectGroup>
+              <Select>
+                <option value="native">내국인</option>
+                <option value="foreigner">외국인</option>
+              </Select>
+              <Select 
+                value={gender} 
+                onChange={(e) => setGender(e.target.value)} 
+              >
+                <option value="MALE">남성</option>
+                <option value="FEMALE">여성</option>
+              </Select>
 
-    <Container>
-
-      {currentStep === 1 && (
-        <>
-          <NumTitle isSeller={isSeller}>1</NumTitle>
-          <Title>정보 입력하기</Title>
-          
-          <InputWrapper>
-            <Input 
-              type="text" 
-              placeholder="이름" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-            />
-            <ErrorMessage isSeller={isSeller}>{errors.name}</ErrorMessage>
-          </InputWrapper>
-          
-          <InputWrapper>
-            <Input 
-              type="email" 
-              placeholder="Email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-            />
-            <ErrorMessage isSeller={isSeller}>{errors.email}</ErrorMessage>
-          </InputWrapper>
-          
-          <InputWrapper>
-          
-            <Input 
-              type="password" 
-              placeholder="비밀번호" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-            />
-            <ErrorMessage isSeller={isSeller}>{errors.password}</ErrorMessage>
-          </InputWrapper>
-
-          <InputWrapper>
-            <Input 
-              type="password" 
-              placeholder="비밀번호 확인" 
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)} 
-            />
-            <ErrorMessage isSeller={isSeller}>{errors.confirmPassword}</ErrorMessage>
-          </InputWrapper>
-          <SelectGroup>
-            <Select>
-              <option value="native">내국인</option>
-              <option value="foreigner">외국인</option>
-            </Select>
-            <Select>
-              <option value="male">남성</option>
-              <option value="female">여성</option>
-              <option value="other">공개하지 않음</option>
-            </Select>
-            <Select>
-              <option value="skt">SKT</option>
-              <option value="kt">KT</option>
-              <option value="lgu">LG U+</option>
-              <option value="other">기타</option>
-            </Select>
-          </SelectGroup>
-
-          <InputWithButton>
-            <Input 
-              type="tel" 
-              placeholder="전화번호" 
-              value={phone} 
-              onChange={(e) => setPhone(e.target.value)} 
-            />
-            <ButtonInInput isSeller={isSeller}>인증요청</ButtonInInput>
-          </InputWithButton>
-          
-          <InputWithButton>
-            <Input 
-              type="text" 
-              placeholder="인증번호" 
-              value={authCode} 
-              onChange={(e) => setAuthCode(e.target.value)} 
-            />
-            <ButtonInInput isSeller={isSeller}>인증완료</ButtonInInput>
-          </InputWithButton>
-          
-          <Button onClick={handleSignUpInfoSubmit} isSeller={isSeller}>회원가입</Button>
-        </>
-      )}
-
+              <Select>
+                <option value="skt">SKT</option>
+                <option value="kt">KT</option>
+                <option value="lgu">LG U+</option>
+                <option value="other">알뜰폰</option>
+              </Select>
+            </SelectGroup>
+            <InputWithButton>
+              <Input 
+                type="tel" 
+                placeholder="전화번호" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+              />
+              <ButtonInInput isSeller={isSeller} onClick={requestAuthCode}>인증요청</ButtonInInput>
+            </InputWithButton>
+            <InputWithButton>
+              <Input 
+                type="text" 
+                placeholder="인증번호" 
+                value={authCode} 
+                onChange={(e) => setAuthCode(e.target.value)} 
+              />
+              <ButtonInInput isSeller={isSeller} onClick={verifyAuthCode}>인증완료</ButtonInInput>
+            </InputWithButton>
+            <Button onClick={handleSignUpInfoSubmit} isSeller={isSeller}>회원가입</Button>
+          </>
+        )}
       {currentStep === 2 && (
         <>
           <NumTitle isSeller={isSeller}>2</NumTitle>
@@ -205,7 +277,7 @@ function SignUpPage() {
               name="age" 
               checked={checkedItems.age} 
               onChange={handleChange} 
-              isSeller={isSeller} // Pass the isSeller prop
+              isSeller={isSeller}
             />
             <CheckboxLabel>[필수] 만 14세 이상입니다.</CheckboxLabel>
           </CheckboxContainer>
@@ -216,7 +288,7 @@ function SignUpPage() {
               name="terms" 
               checked={checkedItems.terms} 
               onChange={handleChange} 
-              isSeller={isSeller} // Pass the isSeller prop
+              isSeller={isSeller}
             />
             <CheckboxLabel>[필수] 이용약관 동의</CheckboxLabel>
           </CheckboxContainer>
@@ -227,7 +299,7 @@ function SignUpPage() {
               name="privacy" 
               checked={checkedItems.privacy} 
               onChange={handleChange} 
-              isSeller={isSeller} // Pass the isSeller prop
+              isSeller={isSeller}
             />
             <CheckboxLabel>[필수] 개인정보 수집 및 이용 동의</CheckboxLabel>
           </CheckboxContainer>
@@ -238,45 +310,45 @@ function SignUpPage() {
               name="marketing" 
               checked={checkedItems.marketing} 
               onChange={handleChange} 
-              isSeller={isSeller} // Pass the isSeller prop
+              isSeller={isSeller}
             />
             <CheckboxLabel>[선택] 이벤트 소식 수신 동의</CheckboxLabel>
           </CheckboxContainer>
 
-          <Button onClick={handleApprovalPage} isSeller={isSeller} disabled={!isCheckedAllRequired}>회원가입</Button>
+          <Button onClick={handleApprovalPage} isSeller={isSeller}>회원가입</Button>
         </>
       )}
-{currentStep === 3 && (
-  <Container>
-    <NumTitle isSeller={isSeller}>3</NumTitle>
-    {isSeller ? (
-      <Title>회원가입 완료 & 승인 안내</Title>
-    ) : (
-      <Title>회원가입 완료</Title>
-    )}
-    {isSeller ? (
-      <Text>
-        회원가입을 환영합니다! <br />
-        판매자 회원가입을 위해서는 관리자의 승인이 필요합니다. <br />
-        빠른 확인 후 서면으로 안내드리겠습니다.
-      </Text>
-    ) : (
-      <Text>
-        회원가입을 환영합니다! <br />
-        Uni-Made의 서비스를 지금 바로 경험해보세요
-      </Text>
-    )}
+      {currentStep === 3 && (
+        <Container>
+          <NumTitle isSeller={isSeller}>3</NumTitle>
+          {isSeller ? (
+            <Title>회원가입 완료 & 승인 안내</Title>
+          ) : (
+            <Title>회원가입 완료</Title>
+          )}
+          {isSeller ? (
+            <Text>
+              회원가입을 환영합니다! <br />
+              판매자 회원가입을 위해서는 관리자의 승인이 필요합니다. <br />
+              빠른 확인 후 서면으로 안내드리겠습니다.
+            </Text>
+          ) : (
+            <Text>
+              회원가입을 환영합니다! <br />
+              Uni-Made의 서비스를 지금 바로 경험해보세요
+            </Text>
+          )}
 
-    {isSeller ? (
-      <Button onClick={handleMain} isSeller={isSeller}>메인으로 돌아가기</Button>
-    ) : (
-      <>
-        <Button onClick={handleLogin}>로그인하기</Button>
-        <LastButton onClick={handleMain}>메인으로 돌아가기</LastButton>
-      </>
-    )}
-  </Container>
-)}
+          {isSeller ? (
+            <Button onClick={handleMain} isSeller={isSeller}>메인으로 돌아가기</Button>
+          ) : (
+            <>
+              <Button onClick={handleLogin}>로그인하기</Button>
+              <LastButton onClick={handleMain}>메인으로 돌아가기</LastButton>
+            </>
+          )}
+        </Container>
+      )}
 
     </Container>
     </>
