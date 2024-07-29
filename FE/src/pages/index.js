@@ -7,3 +7,5 @@ export { default as MaderMyPage } from "./MaderMyPage/MaderMyPage";
 export { default as ProductDetailPage } from "./ProductDetail/ProductDetailPage";
 export { default as ProductListPage } from "./ProductList/ProductListPage";
 export { default as NotFoundPage } from "./NotFound/NotFoundPage";
+export { default as PurchaseHistoryPage } from "./DefaultMyPage/PurchaseHistoryPage";
+export { default as UserInfoUpdatePage } from "./DefaultMyPage/UserInfoUpdatePage";

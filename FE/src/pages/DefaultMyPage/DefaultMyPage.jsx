@@ -73,11 +73,11 @@ const DefaultMyPage = () => {
   const navigate = useNavigate();
 
   const handlePurchaseHistory = () => {
-    navigate('/purchase-history');
+    navigate('/purchaseHistory');
   };
 
   const handleMemberInfoEdit = () => {
-    navigate('/update-info');
+    navigate('/userInfoupdate');
   };
 
   return (

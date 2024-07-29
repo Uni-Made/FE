@@ -9,6 +9,8 @@ import {
   ProductListPage,
   ProductDetailPage,
   NotFoundPage,
+  PurchaseHistoryPage,
+  UserInfoUpdatePage 
 } from "../pages";
 
 const Router = [
@@ -22,8 +24,10 @@ const Router = [
       { path: "signUp", element: <SignUpPage /> },
       { path: "defaultMyPage", element: <DefaultMyPage /> },
       { path: "maderMyPage", element: <MaderMyPage /> },
-      { path: "product/list", element: <ProductListPage /> },
+      { path: "product/list", element: <ProductListPage /> }, 
       { path: "product/:productId", element: <ProductDetailPage /> },
+      { path: "purchaseHistory", element: <PurchaseHistoryPage/> },
+      { path: "userInfoupdate", element: <UserInfoUpdatePage /> }
     ],
     errorElement: <NotFoundPage />,
   },
