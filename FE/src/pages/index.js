@@ -8,3 +8,6 @@ export { default as MaderMyPage } from "./MaderMyPage/MaderMyPage";
 export { default as ProductDetailPage } from "./ProductDetail/ProductDetailPage";
 export { default as ProductListPage } from "./ProductList/ProductListPage";
 export { default as NotFoundPage } from "./NotFound/NotFoundPage";
+export { default as ProductDetailPageSell } from "./MaderMyPage/ProductDetailPageSell";
+export { default as ProductDetailPageSold } from "./MaderMyPage/ProductDetailPageSold";
+export { default as PurchaseRequestPage } from "./MaderMyPage/PurchaseRequestPage";
