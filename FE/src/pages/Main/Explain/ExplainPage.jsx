@@ -1,6 +1,6 @@
 import React from "react";
 import * as S from "./ExplainPage.style";
-import Header from "../Main/components/Header"; 
+import Header from "../components/Header"; 
 
 function ExplainPage() {
   return (
