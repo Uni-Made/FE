@@ -2,6 +2,7 @@ export { default as LoginPage } from "./Login/LoginPage";
 export { default as SignUpSelectPage } from "./SignUpSelect/SignUpSelectPage";
 export { default as SignUpPage } from "./SignUp/SignUpPage";
 export { default as MainPage } from "./Main/MainPage";
+export { default as ExplainPage } from "./Explain/ExplainPage";
 export { default as DefaultMyPage } from "./DefaultMyPage/DefaultMyPage";
 export { default as MaderMyPage } from "./MaderMyPage/MaderMyPage";
 export { default as ProductDetailPage } from "./ProductDetail/ProductDetailPage";
