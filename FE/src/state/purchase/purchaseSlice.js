@@ -9,12 +9,13 @@ const initialState = {
   totalPrice: 0,
   purchaseFormData: {
     name: "",
-    phone: "",
-    howToReceive: "online",
+    phoneNumber: "",
+    pickupOption: "ONLINE",
     address: "",
     detailAddress: "",
-    TermsAdmit: false,
+    isAgree: false,
   },
+  purchaseLastInfo: {},
 };
 
 export const getProductDetails = createAsyncThunk(
@@ -41,47 +42,49 @@ const purchaseSlice = createSlice({
       state.selectedProduct = action.payload;
     },
 
-    createSelectedOption: (state, action) => {
+    createSelectedOptionSet: (state, action) => {
       state.selectedOptions = [
         ...state.selectedOptions,
         {
-          optionName: action.payload.optionName,
+          optionId: action.payload.optionId,
+          valueIds: action.payload.valueIds,
+          values: action.payload.values,
           amount: 1,
           price: action.payload.price,
         },
       ];
     },
 
-    increaseSelectedOption: (state, action) => {
+    increaseSelectedOptionSet: (state, action) => {
       const targetOption = state.selectedOptions.find(
-        (option) => option.optionName === action.payload.optionName
+        (option) => option.optionId === action.payload.optionId
       );
       if (targetOption) {
         targetOption.amount++;
       }
     },
 
-    decreaseSelectedOption: (state, action) => {
+    decreaseSelectedOptionSet: (state, action) => {
       const targetOption = state.selectedOptions.find(
-        (option) => option.optionName === action.payload.optionName
+        (option) => option.optionId === action.payload.optionId
       );
       if (targetOption && targetOption.amount > 1) {
         targetOption.amount--;
       } else if (targetOption && targetOption.amount == 1) {
         state.selectedOptions = state.selectedOptions.filter(
-          (option) => option.optionName !== action.payload
+          (option) => option.optionId !== action.payload.optionId
         );
       }
     },
 
-    removeSelectedOption: (state, action) => {
+    removeSelectedOptionSet: (state, action) => {
       // state.selectedOptions.forEach((option) => {
       //   console.log("Option as JSON:", JSON.stringify(option));
       // });
       // console.log("Removing option with name:", action.payload);
 
       state.selectedOptions = state.selectedOptions.filter(
-        (option) => option.optionName != action.payload
+        (option) => option.optionId != action.payload
       );
     },
 
@@ -92,10 +95,15 @@ const purchaseSlice = createSlice({
     setPurchaseFormData: (state, action) => {
       state.purchaseFormData = { ...state.purchaseFormData, ...action.payload }; // 객체 병합, 동일 내용은 (뒤로) 덮어쓰기
     },
+
+    setPurchaseLastInfo: (state, action) => {
+      state.purchaseLastInfo = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProductDetails.pending, (state, action) => {
       state.selectedProduct = {};
+      state.selectedOptions = [];
       state.getProductDetailsStatus = "pending";
     });
     builder.addCase(getProductDetails.fulfilled, (state, action) => {
@@ -110,11 +118,12 @@ const purchaseSlice = createSlice({
 
 export const {
   setSelectedProduct,
-  createSelectedOption,
-  increaseSelectedOption,
-  decreaseSelectedOption,
-  removeSelectedOption,
+  createSelectedOptionSet,
+  increaseSelectedOptionSet,
+  decreaseSelectedOptionSet,
+  removeSelectedOptionSet,
   setTotalPrice,
   setPurchaseFormData,
+  setPurchaseLastInfo,
 } = purchaseSlice.actions;
 export default purchaseSlice.reducer;

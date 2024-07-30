@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 
 const Input = styled.input`
@@ -11,9 +11,11 @@ const Input = styled.input`
   padding: 20px;
 `;
 
-function PurchaseInput(props) {
-  const { Placeholder } = props;
-  return <Input placeholder={Placeholder}></Input>;
-}
+const PurchaseInput = forwardRef((props, ref) => {
+  return <Input ref={ref} {...props} />;
+});
+
+// displayName 설정
+PurchaseInput.displayName = "PurchaseInput";
 
 export default PurchaseInput;

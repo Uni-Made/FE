@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 // 오버레이 컴포넌트 추가
 const ModalOverlay = styled.div`
-  display: ${(props) => (props.show ? "block" : "none")};
+  display: ${(props) => (props.$show ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -72,15 +72,15 @@ const Button = styled.button`
 
 export default function Modal({ showModal, handleClose }) {
   const navigate = useNavigate();
-  const params = useParams();
+  const { productId } = useParams();
+
   const { selectedOptions, totalPrice } = useSelector(
     (state) => state.purchase
   );
-  console.log(selectedOptions);
 
   const handleYesBtnClick = () => {
     handleClose();
-    navigate("/product/:" + params + "/purchase");
+    navigate("/product/" + productId + "/purchase");
   };
   return (
     <>
@@ -88,7 +88,11 @@ export default function Modal({ showModal, handleClose }) {
       <ModalContainer show={showModal}>
         {selectedOptions.map((option, idx) => (
           <OptionTextBox key={idx}>
-            <p>{option.optionName} </p>
+            <p>
+              {option.values.map((optionItem) => (
+                <>{optionItem + " "}</>
+              ))}{" "}
+            </p>
             <p>{option.amount}개</p>
           </OptionTextBox>
         ))}

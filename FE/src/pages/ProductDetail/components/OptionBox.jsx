@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Box, MenuItem, Select, Typography, IconButton } from "@mui/material";
-// import { Box, Typography, IconButton } from "@mui/material";
 import { Close, Add, Remove } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createSelectedOption,
-  decreaseSelectedOption,
-  increaseSelectedOption,
-  removeSelectedOption,
+  createSelectedOptionSet,
+  decreaseSelectedOptionSet,
+  increaseSelectedOptionSet,
+  removeSelectedOptionSet,
   setTotalPrice,
 } from "../../../state/purchase/purchaseSlice";
-import { useParams } from "react-router-dom";
 
 const Container = styled.div`
   width: 80%;
@@ -22,7 +20,6 @@ const OptionContainer = styled(Box)`
   margin-bottom: 20px;
 `;
 
-// Styled components
 const OptionCard = styled(Box)`
   display: flex;
   align-items: center;
@@ -35,9 +32,6 @@ const OptionCard = styled(Box)`
 const QuantityContainer = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 0 5px;
 `;
 
 const AmountText = styled(Typography)`
@@ -57,150 +51,184 @@ const StyledIconButton = styled(IconButton)`
   padding: 5px;
 `;
 
-// option = optionName, amount, price
 const ProductOption = ({
   option,
   handleIncrease,
   handleDecrease,
   handleRemove,
 }) => {
-  console.log(option);
   return (
     <OptionCard>
       <QuantityContainer>
         <StyledIconButton
-          onClick={() => handleDecrease(option.optionName)}
+          onClick={() => handleDecrease(option.optionId)}
           disabled={option.amount <= 1}
         >
           <Remove />
         </StyledIconButton>
-        <AmountText variant="body1">{option.amount}</AmountText>
-        <StyledIconButton onClick={() => handleIncrease(option.optionName)}>
+        <AmountText>{option.amount}</AmountText>
+        <StyledIconButton onClick={() => handleIncrease(option.optionId)}>
           <Add />
         </StyledIconButton>
       </QuantityContainer>
-      <OptionText variant="body1">
-        {option.optionName}, {option.price}원
+      <OptionText>
+        {option.values.map((optionItem) => (
+          <>{optionItem + " "}</>
+        ))}
+        , {option.price}원
       </OptionText>
-      <StyledIconButton onClick={() => handleRemove(option.optionName)}>
+      <StyledIconButton onClick={() => handleRemove(option.optionId)}>
         <Close />
       </StyledIconButton>
     </OptionCard>
   );
 };
 
-const getAllCombinations = (options) => {
-  if (options.length === 0) return []; // options 비어있으면 빈 배열 반환
-  const [first, ...rest] = options; // options 첫 요소와 나머지들로 분할
-  const restCombinations = getAllCombinations(rest);
-  if (restCombinations.length === 0) {
-    return first.values.map((value) => ({ [first.name]: value }));
-  }
-  return first.values.flatMap((value) =>
-    restCombinations.map((combination) => ({
-      [first.name]: value,
-      ...combination,
-    }))
-  );
-};
-
 const OptionBox = () => {
-  // const [selectedOptions, setSelectedOptions] = useState([]);
-  // const [totalPrice, setTotalPrice] = useState(0);
   const dispatch = useDispatch();
-  const {
-    selectedProduct,
-    totalPrice,
-    getProductDetailsStatus,
-    selectedOptions,
-  } = useSelector((state) => state.purchase);
-  console.log(selectedOptions);
+  const { selectedProduct, totalPrice, selectedOptions } = useSelector(
+    (state) => state.purchase
+  );
+  const [optionId, setOptionId] = useState(1);
+  const optionSetInitValue = selectedProduct.options.map((option) => {
+    return {
+      optionCategory: option.optionCategory,
+      optionCategoryValueIds: option.optionValues.map((value) => value.valueId), // 옵션 선택된 거 반영할 때는, 해당 옵션의 밸류가 여기에 포함되는 지로 조건문 검색
+      nowOptionValue: "",
+      nowOptionValueId: null,
+      price: selectedProduct.price, // 각 카테고리별로 가격은 똑같다 가정
+    };
+  });
+  const [optionSet, setOptionSet] = useState(optionSetInitValue);
+  console.log(optionSet);
 
-  const productOptions = selectedProduct.options;
-  const allCombinations = getAllCombinations(productOptions);
-
-  const handleAddOption = (combination) => {
-    // 조합을 문자열로 변환하여 key로 사용
-    const optionName = Object.entries(combination)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(", ");
-
-    // 중복된 옵션이 있는지 확인
+  // optionSet의 모든 카테고리의 값이 채워졌을 때 실행
+  const handleSelectOptionSet = (optionSet) => {
     const existingOption = selectedOptions.find(
-      (option) => option.optionName === optionName
+      (option) => option.optionId == optionSet.optionId
     );
-
     if (existingOption) {
-      // 이미 존재하는 옵션의 수량을 증가
-      dispatch(increaseSelectedOption({ optionName, amount: 1 }));
+      dispatch(
+        increaseSelectedOptionSet({
+          optionId: existingOption.valueId,
+          amount: 1,
+        })
+      );
     } else {
-      // 새로운 옵션 추가
-      const optionWithPrice = {
-        optionName,
-        amount: 1, // 새로 추가할 때 기본 수량 설정
-        price: selectedProduct.price, // 가격 설정
+      const newOption = {
+        optionId: optionId, // 이걸로 어떤 optionSet인지 구분
+        valueIds: optionSet.map((option) => option.nowOptionValueId),
+        values: optionSet.map((option) => option.nowOptionValue),
+        amount: 1,
+        price: selectedProduct.price,
       };
-      dispatch(createSelectedOption(optionWithPrice));
+      dispatch(createSelectedOptionSet(newOption));
+      setOptionId(optionId + 1);
     }
   };
 
-  const handleIncrease = (optionName) => {
-    dispatch(increaseSelectedOption({ optionName, amount: 1 }));
+  const handleIncrease = (optionId) => {
+    dispatch(increaseSelectedOptionSet({ optionId, amount: 1 }));
   };
 
-  const handleDecrease = (optionName) => {
-    dispatch(decreaseSelectedOption({ optionName, amount: 1 }));
+  const handleDecrease = (optionId) => {
+    dispatch(decreaseSelectedOptionSet({ optionId, amount: 1 }));
   };
 
-  const handleRemove = (optionName) => {
-    dispatch(removeSelectedOption(optionName));
+  const handleRemove = (optionId) => {
+    dispatch(removeSelectedOptionSet(optionId));
   };
 
-  const calculateTotalPrice = (options) => {
-    const total = options.reduce(
+  const handleSelectChange = (e, idx) => {
+    const nowOption = JSON.parse(e.target.value); // 현재 선택한 옵션 가져오기
+    // 마지막 select 태그인 경우
+    if (idx === selectedProduct.options.length - 1) {
+      // optionSet에서 id가 같은 카테고리 객체 값만 변경
+      setOptionSet(
+        optionSet.map((optionSetItem) =>
+          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
+          true
+            ? {
+                ...optionSetItem,
+                nowOptionValue: nowOption.value,
+                nowOptionValueId: nowOption.valueId,
+              }
+            : optionSetItem
+        )
+      );
+      // handleSelectOptionSet(optionSet);
+    }
+    // 마지막 select 태그가 아닐 경우
+    else {
+      // optionSet에서 id가 같은 카테고리 객체 값만 변경
+      setOptionSet(
+        optionSet.map((optionSetItem) =>
+          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
+          true
+            ? {
+                ...optionSetItem,
+                nowOptionValue: nowOption.value,
+                nowOptionValueId: nowOption.valueId,
+              }
+            : optionSetItem
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    // 마지막 select 태그가 변경되었을 때 optionSet이 완성된 것으로 간주
+    if (
+      selectedProduct.options.length === optionSet.length &&
+      optionSet.every((option) => option.nowOptionValue)
+    ) {
+      handleSelectOptionSet(optionSet);
+      // 하나의 카드가 만들어지면 optionSet 초기화
+      setOptionSet(optionSetInitValue);
+    }
+  }, [optionSet]);
+
+  useEffect(() => {
+    const total = selectedOptions.reduce(
       (acc, option) => acc + option.price * option.amount,
       0
     );
     dispatch(setTotalPrice(total));
-  };
-
-  useEffect(() => {
-    calculateTotalPrice(selectedOptions);
-  }, [selectedOptions]);
+  }, [selectedOptions, dispatch]);
 
   return (
-    getProductDetailsStatus == "fulfilled" && (
-      <Container>
-        <OptionContainer>
+    <Container>
+      {/* category : product detail 정보의 options 배열의 순회 반복자 */}
+      {selectedProduct.options.map((category, idx) => (
+        <OptionContainer key={category.optionCategoryId}>
           <Select
+            key={idx}
             displayEmpty
             fullWidth
-            onChange={(e) => handleAddOption(JSON.parse(e.target.value))}
+            onChange={(e) => handleSelectChange(e, idx)}
             value=""
           >
             <MenuItem value="" disabled>
-              상품 옵션 선택
+              {category.optionCategory} 선택
             </MenuItem>
-            {allCombinations.map((combination, idx) => (
-              <MenuItem key={idx} value={JSON.stringify(combination)}>
-                {Object.entries(combination).map(
-                  ([key, value]) => `${key}: ${value} `
-                )}
+            {category.optionValues.map((value) => (
+              <MenuItem key={value.valueId} value={JSON.stringify(value)}>
+                {value.value}
               </MenuItem>
             ))}
           </Select>
         </OptionContainer>
-        {selectedOptions.map((option) => (
-          <ProductOption
-            key={option.name}
-            option={option}
-            handleIncrease={handleIncrease}
-            handleDecrease={handleDecrease}
-            handleRemove={handleRemove}
-          />
-        ))}
-      </Container>
-    )
+      ))}
+      {selectedOptions.map((option, idx) => (
+        <ProductOption
+          key={idx}
+          option={option}
+          handleIncrease={handleIncrease}
+          handleDecrease={handleDecrease}
+          handleRemove={handleRemove}
+        />
+      ))}
+    </Container>
   );
 };
 

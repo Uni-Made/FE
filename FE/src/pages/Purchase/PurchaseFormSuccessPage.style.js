@@ -34,7 +34,7 @@ const HeaderBoxText = styled.div`
 `;
 
 const MainBox = styled.div`
-  width: 40%;
+  width: 50%;
   margin-top: 50px;
   margin-bottom: 20px;
   display: flex;

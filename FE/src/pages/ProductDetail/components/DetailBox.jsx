@@ -42,18 +42,18 @@ const DetailBox = () => {
     <Container>
       <TabContainer>
         <Tab
-          active={activeTab === "details"}
+          $active={activeTab === "details"}
           onClick={() => setActiveTab("details")}
         >
           상세정보
         </Tab>
         <Tab
-          active={activeTab === "review"}
+          $active={activeTab === "review"}
           onClick={() => setActiveTab("review")}
         >
           리뷰
         </Tab>
-        <Tab active={activeTab === "qa"} onClick={() => setActiveTab("qa")}>
+        <Tab $active={activeTab === "qa"} onClick={() => setActiveTab("qa")}>
           Q&A
         </Tab>
       </TabContainer>

@@ -7,7 +7,11 @@ import Modal from "./components/Modal";
 import DetailBox from "./components/DetailBox";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductDetails } from "../../state/purchase/purchaseSlice";
+import {
+  getProductDetails,
+  setSelectedProduct,
+} from "../../state/purchase/purchaseSlice";
+import { defaultInstance } from "../../api/axiosInstance";
 
 function ProductDetailPage() {
   const [showModal, setShowModal] = useState(false);
@@ -16,22 +20,28 @@ function ProductDetailPage() {
 
   const dispatch = useDispatch();
   const { selectedProduct, getProductDetailsStatus, totalPrice } = useSelector(
-    (state) => {
-      return state.purchase;
-    }
+    (state) => state.purchase
     // {return state.purchase;}와 똑같음
   );
+
   // modal 제어 함수들
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const handleHeartClick = () => {
-    setIsHeartFilled(!isHeartFilled);
+  const handleHeartClick = async () => {
     //TODO: 찜 목록 추가/제거 api 적용
+    const result = await defaultInstance.post(
+      "/api/products/favorite/" + productId
+    );
+    if (result.data.message == "좋아요 성공") {
+      setIsHeartFilled(true);
+    } else if (result.data.message == "좋아요 취소") {
+      setIsHeartFilled(false);
+    }
   };
 
   useEffect(() => {
-    console.log(productId);
+    console.log("getproductDetail호출", productId);
     dispatch(getProductDetails(productId));
   }, [dispatch, productId, getProductDetails]);
 

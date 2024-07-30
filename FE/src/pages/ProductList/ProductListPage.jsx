@@ -16,6 +16,7 @@ import {
   sortProducts,
   searchKeywordProducts,
 } from "./../../state/products/productsSlice";
+import { setSelectedProduct } from "../../state/purchase/purchaseSlice";
 
 import { useNavigate } from "react-router-dom";
 
@@ -45,6 +46,10 @@ function ProductListPage() {
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   dispatch(setSelectedProduct({}));
+  // }, []);
 
   return (
     <S.Container>
