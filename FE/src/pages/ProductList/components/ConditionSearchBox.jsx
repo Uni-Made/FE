@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import * as S from "./ConditionSearchBox.style";
+import { useDispatch, useSelector } from "react-redux";
+import { searchKeywordProducts } from "../../../state/products/productsSlice";
 
 const categories = [
   "의류",
@@ -14,6 +16,8 @@ const categories = [
 ];
 
 function ConditionSearchBox() {
+  const dispatch = useDispatch();
+  const [searchKeyword, setSearchKeyword] = useState();
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const toggleCategory = (category) => {
@@ -22,6 +26,16 @@ function ConditionSearchBox() {
         ? prevSelected.filter((cat) => cat !== category)
         : [...prevSelected, category]
     );
+  };
+
+  const handleInputChange = (e) => {
+    setSearchKeyword(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleSearchBtnClick = () => {
+    // dispatch(searchKeywordProducts({ keyword: "test", categories: selectedCategories }));
+    dispatch(searchKeywordProducts(searchKeyword));
   };
 
   return (
@@ -44,8 +58,13 @@ function ConditionSearchBox() {
 
         {/* 입력창에 학교명 대신 키워드로 하고, 이 키워드를 학교명, 제품 명, 상점... 으로 정할 수 있게*/}
         <S.InputGroup>
-          <S.Label>학교명</S.Label>
-          <S.SearchInput type="text" />
+          <S.Label>키워드</S.Label>
+          <select name="keyword" id="keyword">
+            <option value="">학교명</option>
+            <option value="">제품명</option>
+            <option value="">상점명</option>
+          </select>
+          <S.SearchInput type="text" onChange={handleInputChange} />
           <S.SearchIcon></S.SearchIcon>
         </S.InputGroup>
 
@@ -57,7 +76,10 @@ function ConditionSearchBox() {
         </S.PriceGroup>
       </S.FilterSection>
 
-      <S.SelectedArea> 검색 </S.SelectedArea>
+      <S.SelectedArea onClick={() => handleSearchBtnClick()}>
+        {" "}
+        검색{" "}
+      </S.SelectedArea>
     </S.Container>
   );
 }

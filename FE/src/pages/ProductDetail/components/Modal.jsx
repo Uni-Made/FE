@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 // 오버레이 컴포넌트 추가
 const ModalOverlay = styled.div`
-  display: ${(props) => (props.show ? "block" : "none")};
+  display: ${(props) => (props.$show ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -69,22 +71,35 @@ const Button = styled.button`
 `;
 
 export default function Modal({ showModal, handleClose }) {
+  const navigate = useNavigate();
+  const { productId } = useParams();
+
+  const { selectedOptions, totalPrice } = useSelector(
+    (state) => state.purchase
+  );
+
+  const handleYesBtnClick = () => {
+    handleClose();
+    navigate("/product/" + productId + "/purchase");
+  };
   return (
     <>
       <ModalOverlay show={showModal} />
       <ModalContainer show={showModal}>
-        <OptionTextBox>
-          <p>파란색 | M사이즈 </p>
-          <p>1개</p>
-        </OptionTextBox>
-        <OptionTextBox>
-          <p>흰색 | XL사이즈 </p>
-          <p>1개</p>
-        </OptionTextBox>
-        <PriceText>총 58,000원</PriceText>
+        {selectedOptions.map((option, idx) => (
+          <OptionTextBox key={idx}>
+            <p>
+              {option.values.map((optionItem) => (
+                <>{optionItem + " "}</>
+              ))}{" "}
+            </p>
+            <p>{option.amount}개</p>
+          </OptionTextBox>
+        ))}
+        <PriceText>총 {totalPrice}원</PriceText>
         <h3>상품을 구매하시겠습니까?</h3>
         <ButtonContainer>
-          <Button primary onClick={handleClose}>
+          <Button primary onClick={handleYesBtnClick}>
             예
           </Button>
           <Button onClick={handleClose}>아니오</Button>

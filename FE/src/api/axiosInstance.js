@@ -1,6 +1,4 @@
-{/*import axios from "axios";
-
-// const BASE_URL = "";
+const BASE_URL = "http://15.165.185.157:8080";
 
 // 단순 get요청으로 인증값이 필요없는 경우
 const axiosApi = (url) => {
@@ -16,34 +14,17 @@ const axiosApi = (url) => {
 };
 
 // post, delete등 api요청 시 인증값이 필요한 경우
-// const axiosAuthApi = (url, options) => {
-//   const token = "토큰 값";
-//   const instance = axios.create({
-//     baseURL: url,
-//     headers: { Authorization: "Bearer " + token },
-//     ...options,
-//   });
-//   return instance;
-// };
-
-export const defaultInstance = axiosApi(BASE_URL);
-// export const authInstance = axiosAuthApi(BASE_URL);
-*/}
-
-import axios from 'axios';
-
-const BASE_URL = "http://15.165.185.157:8080";
-
-const axiosApi = (url) => {
+const axiosAuthApi = (url, options) => {
+  const token = import.meta.env.VITE_UNIMADE_SELLER_API_KEY;
   const instance = axios.create({
     baseURL: url,
     headers: {
-      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
     },
+    ...options,
   });
   return instance;
 };
 
-// 기본 내보내기 설정
-const axiosInstance = axiosApi(BASE_URL);
-export default axiosInstance;
+export const defaultInstance = axiosApi(BASE_URL);
+export const authInstance = axiosAuthApi(BASE_URL);

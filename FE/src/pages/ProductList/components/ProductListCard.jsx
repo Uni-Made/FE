@@ -3,17 +3,15 @@ import * as S from "./productListCard.style";
 import { useNavigate } from "react-router-dom";
 
 function ProductListCard(props) {
-  const { id, imageSrc, firstTitle, secondTitle, price } = props;
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/product/${id}`);
-  };
+  const { id, imageSrc, firstTitle, secondTitle, price, onClick } = props;
+  // console.log(id, imageSrc, firstTitle, secondTitle, price);
+
   return (
-    <S.Container onClick={handleClick}>
+    <S.Container onClick={() => onClick(id)}>
       <S.Image src={imageSrc} />
       <S.FirstTitle>{firstTitle}</S.FirstTitle>
       <S.SecondTitle>{secondTitle}</S.SecondTitle>
-      <S.Price>{price}</S.Price>
+      <S.Price>{price + "원"}</S.Price>
     </S.Container>
   );
 }
