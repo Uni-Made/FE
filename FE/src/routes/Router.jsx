@@ -14,6 +14,17 @@ import {
   ExplainPage,
   ProductDetailPageSell,
   ProductDetailPageSold,
+  FavoriteMaderListPage,
+  FavoriteProductsListPage,
+  MaderHomePage,
+  NotiMessagesPage,
+  NoticeBoardPage,
+  NoticeDetailPage,
+  SellingProductDetailPage,
+  SoldoutProductDetailPage,
+  SellingProductsListPage,
+  SoldoutProductsListPage,
+  PurchaseRequestsPage,
 } from "../pages";
 
 const Router = [
@@ -35,8 +46,49 @@ const Router = [
         element: <PurchaseFormSuccessPage />,
       },
       { path: "explain", element: <ExplainPage /> },
-      { path: "productDetailPageSell", element: <ProductDetailPageSell />},
-      { path: "productDetailPageSold", element: <ProductDetailPageSold />},
+      { path: "productDetailPageSell", element: <ProductDetailPageSell /> },
+      { path: "productDetailPageSold", element: <ProductDetailPageSold /> },
+
+      // 24-08-01 이후로 추가된 라우팅 주석 처리된 부분은 진웅님 페이지
+      { path: "notice/Board", element: <NoticeBoardPage /> },
+      { path: "notice/:noticeId", element: <NoticeDetailPage /> },
+      // { path: "defaultMyPage/modify/myInfo", element: < /> }, 3번
+      {
+        path: "defaultMyPage/favorite/products",
+        element: <FavoriteProductsListPage />,
+      },
+      {
+        path: "defaultMyPage/favorite/maders",
+        element: <FavoriteMaderListPage />,
+      },
+      // { path: "defaultMyPage/purchase/History", element: </> }, 6번
+      {
+        path: "defaultMyPage/purchase/messages",
+        element: <NotiMessagesPage />,
+      },
+      { path: "maderHome", element: <MaderHomePage /> },
+      {
+        path: "maderMyPage/products/selling",
+        element: <SellingProductsListPage />,
+      },
+      {
+        path: "maderMyPage/products/soldout",
+        element: <SoldoutProductsListPage />,
+      },
+      {
+        path: "maderMyPage/products/selling/:productId",
+        element: <SellingProductDetailPage />,
+      },
+      {
+        path: "maderMyPage/products/soldout/:productId",
+        element: <SoldoutProductDetailPage />,
+      },
+      {
+        path: "maderMyPage/purchase/requests",
+        element: <PurchaseRequestsPage />,
+      },
+      // { path: "", element: < /> }, 14번
+      // { path: "", element: < /> }, 15번
     ],
     errorElement: <NotFoundPage />,
   },
