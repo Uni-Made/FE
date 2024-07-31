@@ -25,6 +25,10 @@ import {
   SellingProductsListPage,
   SoldoutProductsListPage,
   PurchaseRequestsPage,
+  BuyerInfoModifyPage,
+  PurchaseHistoryPage,
+  ProductModifyPage,
+  ProductRegisterPage,
 } from "../pages";
 
 const Router = [
@@ -52,7 +56,7 @@ const Router = [
       // 24-08-01 이후로 추가된 라우팅 주석 처리된 부분은 진웅님 페이지
       { path: "notice/Board", element: <NoticeBoardPage /> },
       { path: "notice/:noticeId", element: <NoticeDetailPage /> },
-      // { path: "defaultMyPage/modify/myInfo", element: < /> }, 3번
+      { path: "defaultMyPage/modify/myInfo", element: <BuyerInfoModifyPage /> },
       {
         path: "defaultMyPage/favorite/products",
         element: <FavoriteProductsListPage />,
@@ -61,7 +65,10 @@ const Router = [
         path: "defaultMyPage/favorite/maders",
         element: <FavoriteMaderListPage />,
       },
-      // { path: "defaultMyPage/purchase/History", element: </> }, 6번
+      {
+        path: "defaultMyPage/purchase/History",
+        element: <PurchaseHistoryPage />,
+      },
       {
         path: "defaultMyPage/purchase/messages",
         element: <NotiMessagesPage />,
@@ -87,8 +94,11 @@ const Router = [
         path: "maderMyPage/purchase/requests",
         element: <PurchaseRequestsPage />,
       },
-      // { path: "", element: < /> }, 14번
-      // { path: "", element: < /> }, 15번
+      {
+        path: "maderMyPage/product/register",
+        element: <ProductRegisterPage />,
+      },
+      { path: "maderMyPage/product/modify", element: <ProductModifyPage /> },
     ],
     errorElement: <NotFoundPage />,
   },

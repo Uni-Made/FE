@@ -24,5 +24,9 @@ export { default as SellingProductDetailPage } from "./Seller_ProductDetail_norm
 export { default as SoldoutProductDetailPage } from "./Seller_ProductDetail_norman/SoldoutProductDetailPage";
 export { default as SellingProductsListPage } from "./Seller_ProductsList_dadam/SellingProductsListPage";
 export { default as SoldoutProductsListPage } from "./Seller_ProductsList_dadam/SoldoutProductsListPage";
-export { default as PurchaseRequestsPage} from './Seller_PurchaseRequests_chri/PurchaseRequestsPage'
-// 진웅님이 쓰시는 페이지 4개 추가 필요
+export { default as PurchaseRequestsPage } from "./Seller_PurchaseRequests_chri/PurchaseRequestsPage";
+// 진웅님이 쓰시는 페이지 4개 추가
+export { default as BuyerInfoModifyPage } from "./Buyer_InfoModify_woong/BuyerInfoModifyPage";
+export { default as PurchaseHistoryPage } from "./Buyer_PurchaseHistory_woong/PurchaseHistoryPage";
+export { default as ProductModifyPage } from "./Seller_ProductModify_woong/ProductModifyPage";
+export { default as ProductRegisterPage } from "./Seller_ProductRegister_woong/ProductRegisterPage";
