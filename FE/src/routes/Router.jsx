@@ -11,6 +11,9 @@ import {
   PurchaseFormPage,
   PurchaseFormSuccessPage,
   NotFoundPage,
+  ExplainPage,
+  ProductDetailPageSell,
+  ProductDetailPageSold,
 } from "../pages";
 
 const Router = [
@@ -31,6 +34,9 @@ const Router = [
         path: "product/:productId/purchase/success",
         element: <PurchaseFormSuccessPage />,
       },
+      { path: "explain", element: <ExplainPage /> },
+      { path: "productDetailPageSell", element: <ProductDetailPageSell />},
+      { path: "productDetailPageSold", element: <ProductDetailPageSold />},
     ],
     errorElement: <NotFoundPage />,
   },
