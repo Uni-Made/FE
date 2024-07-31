@@ -12,6 +12,9 @@ import {
   setSelectedProduct,
 } from "../../state/purchase/purchaseSlice";
 import { defaultInstance } from "../../api/axiosInstance";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function ProductDetailPage() {
   const [showModal, setShowModal] = useState(false);
@@ -24,12 +27,25 @@ function ProductDetailPage() {
     // {return state.purchase;}와 똑같음
   );
 
+  // react-slider pause on hover셋팅
+  const settings = {
+    dots: false,
+    infinite: false,
+    slidesToShow: 3,
+    swipeToSlide: true,
+    afterChange: function (index) {
+      console.log(`Slider Changed to: ${index + 1}`);
+    },
+    autoplay: true,
+    autoplaySpeed: 2000,
+    pauseOnHover: true,
+  };
+
   // modal 제어 함수들
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
   const handleHeartClick = async () => {
-    //TODO: 찜 목록 추가/제거 api 적용
     const result = await defaultInstance.post(
       "/api/products/favorite/" + productId
     );
@@ -56,27 +72,9 @@ function ProductDetailPage() {
                 src={selectedProduct.productImages[0]}
               ></S.LeftMainImage>
               <S.LeftSubBox>
-                <S.LeftSubBoxItem
-                  src={
-                    selectedProduct.productImages[1]
-                      ? selectedProduct.productImages[1]
-                      : selectedProduct.productImages[0]
-                  }
-                ></S.LeftSubBoxItem>
-                <S.LeftSubBoxItem
-                  src={
-                    selectedProduct.productImages[2]
-                      ? selectedProduct.productImages[2]
-                      : selectedProduct.productImages[0]
-                  }
-                ></S.LeftSubBoxItem>
-                <S.LeftSubBoxItem
-                  src={
-                    selectedProduct.productImages[2]
-                      ? selectedProduct.productImages[2]
-                      : selectedProduct.productImages[0]
-                  }
-                ></S.LeftSubBoxItem>
+                {selectedProduct.productImages.map((img, idx) => (
+                  <S.LeftSubBoxItem key={idx} src={img}></S.LeftSubBoxItem>
+                ))}
               </S.LeftSubBox>
             </S.LeftContainer>
             <S.RightContainer>
@@ -112,7 +110,6 @@ function ProductDetailPage() {
               </S.RightPurchaseButton>
             </S.RightContainer>
           </S.TopContainer>
-
           <S.BottomContainer>
             <DetailBox></DetailBox>
           </S.BottomContainer>

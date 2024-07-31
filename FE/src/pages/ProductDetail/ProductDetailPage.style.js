@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Slider from "react-slick";
 
 const Container = styled.div`
   /* height: 80vh; */
@@ -25,7 +26,7 @@ const LeftContainer = styled.div`
   flex-direction: column;
   /* justify-content: center; */
   /* align-items: center; */
-  gap: 5vh;
+  gap: 4vh;
 `;
 const RightContainer = styled.div`
   width: 46%;
@@ -39,20 +40,33 @@ const RightContainer = styled.div`
 const LeftMainImage = styled.img`
   width: 90%;
   /* width: 500px; */
-  height: 65%;
+  height: 60%;
   border: 1px solid #24c7c4;
 `;
+// const LeftSubBox = styled(Slider)`
+//   width: 90%;
+//   height: 20%;
+//   display: flex;
+//   justify-content: flex-start;
+//   align-items: center;
+//   gap: 10px;
+//   .slick-slide {
+//     padding-right: 10px; /* 슬라이더 아이템 간의 간격 설정 */
+//   }
+//   /* overflow-x: auto; */
+// `;
 const LeftSubBox = styled.div`
-  width: 100%;
-  height: 15%;
+  width: 90%;
+  height: 20%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+  overflow-x: auto;
 `;
 const LeftSubBoxItem = styled.img`
-  width: 23%;
-  height: 90%;
+  width: 30%;
+  height: 80%;
   border: 1px solid #24c7c4;
 `;
 
