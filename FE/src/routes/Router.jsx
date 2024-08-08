@@ -29,6 +29,7 @@ import {
   PurchaseHistoryPage,
   ProductModifyPage,
   ProductRegisterPage,
+  AfterLoginPage,
 } from "../pages";
 
 const Router = [
@@ -99,6 +100,7 @@ const Router = [
         element: <ProductRegisterPage />,
       },
       { path: "maderMyPage/product/modify", element: <ProductModifyPage /> },
+      { path: "/api/v1/auth/buyer/:provider", element: <AfterLoginPage /> },
     ],
     errorElement: <NotFoundPage />,
   },

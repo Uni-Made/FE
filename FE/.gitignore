@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# FCM config files
+firebaseConfig.js
+firebase-messaging-sw.js
+
+package-lock.json
