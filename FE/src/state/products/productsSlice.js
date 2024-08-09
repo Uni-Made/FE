@@ -5,11 +5,26 @@ import { defaultInstance, authInstance } from "../../api/axiosInstance";
 // api 비동기 서버 통신 함수 만들고 extrareducer로 정의
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async () => {
-    const pageSize = 10;
-    const response = await defaultInstance.get(
-      `/api/products/list?pageSize=${pageSize}`
-    );
+  async ({ cursor, sort, keyword, category }) => {
+    console.log(cursor, sort, keyword, category);
+    const pageSize = 12;
+    let url = `/api/products/list?pageSize=${pageSize}`;
+
+    // 조건부로 URL 파라미터 추가
+    if (cursor) {
+      url += `&cursor=${cursor}`;
+    }
+    if (sort) {
+      url += `&sort=${sort}`;
+    }
+    if (keyword) {
+      url += `&keyword=${keyword}`;
+    }
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    const response = await authInstance.get(url);
     // const response = await authInstance.get(
     //   `/api/products/list?pageSize=${pageSize}`
     // );
@@ -24,6 +39,10 @@ const calculateTotalProductsCount = (items) => {
 
 const initialState = {
   products: [], // product 객체의 배열
+  nextCursor: null,
+  isLast: false,
+  selectedCategories: [], // TODO: 예윤님이 말해주시면 수정 08-07
+  searchKeyword: null, //
   filteredProducts: [], // product 검색 결과 배열
   isFiltered: false, // 한 번이라도 검색되면 true
   totalCount: 0,
@@ -62,6 +81,13 @@ const productsSlice = createSlice({
       state.filteredProducts = filteredProducts;
       state.isFiltered = true;
     },
+
+    selectCategory: (state, action) => {
+      state.selectedCategories = action.payload;
+    },
+    setSearchKeyword: (state, action) => {
+      state.searchKeyword = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // 프로미스 로딩 (pending) 시점
@@ -76,6 +102,8 @@ const productsSlice = createSlice({
     builder.addCase(getProducts.fulfilled, (state, action) => {
       console.log(action.payload);
       state.products = action.payload.productsList;
+      state.nextCursor = action.payload.nextCursor;
+      state.isLast = action.payload.isLast;
 
       state.getProductsStatus = "fulfilled";
     });
@@ -90,6 +118,11 @@ const productsSlice = createSlice({
   },
 });
 
-export const { getTotalProductsCount, sortProducts, searchKeywordProducts } =
-  productsSlice.actions;
+export const {
+  getTotalProductsCount,
+  sortProducts,
+  searchKeywordProducts,
+  selectCategory,
+  setSearchKeyword,
+} = productsSlice.actions;
 export default productsSlice.reducer; // 리듀서를 통째로 반환해야 emutable한 기능 사용가능
