@@ -1,6 +1,19 @@
 import styled from "styled-components";
 import Navbar from "../../ProductList/components/Navbar";
 import { useNavigate } from "react-router-dom";
+import { authInstance } from "../../../api/axiosInstance";
+import { useEffect, useState } from "react";
+
+// 공지 다 가져오는 api 함수
+async function getNotices() {
+  try {
+    const result = await authInstance.get("/admin/notice");
+    console.log(result);
+    return result.data.result;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // Styled components
 const Container = styled.div`
@@ -77,38 +90,23 @@ const PageButton = styled.button`
 
 const Board = () => {
   const navigate = useNavigate();
+  const [notices, setNotices] = useState([]);
+  console.log(notices);
+
   const handleClickItem = (noticeId) => {
     console.log(noticeId);
     navigate("/notice/" + noticeId);
   };
 
-  // 테스트용
-  const noticeItems = [
-    {
-      noticeId: 1,
-      title: "[공지] 입금 관련 안내",
-      createdAt: "2022-07-14",
-      viewCount: 3,
-    },
-    {
-      noticeId: 2,
-      title: "[공지] 입금 관련 안내",
-      createdAt: "2022-07-14",
-      viewCount: 3,
-    },
-    {
-      noticeId: 3,
-      title: "[공지] 입금 관련 안내",
-      createdAt: "2022-07-14",
-      viewCount: 10,
-    },
-    {
-      noticeId: 4,
-      title: "[공지] 입금 관련 안내",
-      createdAt: "2022-07-14",
-      viewCount: 15,
-    },
-  ];
+  useEffect(() => {
+    // getNotices 함수를 통해서 받아온 정보를 "상태로 저장하기 위한" async 함수
+    async function fetchGetNotices(params) {
+      const result = await getNotices(params);
+      setNotices(result);
+    }
+    fetchGetNotices();
+  }, []);
+
   return (
     <Container>
       <SearchBar placeholder="검색어를 입력하세요" />
@@ -125,18 +123,19 @@ const Board = () => {
           </TableHeaderRow>
         </thead>
         <tbody>
-          {noticeItems.map((item) => {
-            return (
-              <TableRow
-                key={item.noticeId}
-                onClick={() => handleClickItem(item.noticeId)}
-              >
-                <TableCell>{item.title}</TableCell>
-                <TableCell>{item.createdAt}</TableCell>
-                <TableCell>{item.viewCount}</TableCell>
-              </TableRow>
-            );
-          })}
+          {notices.content &&
+            notices.content.map((item) => {
+              return (
+                <TableRow
+                  key={item.id}
+                  onClick={() => handleClickItem(item.id)}
+                >
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>{item.createdAt.split("T")[0]}</TableCell>
+                  <TableCell>{item.viewCount}</TableCell>
+                </TableRow>
+              );
+            })}
         </tbody>
       </Table>
       <Pagination>
@@ -145,7 +144,7 @@ const Board = () => {
         <PageButton>2</PageButton>
         <PageButton>3</PageButton>
         <span> ... </span>
-        <PageButton>68</PageButton>
+        <PageButton>10</PageButton>
         <PageButton>Next →</PageButton>
       </Pagination>
     </Container>

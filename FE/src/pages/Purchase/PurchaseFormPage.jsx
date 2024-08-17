@@ -9,12 +9,14 @@ import {
   setPurchaseLastInfo,
 } from "../../state/purchase/purchaseSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultInstance } from "./../../api/axiosInstance";
+import { authInstance, defaultInstance } from "./../../api/axiosInstance";
+import DaumPostcode from "react-daum-postcode";
+import AddressBox from "./components/AddressBox";
+import AddressModal from "./components/AddressModal";
 
 function PurchaseFormPage() {
   const navigate = useNavigate();
   const { productId } = useParams();
-  console.log(productId);
   const {
     register,
     handleSubmit,
@@ -37,7 +39,6 @@ function PurchaseFormPage() {
       detailAddress: data.detailAddress,
       isAgree: data.privacyAgreement,
     };
-    console.log(selectedOptions);
     const purchaseTotalRequestData = {
       purchaseForm: purchaseFormData,
       orderOptions: selectedOptions.map((option, i) => {
@@ -49,8 +50,8 @@ function PurchaseFormPage() {
     };
     console.log(purchaseTotalRequestData);
 
-    const response = await defaultInstance.post(
-      "/api/orders/" + "1/" + productId, //TODO: 일단 buyer id는 1로 고정해서 사용
+    const response = await authInstance.post(
+      "/buyer/orders/" + productId,
       purchaseTotalRequestData
     );
     console.log(response.data.result);
@@ -71,6 +72,22 @@ function PurchaseFormPage() {
   const handleRightBtnClick = (e) => {
     e.preventDefault();
     setIsLeftBtnSelected(false);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nowAddress, setNowAddress] = useState("");
+  const handleComplete = (data) => {
+    console.log(data.address); // 선택된 주소 확인
+    setNowAddress(data.address); // 선택된 주소 처리
+    setIsModalOpen(false); // 모달 닫기
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -128,25 +145,49 @@ function PurchaseFormPage() {
             오프라인 수령
           </S.MainToggleBoxButton>
         </S.MainToggleBox>
+        {isLeftBtnSelected ? (
+          <>
+            {isModalOpen && (
+              <AddressModal onClose={closeModal}>
+                <DaumPostcode
+                  onComplete={(data) => {
+                    console.log("data", data);
+                    handleComplete(data);
+                    closeModal();
+                  }}
+                />
+              </AddressModal>
+            )}
+            <PurchaseInput
+              onClick={openModal}
+              placeholder="주소 ex) 경기 성남시 분당구 판교역로 166"
+              readOnly
+              value={nowAddress}
+              {...register("address", {
+                required: "주소는 필수 입력 항목입니다.",
+              })}
+            />
+            {errors.address && (
+              <S.MainErrorText>{errors.address.message}</S.MainErrorText>
+            )}
 
-        <PurchaseInput
-          placeholder="주소 ex) 경기도 안산시 단원구 중앙대로 918"
-          {...register("address", {
-            required: "주소는 필수 입력 항목입니다.",
-          })}
-        />
-        {errors.address && (
-          <S.MainErrorText>{errors.address.message}</S.MainErrorText>
-        )}
-
-        <PurchaseInput
-          placeholder="상세주소 ex) 푸르지오 3차 403동 604호"
-          {...register("detailAddress", {
-            required: "상세주소는 필수 입력 항목입니다.",
-          })}
-        />
-        {errors.detailAddress && (
-          <S.MainErrorText>{errors.detailAddress.message}</S.MainErrorText>
+            <PurchaseInput
+              placeholder="상세주소 ex) 푸르지오 3차 403동 604호"
+              {...register("detailAddress", {
+                required: "상세주소는 필수 입력 항목입니다.",
+              })}
+            />
+            {errors.detailAddress && (
+              <S.MainErrorText>{errors.detailAddress.message}</S.MainErrorText>
+            )}
+          </>
+        ) : (
+          <>
+            <S.MainPickUpBox>
+              <div>수령일자 : {"24/08/25"}</div> <br></br>{" "}
+              <div>수령장소 : {"상명대"}</div>
+            </S.MainPickUpBox>
+          </>
         )}
 
         <S.PrivacyBox>

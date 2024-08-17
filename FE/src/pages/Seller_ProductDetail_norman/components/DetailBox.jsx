@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import DetailReviewBox from "./DetailBox_components/DetailReviewBox";
-import DetailQnABox from "./DetailBox_components/DetailQnABox";
-import DetailInfoBox from "./DetailBox_components/DetailInfoBox";
+DetailInfoBox;
+import DetailReviewBox from "./../../ProductDetail/components/DetailBox_components/DetailReviewBox";
+import DetailInfoBox from "./../../ProductDetail/components/DetailBox_components/DetailInfoBox";
+import QnaManageBox from "./QnaManageBox";
 
 const Container = styled.div`
   width: 100%;
@@ -68,7 +69,7 @@ const DetailBox = () => {
       <Content>
         {activeTab === "details" && <DetailInfoBox></DetailInfoBox>}
         {activeTab === "review" && <DetailReviewBox></DetailReviewBox>}
-        {activeTab === "qa" && <DetailQnABox></DetailQnABox>}
+        {activeTab === "qa" && <QnaManageBox></QnaManageBox>}
       </Content>
     </Container>
   );

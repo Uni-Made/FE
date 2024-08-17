@@ -12,7 +12,7 @@ import {
 } from "../../../state/purchase/purchaseSlice";
 
 const Container = styled.div`
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 `;
 
@@ -27,6 +27,11 @@ const OptionCard = styled(Box)`
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+
+  span {
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const QuantityContainer = styled.div`
@@ -34,17 +39,17 @@ const QuantityContainer = styled.div`
   align-items: center;
 `;
 
-const AmountText = styled(Typography)`
+const AmountText = styled.p`
   margin: 0 10px;
-  font-size: 1.1rem;
+  font-size: 20px;
   width: 40px;
   text-align: center;
 `;
 
-const OptionText = styled(Typography)`
+const OptionText = styled.p`
   flex: 1;
   margin-left: 20px;
-  font-size: 1.1rem;
+  font-size: 20px;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -71,12 +76,15 @@ const ProductOption = ({
           <Add />
         </StyledIconButton>
       </QuantityContainer>
+
       <OptionText>
         {option.values.map((optionItem) => (
           <>{optionItem + " "}</>
         ))}
-        , {option.price}원
+        &nbsp; &nbsp;
+        {new Intl.NumberFormat("ko-KR").format(option.price)}원
       </OptionText>
+
       <StyledIconButton onClick={() => handleRemove(option.optionId)}>
         <Close />
       </StyledIconButton>

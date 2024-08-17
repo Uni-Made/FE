@@ -4,40 +4,10 @@ import Slider from "react-slick";
 const Container = styled.div`
   /* height: 80vh; */
   width: 80vw;
-  margin-bottom: 20px;
-
-  /* 전체 스크롤바 스타일을 지정합니다 */
-  ::-webkit-scrollbar {
-    width: 12px; /* 세로 스크롤바 너비 */
-    height: 12px; /* 가로 스크롤바 높이 */
-  }
-
-  /* 스크롤바 트랙을 스타일링합니다 */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; /* 스크롤 트랙 색상 */
-    border-radius: 10px; /* 둥근 모서리 적용 */
-  }
-
-  /* 스크롤바 손잡이를 스타일링합니다 */
-  ::-webkit-scrollbar-thumb {
-    background: #888; /* 손잡이 색상 */
-    border-radius: 10px; /* 둥근 모서리 적용 */
-    border: 3px solid #f1f1f1; /* 손잡이 주변 여백 */
-  }
-
-  /* 스크롤바 손잡이 마우스 오버 시 스타일 */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 손잡이 색상 변경 */
-  }
-
-  /* 스크롤바 화살표 버튼을 제거합니다 */
-  ::-webkit-scrollbar-button {
-    display: none; /* 화살표 버튼 숨김 */
-  }
 `;
 
 const TopContainer = styled.div`
-  height: 100vh;
+  height: 110vh;
   display: flex;
   justify-content: center;
   /* align-items: center; */
@@ -55,23 +25,27 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
-  align-items: center;
+  /* align-items: center; */
   gap: 4vh;
 `;
+// rightContainer height 100 -> 85로 바꿈
 const RightContainer = styled.div`
   width: 46%;
-  height: 100%;
+  height: 85%;
   display: flex;
   flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
 `;
 
 const LeftMainImage = styled.img`
   width: 90%;
+  /* width: 500px; */
   height: 60%;
-  /* object-fit: cover;  */
+  border: 1px solid #24c7c4;
 `;
 const LeftSubBox = styled(Slider)`
-  width: 80%;
+  width: 90%;
   height: 20%;
   gap: 10px;
 
@@ -80,6 +54,7 @@ const LeftSubBox = styled(Slider)`
   }
 
   &:slick-list {
+    /* width: 100%; */
     overflow: visible; /* 슬라이더 overflow 설정 */
     display: flex;
     justify-content: flex-start; /* 슬라이더 아이템들을 왼쪽 정렬 */
@@ -90,25 +65,28 @@ const LeftSubBox = styled(Slider)`
     align-items: center;
   }
 `;
+// const LeftSubBox = styled.div`
+//   width: 90%;
+//   height: 20%;
+//   display: flex;
+//   justify-content: flex-start;
+//   align-items: center;
+//   gap: 10px;
+//   overflow-x: auto;
+// `;
 const LeftSubBoxItem = styled.img`
-  height: 20vh; // 크기 고정
-  object-fit: cover; /* 이미지 비율을 유지하면서 크기에 맞게 잘라냄 */
+  width: 30%;
+  height: 80%;
+  border: 1px solid #24c7c4;
 `;
 
 const RightHeader = styled.div`
   height: 5%;
-  font-size: 26px;
-
-  div {
-    width: 30%;
-    &:hover {
-      cursor: pointer;
-    }
-  }
+  font-size: 28px;
 `;
 const RightProductName = styled.div`
   height: 10%;
-  font-size: 55px;
+  font-size: 60px;
   font-weight: 700;
   margin-bottom: 20px;
 `;
@@ -116,14 +94,14 @@ const RightDetailBox = styled.div`
   height: 8%;
   display: flex;
   justify-content: space-between;
-  font-size: 30px;
+  font-size: 38px;
   align-items: baseline;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 const RightDetailBoxItem = styled.div``;
 
 const RightOptionBox = styled.div`
-  height: 35%;
+  height: 30%;
   overflow-y: auto;
 `;
 const RightOptionBoxItem = styled.div``;
@@ -140,12 +118,7 @@ const RightPriceBox = styled.div`
     }
   }
 `;
-const RightPriceBoxItem = styled.div`
-  span {
-    position: relative;
-    top: 6px;
-  }
-`;
+const RightPriceBoxItem = styled.div``;
 
 const RightPurchaseButton = styled.button`
   height: 10%;
@@ -158,6 +131,7 @@ const RightPurchaseButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   outline: none;
+  margin-bottom: 20px;
 
   &:hover {
     background-color: #3cb8b8;

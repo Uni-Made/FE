@@ -5,16 +5,17 @@ import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import Navbar from "../ProductList/components/Navbar";
 import Modal from "./components/Modal";
 import DetailBox from "./components/DetailBox";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProductDetails,
   setSelectedProduct,
 } from "../../state/purchase/purchaseSlice";
-import { defaultInstance } from "../../api/axiosInstance";
+import { defaultInstance, authInstance } from "../../api/axiosInstance";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+import DetailReviewBox from "./components/DetailBox_components/DetailReviewBox";
 
 function ProductDetailPage() {
   const [showModal, setShowModal] = useState(false);
@@ -22,6 +23,7 @@ function ProductDetailPage() {
   const { productId } = useParams();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { selectedProduct, getProductDetailsStatus, totalPrice } = useSelector(
     (state) => state.purchase
     // {return state.purchase;}와 똑같음
@@ -33,12 +35,10 @@ function ProductDetailPage() {
     infinite: false,
     slidesToShow: 3,
     swipeToSlide: true,
-    afterChange: function (index) {
-      console.log(`Slider Changed to: ${index + 1}`);
-    },
     autoplay: true,
     autoplaySpeed: 2000,
     pauseOnHover: true,
+    cssEase: "linear",
   };
 
   // modal 제어 함수들
@@ -46,8 +46,8 @@ function ProductDetailPage() {
   const handleCloseModal = () => setShowModal(false);
 
   const handleHeartClick = async () => {
-    const result = await defaultInstance.post(
-      "/api/products/favorite/" + productId
+    const result = await authInstance.post(
+      "/buyer/product/favorite/" + productId
     );
     if (result.data.message == "좋아요 성공") {
       setIsHeartFilled(true);
@@ -56,10 +56,14 @@ function ProductDetailPage() {
     }
   };
 
+  const handleSellerNameClick = () => {
+    navigate(`/maderMyPage`);
+  };
+
   useEffect(() => {
     console.log("getproductDetail호출", productId);
     dispatch(getProductDetails(productId));
-  }, [dispatch, productId, getProductDetails]);
+  }, [productId, getProductDetails]);
 
   return (
     <>
@@ -71,14 +75,18 @@ function ProductDetailPage() {
               <S.LeftMainImage
                 src={selectedProduct.productImages[0]}
               ></S.LeftMainImage>
-              <S.LeftSubBox>
+              <S.LeftSubBox {...settings}>
                 {selectedProduct.productImages.map((img, idx) => (
                   <S.LeftSubBoxItem key={idx} src={img}></S.LeftSubBoxItem>
                 ))}
               </S.LeftSubBox>
             </S.LeftContainer>
             <S.RightContainer>
-              <S.RightHeader>UNI-MADE</S.RightHeader>
+              <S.RightHeader>
+                <div onClick={handleSellerNameClick}>
+                  {selectedProduct.sellerName}
+                </div>
+              </S.RightHeader>
               <S.RightProductName>
                 {selectedProduct.productName}
               </S.RightProductName>
@@ -87,7 +95,8 @@ function ProductDetailPage() {
                   ~{selectedProduct.deadline}
                 </S.RightDetailBoxItem>
                 <S.RightDetailBoxItem>
-                  {selectedProduct.price}원
+                  {new Intl.NumberFormat("ko-KR").format(selectedProduct.price)}
+                  원
                 </S.RightDetailBoxItem>
               </S.RightDetailBox>
               <S.RightOptionBox>
@@ -97,13 +106,23 @@ function ProductDetailPage() {
                 <S.RightPriceBoxItem onClick={handleHeartClick}>
                   <span>
                     {isHeartFilled ? (
-                      <IoMdHeart style={{ color: "red" }} />
+                      <IoMdHeart
+                        style={{
+                          color: "#4cd5d5",
+                        }}
+                      />
                     ) : (
-                      <IoMdHeartEmpty />
+                      <IoMdHeartEmpty
+                        style={{
+                          strokeWidth: "0.1", // 선의 두께를 변경
+                        }}
+                      />
                     )}
                   </span>
                 </S.RightPriceBoxItem>
-                <S.RightPriceBoxItem>총 {totalPrice}원</S.RightPriceBoxItem>
+                <S.RightPriceBoxItem>
+                  총 {new Intl.NumberFormat("ko-KR").format(totalPrice)}원
+                </S.RightPriceBoxItem>
               </S.RightPriceBox>
               <S.RightPurchaseButton onClick={handleOpenModal}>
                 구매

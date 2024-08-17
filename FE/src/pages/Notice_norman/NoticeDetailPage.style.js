@@ -36,6 +36,7 @@ const MainNoticeBodyBox = styled.div`
   gap: 20px;
   padding: 20px;
   padding-top: 35px;
+  overflow-y: auto;
 `;
 
 const ReturnButton = styled.button`
@@ -48,10 +49,15 @@ const ReturnButton = styled.button`
   padding: 12px;
   color: white;
   font-size: 18px;
-
   background: #2c2c2c;
   border: 1px solid #2c2c2c;
   border-radius: 8px;
+  margin-top: 25px;
+
+  &:hover {
+    cursor: pointer;
+    background: #3c3c3c;
+  }
 `;
 
 export {

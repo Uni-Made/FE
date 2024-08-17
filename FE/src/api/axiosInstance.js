@@ -31,7 +31,7 @@ const axiosAuthApi = (url, options = {}) => {
       // 로컬 스토리지에서 토큰 가져오기
       const token =
         localStorage.getItem("accessToken") ||
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1bmltYWRlQGdtYWlsLmNvbSIsImlkIjoidW5pbWFkZUBnbWFpbC5jb20iLCJyb2xlIjoiU0VMTEVSIiwiaWF0IjoxNzIzMDAwNjUzLCJleHAiOjE3MjU1OTI2NTN9.S8TCT1b3srV_j-uxiT4gyNZzVrEOkY4pH0j1nT90ZZk";
+        import.meta.env.VITE_UNIMADE_ADMIN_API_KEY;
       // 토큰이 있으면 Authorization 헤더에 추가
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
