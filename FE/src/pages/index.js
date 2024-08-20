@@ -30,3 +30,6 @@ export { default as BuyerInfoModifyPage } from "./Buyer_InfoModify_woong/BuyerIn
 export { default as PurchaseHistoryPage } from "./Buyer_PurchaseHistory_woong/PurchaseHistoryPage";
 export { default as ProductModifyPage } from "./Seller_ProductModify_woong/ProductModifyPage";
 export { default as ProductRegisterPage } from "./Seller_ProductRegister_woong/ProductRegisterPage";
+
+export { default as SocialSignUpPage } from "./SignUp/SocialSignUpPage";
+export { default as SignUpBuyerPage } from "./SignUp/SignUpBuyerPage";

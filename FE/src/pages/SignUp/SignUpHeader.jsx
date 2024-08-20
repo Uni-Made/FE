@@ -138,7 +138,7 @@ const Header = () => {
         </SearchButton>
       </SearchInputContainer>
       <NavLinks>
-        <NavLink to="/login">Login</NavLink>
+        <NavLink to="/loginSelect">Login</NavLink>
         <NavLink to="/signUpSelect">Sign up</NavLink>
       </NavLinks>
     </HeaderContainer>

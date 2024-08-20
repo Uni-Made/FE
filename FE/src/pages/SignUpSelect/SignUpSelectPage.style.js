@@ -30,8 +30,6 @@ export const Text = styled.p`
   line-height: 48.41px;
   text-align: center;
   width: 100%;
-  /* 미디어 쿼리 추가 */
-
   @media (max-width: 768px) {
     font-size: 34px; 
   }
@@ -58,10 +56,6 @@ const BaseButton = styled.button`
   cursor: pointer;
   font-size: 30px;
 
-  &:hover {
-    opacity: 0.7;
-  }
-
   &:active {
     opacity: 0.5;
   }
@@ -82,11 +76,21 @@ export const SellerButton = styled(BaseButton)`
   & > span {
     font-weight: bold;
   }
+  &:hover{
+    background-color: white;
+    color: #FF0099;
+    border: 1.5px solid #FF0099;
+  }
 `;
 
 export const BuyerButton = styled(BaseButton)`
   background-color: #00DDDD;
   & > span {
     font-weight: bold;
+  }
+  &:hover{
+    background-color: white;
+    color: #00DDDD;
+    border: 1.5px solid #00DDDD;
   }
 `;

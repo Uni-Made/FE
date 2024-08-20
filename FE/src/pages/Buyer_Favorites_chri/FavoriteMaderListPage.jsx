@@ -1,81 +1,152 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { authInstance } from '../../api/axiosInstance'; // Axios 인스턴스 가져오기
+import { authInstance } from '../../api/axiosInstance'; 
 import FavoriteHeader from './components/FavoriteHeader';
 import MaderCard from './components/MaderCard';
 import FavoriteFooter from './components/FavoriteFooter';
 
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 88vh;
+  width: 70%;
+  min-width: 900px;
+`;
+
+const FooterWrapper = styled.div`
+  width: 100%;
+`;
+
 const Container = styled.div`
-  padding: 16px;
+  padding: 10px;
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 50%;
+  flex: 1;
+  max-height: 40rem;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 300px; /* 기본 높이 설정 */
 `;
 
-const HeaderAndTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+const TitleContainer = styled.div`
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
 `;
 
 const Title = styled.h1`
   color: #00DDDD;
-  text-align: left;
+  font-size: 2.5rem;
   margin: 0;
+  text-align: left;
+  margin-bottom: 15px;
 `;
 
 const MaderGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4개의 열로 설정 */
-  gap: 10px;
-  padding: 20px 0 0 0;
-  flex: 1; /* 남은 공간을 모두 차지 */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
-  overflow-x: hidden; /* 가로 스크롤 비활성화 */
-  max-height: 55rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  flex: 1;
+  min-height: 1px;
+  padding: 0;
+`;
+
+const NoMadersMessage = styled.p`
+  margin-top: 10px;
+  color: #888;
 `;
 
 const FavoriteMaderListPage = () => {
   const [maders, setMaders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [cursor, setCursor] = useState(null);
+  const pageSize = 16;
+  const containerRef = useRef(null);
+
+  const fetchMaders = async () => {
+    if (!hasMore || loading) return;
+
+    setLoading(true);
+    try {
+      const response = await authInstance.get('/buyer/favorite-sellers', {
+        params: {
+          cursor: cursor || undefined,
+          pageSize: pageSize,
+        },
+      });
+      console.log(response);
+      const { favoriteSellers, nextCursor, isLast } = response.data.result;
+
+      const validatedMaders = favoriteSellers.map(mader => ({
+        ...mader,
+        profileImage: mader.profileImage || 'default-image-url',
+      }));
+
+      setMaders(prevMaders => [...prevMaders, ...validatedMaders]);
+      setCursor(nextCursor);
+      setHasMore(!isLast);
+    } catch (error) {
+      console.error('데이터 가져오기 오류:', error.message || error);
+      setError(error.message || '데이터 가져오기 오류');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchMaders = async () => {
-      try {
-        const response = await authInstance.get('/api/buyer/myPage');
-        console.log('API 응답:', response.data); // 전체 응답 로그
-
-        if (response.data.result && response.data.result.favoriteSellers) {
-          setMaders(response.data.result.favoriteSellers);
-        } else {
-          console.error('예상치 못한 응답 형식:', response.data);
-        }
-      } catch (error) {
-        console.error('데이터 가져오기 오류:', error.message || error);
-      }
-    };
-
-    fetchMaders();
+    fetchMaders(); 
   }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      const handleScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+          fetchMaders();
+        }
+      };
+
+      container.addEventListener('scroll', handleScroll);
+
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [hasMore, loading, cursor]);
 
   return (
     <>
       <FavoriteHeader />
-      <Container>
-        <HeaderAndTitle>
+      <PageWrapper>
+        <TitleContainer>
           <Title>찜한 메이더</Title>
-        </HeaderAndTitle>
-        <MaderGrid>
-          {maders.map(mader => (
-            <MaderCard
-              key={mader.id}
-              image={mader.profileImage} // 이미지 URL을 profileImage로 설정
-              mader={mader.name} // 메이더 이름을 name으로 설정
-            />
-          ))}
-        </MaderGrid>
-        <FavoriteFooter />
-      </Container>
+        </TitleContainer>
+        <Container ref={containerRef}>
+          {loading && <p>Loading...</p>}
+          {error && <p>Error: {error}</p>}
+          {maders.length > 0 ? (
+            <MaderGrid>
+              {maders.map(mader => (
+                <MaderCard
+                  key={mader.id}
+                  image={mader.profileImage}
+                  mader={mader.name}
+                />
+              ))}
+            </MaderGrid>
+          ) : (
+            !loading && <NoMadersMessage>찜한 상품이 없습니다.</NoMadersMessage>
+          )}
+        </Container>
+        <FooterWrapper>
+          <FavoriteFooter />
+        </FooterWrapper>
+      </PageWrapper>
     </>
   );
 }
