@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useInView } from 'react-intersection-observer'; 
+import { useNavigate } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 import MaderHomeHeader from "./components/MaderHomeHeader";
 import {
   CONTAINER,
@@ -14,9 +15,10 @@ import {
   MainContainer,
   PRODUCT_ID,
   Containersum,
-} from './SellingProductsListPage.style';
+} from "./SellingProductsListPage.style";
 
-const renderProductList = (title, products) => {
+// 상품 리스트 렌더링 컴포넌트
+const renderProductList = (title, products, handleProductClick) => {
   return (
     <SECTION_CONTAINER>
       <SECTION_TITLE>{title}</SECTION_TITLE>
@@ -25,11 +27,14 @@ const renderProductList = (title, products) => {
           <ITEM_CONTAINER key={product.productId}>
             <PRODUCT_CARD
               style={{
-                backgroundImage: product.imageUrl ? `url(${product.imageUrl})` : 'none',
-                backgroundColor: '#f0f0f0',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundImage: product.imageUrl
+                  ? `url(${product.imageUrl})`
+                  : "none",
+                backgroundColor: "#f0f0f0",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
+              onClick={() => handleProductClick(product.productId)} // 이미지 클릭 시 실행될 함수
             />
             <PRODUCT_DETAILS>
               <PRODUCT_ID>{product.productId}</PRODUCT_ID>
@@ -44,22 +49,25 @@ const renderProductList = (title, products) => {
 };
 
 const fetchProducts = async (page, setSellerData, setHasMore) => {
-  console.log('Fetching page:', page);
+  console.log("Fetching page:", page);
   try {
-    const response = await fetch(`http://15.165.185.157:8080/seller/myPage/sellingProducts?page=${page}&size=12`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json;charset=UTF-8',
-        Authorization: `Bearer ${import.meta.env.SELLER_API_TEST_KEY}`,
-      },
-    });
+    const response = await fetch(
+      `http://15.165.185.157:8080/seller/myPage/sellingProducts?page=${page}&size=12`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json;charset=UTF-8",
+          Authorization: `Bearer ${import.meta.env.VITE_SELLER_API_TEST_KEY}`,
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
-    console.log('Fetched data:', data);
+    console.log("Fetched data:", data);
 
     setSellerData((prevData) => [...prevData, ...data.content]);
 
@@ -67,18 +75,24 @@ const fetchProducts = async (page, setSellerData, setHasMore) => {
       setHasMore(false);
     }
   } catch (error) {
-    console.error('Failed to fetch data:', error);
+    console.error("Failed to fetch data:", error);
   }
 };
 
 const SellingProductsListPage = () => {
   const [sellerData, setSellerData] = useState([]);
-  const [page, setPage] = useState(0); 
-  const [hasMore, setHasMore] = useState(true); 
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView({
-    triggerOnce: false, 
-    threshold: 1.0, 
+    triggerOnce: false,
+    threshold: 1.0,
   });
+
+  const navigate = useNavigate();
+
+  const handleProductClick = (productId) => {
+    navigate(`/maderMyPage/products/selling/${productId}`);
+  };
 
   const fetchData = useCallback(async () => {
     if (hasMore) {
@@ -87,7 +101,6 @@ const SellingProductsListPage = () => {
   }, [page, hasMore]);
 
   useEffect(() => {
-    // 초기 데이터 로드
     fetchData();
   }, [fetchData]);
 
@@ -95,7 +108,7 @@ const SellingProductsListPage = () => {
     if (inView && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-  }, [inView, hasMore]); // inView와 hasMore만 의존성 배열에 포함
+  }, [inView, hasMore]);
 
   if (sellerData.length === 0) {
     return <div>Loading...</div>;
@@ -106,8 +119,8 @@ const SellingProductsListPage = () => {
       <MaderHomeHeader />
       <MainContainer>
         <CONTAINER>
-          {renderProductList('판매 중인 상품', sellerData)}
-          <div ref={ref} style={{ height: '10px' }} /> 
+          {renderProductList("판매 중인 상품", sellerData, handleProductClick)}
+          <div ref={ref} style={{ height: "10px" }} />
         </CONTAINER>
       </MainContainer>
     </Containersum>
