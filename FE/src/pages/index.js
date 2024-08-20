@@ -38,3 +38,4 @@ export { default as GoogleAfterLoginPage } from "./Login/GoogleAfterLoginPage"
 export { default as LoginSelectPage } from "./Login/LoginSelect/LoginSelectPage"
 // login 바이어(소셜)
 export { default as LoginBPage } from "./Login/LoginBPage"
+export { default as SignUpBuyerPage } from "./SignUp/SignUpBuyerPage";

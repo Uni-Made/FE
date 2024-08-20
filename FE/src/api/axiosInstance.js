@@ -18,8 +18,7 @@ const axiosApi = (url) => {
 
 // post, delete등 api요청 시 인증값이 필요한 경우
 const axiosAuthApi = (url, options) => {
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1bmltYWRlQGdtYWlsLmNvbSIsImlkIjoidW5pbWFkZUBnbWFpbC5jb20iLCJyb2xlIjoiU0VMTEVSIiwiaWF0IjoxNzIyOTIzMzQ2LCJleHAiOjE3MjU1MTUzNDZ9.FEeKzZBLP90UZwxfOKV2fOL-sGN7OZwPQvwbQ9wwjwc";
+  const token = import.meta.env.VITE_AXIOSAUTH_TOKEN;
   const instance = axios.create({
     baseURL: url,
     headers: {
@@ -30,5 +29,18 @@ const axiosAuthApi = (url, options) => {
   return instance;
 };
 
+const axiosSellerApi = (url, options = {}) => {
+  const token = import.meta.env.VITE_REACT_APP_ACCESS_TOKEN;
+  const instance = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    ...options,
+  });
+  return instance;
+};
+
 export const defaultInstance = axiosApi(BASE_URL);
 export const authInstance = axiosAuthApi(BASE_URL);
+export const sellerInstance = axiosSellerApi(BASE_URL);
