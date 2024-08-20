@@ -29,6 +29,9 @@ import {
   PurchaseHistoryPage,
   ProductModifyPage,
   ProductRegisterPage,
+
+  SocialSignUpPage,
+  SignUpBuyerPage,
 } from "../pages";
 
 const Router = [
@@ -40,6 +43,9 @@ const Router = [
       { path: "login", element: <LoginPage /> },
       { path: "signUpSelect", element: <SignUpSelectPage /> },
       { path: "signUp", element: <SignUpPage /> },
+      { path: "socialSignUpPage", element: <SocialSignUpPage /> },
+      { path: "signUpBuyerPage", element: <SignUpBuyerPage /> },
+
       { path: "defaultMyPage", element: <DefaultMyPage /> },
       { path: "maderMyPage", element: <MaderMyPage /> },
       { path: "product/list", element: <ProductListPage /> },
@@ -91,7 +97,7 @@ const Router = [
         element: <SoldoutProductDetailPage />,
       },
       {
-        path: "maderMyPage/purchase/requests",
+        path: "maderMyPage/purchase/requests/:productId",
         element: <PurchaseRequestsPage />,
       },
       {

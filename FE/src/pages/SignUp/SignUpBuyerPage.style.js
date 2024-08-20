@@ -16,7 +16,7 @@ export const NumTitle = styled.h1`
   line-height: 60px;
   width: 60px;
   text-align: center;
-  background-color: #FF0099;
+  background-color: #00DDDD;
   color: white;
   border-radius: 50%;
   margin-top: 20px;
@@ -51,7 +51,7 @@ export const InputWrapper = styled.div`
 
 
 export const ErrorMessage = styled.div`
-  color: #FF0099;
+  color:#00DDDD;
   font-size: 12px;
   text-align: left;
   min-height: 20px;
@@ -59,7 +59,7 @@ export const ErrorMessage = styled.div`
 
 
 export const Button = styled.button`
-  background-color: #FF0099;
+  background-color: #00DDDD;
   color: white;
   border: none;
   border-radius: 5px;
@@ -73,8 +73,8 @@ export const Button = styled.button`
   cursor: pointer;
   &:hover {
     background-color: white;
-    color: #FF0099;
-    border: 1.5px solid #FF0099;
+    color: #00DDDD;
+    border: 1.5px solid #00DDDD;
   }
 `;
 export const Select = styled.select`
@@ -99,7 +99,7 @@ export const ButtonInInput = styled.button`
   top: 50%;
   transform: translateY(-50%);
   padding: 5px 10px;
-  color: #FF0099;
+  color: #00DDDD;
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 10px;
@@ -137,6 +137,7 @@ export const CheckboxLabel = styled.label`
     font-size: 20px; 
   }
 `;
+
 export const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
   appearance: none;
   width: 25px;
@@ -190,11 +191,46 @@ export const Text = styled.p`
   }
 `;
 
+export const LastButton = styled.button`
+  background-color: rgba(221, 221, 221, 1);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  max-width: 350px;
+  width: 90%;
+  height: 60px;
+  font-weight: bold;
+  cursor: pointer;
+  cursor: pointer;
+  &:hover {
+    background-color: black;
+    color:white;
+  }
+`;
 export const NameGenderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 10px;
+`;
+
+export const ProviderButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  width: 90%;
+`;
+
+export const ProviderButton = styled.button`
+  width: 32%; 
+  padding: 10px 0;
+  background-color: ${(props) => (props.$isActive ? '#00DDDD' : '#e0e0e0')};
+  color: ${(props) => (props.$isActive ?  'white' : 'black')}; 
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
 `;
 
 // 약관 동의 모달 스타일
@@ -230,4 +266,3 @@ export const CloseButton = styled.button`
   font-size: 18px;
   cursor: pointer;
 `;
-

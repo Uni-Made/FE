@@ -138,8 +138,8 @@ const Header = () => {
         </SearchButton>
       </SearchInputContainer>
       <NavLinks>
-        <NavLink to="/loginSelect">Login</NavLink>
-        <NavLink to="/signUpSelect">Sign up</NavLink>
+        <NavLink to="/maderMyPage/purchase/requests">Event</NavLink>
+        <NavLink to="/defaultMyPage">My Page</NavLink>
       </NavLinks>
     </HeaderContainer>
   );
