@@ -7,13 +7,14 @@ const axiosApi = (url) => {
   const instance = axios.create({
     baseURL: url,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       // "X-CSRFToken": csrftoken,
     },
     // ...options,
   });
   return instance;
 };
+
 
 // post, delete등 api요청 시 인증값이 필요한 경우
 const axiosAuthApi = (url, options) => {
