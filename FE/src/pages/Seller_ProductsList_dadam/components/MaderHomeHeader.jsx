@@ -43,13 +43,13 @@ const TitleLink = styled(Link)`
   }
 `;
 
-
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
   height: 100%; 
 `;
+
 
 const NavLink = styled(Link)`
   padding: 0 15px; 
@@ -63,7 +63,7 @@ const NavLink = styled(Link)`
     text-decoration: underline;
   }
 
-  
+
   @media (max-width: 1200px) {
     font-size: 1.25rem;
     padding: 0 10px;
@@ -83,7 +83,7 @@ const NavLink = styled(Link)`
 
 const SearchInputContainer = styled.div`
   position: relative;
-  flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+  flex-grow: 1; 
   margin: 10px;
   display: flex;
   align-items: center;
@@ -137,8 +137,9 @@ const Header = () => {
         </SearchButton>
       </SearchInputContainer>
       <NavLinks>
-        <NavLink to="/loginSelect">Login</NavLink>
-        <NavLink to="/signUpSelect">Sign up</NavLink>
+        <NavLink to="/maderMyPage/purchase/requests">Event</NavLink>
+        <NavLink to="/defaultMyPage">My Page</NavLink>
+        <NavLink to="/">Logout</NavLink>
       </NavLinks>
     </HeaderContainer>
   );

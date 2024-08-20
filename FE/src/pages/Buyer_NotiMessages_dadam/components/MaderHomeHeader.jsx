@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-
+// 헤더 컨테이너 스타일
 const HeaderContainer = styled.header`
   background-color: #fff;
   padding: 15px; 
@@ -15,7 +15,7 @@ const HeaderContainer = styled.header`
   box-sizing: border-box;
 `;
 
-
+// 타이틀 스타일
 const TitleLink = styled(Link)`
   font-family: 'Inspiration', cursive;
   font-size: 2.5rem;
@@ -43,7 +43,7 @@ const TitleLink = styled(Link)`
   }
 `;
 
-
+// 네비게이션 링크들을 감싸는 컨테이너 스타일
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
@@ -51,6 +51,7 @@ const NavLinks = styled.div`
   height: 100%; 
 `;
 
+// 링크 스타일
 const NavLink = styled(Link)`
   padding: 0 15px; 
   text-decoration: none;
@@ -63,7 +64,7 @@ const NavLink = styled(Link)`
     text-decoration: underline;
   }
 
-  
+  /* 미디어 쿼리 추가 */
   @media (max-width: 1200px) {
     font-size: 1.25rem;
     padding: 0 10px;
@@ -80,7 +81,7 @@ const NavLink = styled(Link)`
   }
 `;
 
-
+// 검색 입력 필드 스타일
 const SearchInputContainer = styled.div`
   position: relative;
   flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
@@ -137,8 +138,9 @@ const Header = () => {
         </SearchButton>
       </SearchInputContainer>
       <NavLinks>
-        <NavLink to="/loginSelect">Login</NavLink>
-        <NavLink to="/signUpSelect">Sign up</NavLink>
+        <NavLink to="/maderMyPage/purchase/requests">Event</NavLink>
+        <NavLink to="/defaultMyPage">My Page</NavLink>
+        <NavLink to="/">Logout</NavLink>
       </NavLinks>
     </HeaderContainer>
   );

@@ -7,7 +7,7 @@ const axiosApi = (url) => {
   const instance = axios.create({
     baseURL: url,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       // "X-CSRFToken": csrftoken,
     },
     // ...options,
@@ -15,9 +15,11 @@ const axiosApi = (url) => {
   return instance;
 };
 
+
 // post, delete등 api요청 시 인증값이 필요한 경우
 const axiosAuthApi = (url, options) => {
-  const token = import.meta.env.VITE_UNIMADE_SELLER_API_KEY;
+  const token =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1bmltYWRlQGdtYWlsLmNvbSIsImlkIjoidW5pbWFkZUBnbWFpbC5jb20iLCJyb2xlIjoiU0VMTEVSIiwiaWF0IjoxNzIyOTIzMzQ2LCJleHAiOjE3MjU1MTUzNDZ9.FEeKzZBLP90UZwxfOKV2fOL-sGN7OZwPQvwbQ9wwjwc";
   const instance = axios.create({
     baseURL: url,
     headers: {
