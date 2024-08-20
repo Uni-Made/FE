@@ -29,8 +29,13 @@ import {
   PurchaseHistoryPage,
   ProductModifyPage,
   ProductRegisterPage,
-  AfterLoginPage,
   BeforeLoginPage,
+  KakaoAfterLoginPage,
+  NaverAfterLoginPage,
+  GoogleAfterLoginPage,
+  LoginSelectPage,
+  LoginBPage,
+  SignUpBuyerPage,
 } from "../pages";
 
 const Router = [
@@ -42,6 +47,9 @@ const Router = [
       { path: "login", element: <LoginPage /> },
       { path: "signUpSelect", element: <SignUpSelectPage /> },
       { path: "signUp", element: <SignUpPage /> },
+      { path: "socialSignUpPage", element: <SocialSignUpPage /> },
+      { path: "signUpBuyerPage", element: <SignUpBuyerPage /> },
+
       { path: "defaultMyPage", element: <DefaultMyPage /> },
       { path: "maderMyPage", element: <MaderMyPage /> },
       { path: "product/list", element: <ProductListPage /> },
@@ -102,7 +110,11 @@ const Router = [
       },
       { path: "maderMyPage/product/modify", element: <ProductModifyPage /> },
       { path: "/api/v1/auth/buyer/test", element: <BeforeLoginPage /> },
-      { path: "/api/v1/auth/buyer/:provider", element: <AfterLoginPage /> },
+      { path: "api/v1/auth/buyer/kakao", element: <KakaoAfterLoginPage/> },
+      { path: "api/v1/auth/buyer/naver", element: <NaverAfterLoginPage/> },
+      { path: "api/v1/auth/buyer/google", element: <GoogleAfterLoginPage/> },
+      { path: "loginselect", element: <LoginSelectPage/> },
+      { path: "loginbpage", element: <LoginBPage/> },
     ],
     errorElement: <NotFoundPage />,
   },

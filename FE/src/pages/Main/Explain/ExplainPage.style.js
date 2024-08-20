@@ -5,6 +5,7 @@ const Explain = styled.div`
     height: 200px
     /* padding: 32px 0; */
     position: relative;
+    width:100%;
     
 `;
 
@@ -22,7 +23,7 @@ const Text = styled.div`
     font-weight: 500;
     top: 55%;
     left: 36%;
-    font-size: 60px;
+    font-size: 40px;
     width: 35vw ;
     color: #D9D9D9;
     

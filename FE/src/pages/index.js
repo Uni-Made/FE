@@ -30,6 +30,14 @@ export { default as BuyerInfoModifyPage } from "./Buyer_InfoModify_woong/BuyerIn
 export { default as PurchaseHistoryPage } from "./Buyer_PurchaseHistory_woong/PurchaseHistoryPage";
 export { default as ProductModifyPage } from "./Seller_ProductModify_woong/ProductModifyPage";
 export { default as ProductRegisterPage } from "./Seller_ProductRegister_woong/ProductRegisterPage";
-
 export { default as BeforeLoginPage } from "./Seller_ProductDetail_norman/BeforeLoginPage";
 export { default as AfterLoginPage } from "./Seller_ProductDetail_norman/AfterLoginPage";
+// login 부분 소셜 로그인
+export { default as KakaoAfterLoginPage } from "./Login/KakaoAfterLoginPage"
+export { default as NaverAfterLoginPage } from "./Login/NaverAfterLoginPage"
+export { default as GoogleAfterLoginPage } from "./Login/GoogleAfterLoginPage"
+// login 셀렉트 부분
+export { default as LoginSelectPage } from "./Login/LoginSelect/LoginSelectPage"
+// login 바이어(소셜)
+export { default as LoginBPage } from "./Login/LoginBPage"
+export { default as SignUpBuyerPage } from "./SignUp/SignUpBuyerPage";

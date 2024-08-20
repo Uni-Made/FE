@@ -7,13 +7,14 @@ const axiosApi = (url) => {
   const instance = axios.create({
     baseURL: url,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       // "X-CSRFToken": csrftoken,
     },
     // ...options,
   });
   return instance;
 };
+
 
 // post, delete등 api요청 시 인증값이 필요한 경우
 // options를 default 값 {}로 정의해야 오류 피할 수 있음
@@ -45,5 +46,18 @@ const axiosAuthApi = (url, options = {}) => {
   return instance;
 };
 
+const axiosSellerApi = (url, options = {}) => {
+  const token = import.meta.env.VITE_REACT_APP_ACCESS_TOKEN;
+  const instance = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    ...options,
+  });
+  return instance;
+};
+
 export const defaultInstance = axiosApi(BASE_URL);
 export const authInstance = axiosAuthApi(BASE_URL);
+export const sellerInstance = axiosSellerApi(BASE_URL);

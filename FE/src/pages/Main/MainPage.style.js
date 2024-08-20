@@ -1,26 +1,49 @@
 import styled from "styled-components";
 
+
+
+const Container = styled.div`
+  overflow-x: hidden; 
+  width: 100%;
+  max-width: 100%;
+`;
+
 const PageContainer = styled.div`
     margin: 0 auto;
     /* padding: 32px 0; */
     position: relative;
-    
 `;
+
+
 
 const Mainp = styled.img`
 //   height: 980px ;
   width: 100%;
+  max-width: 100%; 
+  
   
 `;
 
 const MainTextBox = styled.div`
     position: absolute;
     top: 25%;
-    left: 45%;
+    left: 44%;
     transform: translate ( -50% , -50% );
     font-size: 60px;
     color: #ffffff;
     text-align: center;
+
+    @media (max-width: 1400px) {
+    font-size: 50px;
+    top: 25%;
+    left: 42%;
+  }
+
+  @media (max-width: 900px) {
+    font-size: 30px;
+    top: 25s%;
+    left: 40%;
+  }
 `;
   
 const MainTextEv = styled.span`
@@ -33,8 +56,8 @@ const MainTextMd = styled.span`
 
 const MadeLogo = styled.img`
     position: absolute;
-    top: 33%;
-    left: 38%;
+    top: 35%;
+    left: 37%;
     height: auto ;
     width: 30vw ;
 `;
@@ -47,6 +70,15 @@ const About = styled.div`
     color: #ffffff;
     text-align: center;
     font-weight: 700;
+    
+    @media (max-width: 1400px) {
+    font-size: 50px;
+    left: 42%;
+  }
+    @media (max-width: 900px) {
+    font-size: 30px;
+    left: 40%;
+  }
 `;
 
 const TextBox = styled.div`
@@ -58,6 +90,13 @@ const TextBox = styled.div`
     font-weight: 600;
     /* height: 100px; */
     display: block;
+
+    @media (max-width: 1400px) {
+    font-size: 50px;
+  }
+    @media (max-width: 900px) {
+    font-size: 30px;
+  }
 `;
 
 const TextSe = styled.span`
@@ -71,60 +110,26 @@ const MainGoods = styled.div`
     color: #000000; 
     font-size: 40px;
     margin: 0 0 50px 0;
+    
+    @media (max-width: 1400px) {
+    font-size: 25px;
+  }
+    @media (max-width: 900px) {
+    font-size: 15px;
+  }
 `;
 
-//   .explain {
-//     position: absolute;
-//     top: 60%;
-//     left: 53%;
-//     font-size: 80px;
-//     color: #ffffff;
-//     text-align: center;
-//     font-weight: 700;
-//   }
-  
-//   .movies-container {
-//     display: flex;
-//     flex-wrap: wrap;
-//     justify-content: center;
-//   }
+const MainList = styled.div`
+    color: #000000;
+    text-align: center;
+`;
 
-  
-//   .www {
-//     text-align: center;
-//     color: #000000; 
-//     font-size: 40px;
-//     margin: 0 0 50px 0;
-//   }
-  
-//   .movie-container {
-//     width: 250px;
-//     margin: 16px;
-//     background-color: #373b69;
-//     color: white;
-//     border-radius: 5px;
-//     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
-//   }
-  
-//   .movie-container img {
-//     max-width: 100%;
-//   }
-  
-//   .movie-info {
-//     display: flex;
-//     padding: 20px;
-//     justify-content: space-between;
-//     align-items: center;
-    
-//   }
-  
-//   .movie-info h4 {
-//     margin: 0;
-//   }
-  
-//   .movie-info span {
-//     margin-left: 3px;
-//   }
+const List = styled.div`
+    text-align:center
+    color: #000000;
+    font-size: 40px;
+    display: block;
+`;
 
 export {
     PageContainer,
@@ -138,4 +143,9 @@ export {
     TextSe,
     TextBl,
     MainGoods,
+    MainList,
+    List,
+    Container,
+    
+
 };

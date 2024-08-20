@@ -165,26 +165,85 @@ export const Sin = styled.button`
 `;
 
 export const SoLogInContainer = styled.div`
-  width: 35vw;
-  display: flex;
+// //   width: 35vw;
+//   display: flex;
   justify-content: space-around;
   margin: 20px 0;
   
 `;
 
-export const SocialButton = styled.div`
-  width: 10vw;
-  height: 10vw;
+export const SocialButtonK = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
-  // background-color: #f0f0f0;
-  border-radius: 50%;
-  cursor: pointer;
   // margin-top:150px;
+  background-color: #FEE500;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-size: 2.6rem;
+  width: 40vw;
+  height: 11vh;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 30px 0 0 0;
 
   img {
-    width: 60%;
-    height: 60%;
+    width: 60px;
+    height: 60px;
+    margin:20px;
+    margin-left:100px;
+     margin-right:50px;
   }
+`;
+
+export const SocialButtonN = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  // margin-top:150px;
+  background-color: #00C73C;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-size: 2.6rem;
+  width: 40vw;
+  height: 11vh;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 30px 0 0 0;
+
+  img {
+    width: 60px;
+    height: 60px;
+    margin:20px;
+    margin-left:100px;
+     margin-right:50px;
+  }
+`;
+
+export const SocialButtonG = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  // margin-top:150px;
+  background-color: #E6E6E6;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-size: 2.6rem;
+  width: 40vw;
+  height: 11vh;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 30px 0 0 0;
+
+  img {
+    width: 60px;
+    height: 60px;
+    margin:20px;
+    margin-left:100px;
+     margin-right:50px;
+  }
+
 `;

@@ -7,11 +7,11 @@ function SignUpSelectPage() {
   const navigate = useNavigate();
 
   const handleSellerSignUp = () => {
-    navigate('/signUp', { state: { userType: 'seller' } });
+    navigate('/signUp');
   };
 
   const handleBuyerSignUp = () => {
-    navigate('/signUp', { state: { userType: 'buyer' } });
+    navigate('/loginbpage');
   };
 
   return (
