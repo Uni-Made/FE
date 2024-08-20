@@ -14,6 +14,11 @@ const QnaTap = styled.div`
   height: 5vh;
   font-size: 16px;
   padding: 6px;
+  &:hover {
+    background-color: #f0f0f0; /* 배경색을 변경하는 예시 */
+    transform: scale(1.02); /* 살짝 확대하는 예시 */
+    cursor: pointer; /* 커서 모양을 포인터로 변경 */
+  }
 `;
 
 async function getProductQNA(productId) {

@@ -36,10 +36,6 @@ function SellingProductDetailPage() {
     cssEase: "linear",
   };
 
-  const handleSellerNameClick = () => {
-    navigate(`/maderMyPage`);
-  };
-
   useEffect(() => {
     console.log("getproductDetail호출", productId);
     dispatch(getProductDetails(productId));
@@ -63,9 +59,7 @@ function SellingProductDetailPage() {
             </S.LeftContainer>
             <S.RightContainer>
               <S.RightHeader>
-                <div onClick={handleSellerNameClick}>
-                  {selectedProduct.sellerName}
-                </div>
+                <div>{selectedProduct.sellerName}</div>
               </S.RightHeader>
               <S.RightProductName>
                 {selectedProduct.productName}

@@ -85,7 +85,7 @@ function ProductDetailPage() {
   };
 
   const handleSellerNameClick = () => {
-    navigate(`/maderMyPage`);
+    navigate(`/maderHome/${selectedProduct.sellerId}`);
   };
 
   useEffect(() => {
