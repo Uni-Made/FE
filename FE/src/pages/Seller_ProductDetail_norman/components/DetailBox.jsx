@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import DetailReviewBox from "./DetailBox_components/DetailReviewBox";
-import DetailQnABox from "./DetailBox_components/DetailQnABox";
-import DetailInfoBox from "./DetailBox_components/DetailInfoBox";
-import { useLocation } from "react-router-dom";
+DetailInfoBox;
+import DetailReviewBox from "./../../ProductDetail/components/DetailBox_components/DetailReviewBox";
+import DetailInfoBox from "./../../ProductDetail/components/DetailBox_components/DetailInfoBox";
+import QnaManageBox from "./QnaManageBox";
 
 const Container = styled.div`
   width: 100%;
@@ -46,39 +46,6 @@ const Content = styled.div`
 
 const DetailBox = () => {
   const [activeTab, setActiveTab] = useState("details");
-  const location = useLocation();
-  const reviewRef = useRef(null);
-
-  useEffect(() => {
-    const isVisited = sessionStorage.getItem("hasVisited") === "true";
-
-    console.log(!isVisited);
-
-    if (location.state?.from == "/api/v1/auth/buyer/test" && !isVisited) {
-      setActiveTab("review");
-
-      setTimeout(() => {
-        if (reviewRef.current) {
-          reviewRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 0);
-
-      sessionStorage.setItem("hasVisited", "true");
-    }
-  }, [location.state?.from]); // location.state?.from을 의존성 배열에 추가
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      sessionStorage.setItem("hasVisited", "false");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      sessionStorage.setItem("hasVisited", "false");
-    };
-  }, []);
 
   return (
     <Container>
@@ -100,9 +67,9 @@ const DetailBox = () => {
         </Tab>
       </TabContainer>
       <Content>
-        {activeTab === "details" && <DetailInfoBox />}
-        {activeTab === "review" && <DetailReviewBox ref={reviewRef} />}
-        {activeTab === "qa" && <DetailQnABox />}
+        {activeTab === "details" && <DetailInfoBox></DetailInfoBox>}
+        {activeTab === "review" && <DetailReviewBox></DetailReviewBox>}
+        {activeTab === "qa" && <QnaManageBox></QnaManageBox>}
       </Content>
     </Container>
   );

@@ -29,6 +29,7 @@ import {
   PurchaseHistoryPage,
   ProductModifyPage,
   ProductRegisterPage,
+  BeforeLoginPage,
   KakaoAfterLoginPage,
   NaverAfterLoginPage,
   GoogleAfterLoginPage,
@@ -82,7 +83,7 @@ const Router = [
         path: "defaultMyPage/purchase/messages",
         element: <NotiMessagesPage />,
       },
-      { path: "maderHome", element: <MaderHomePage /> },
+      { path: "maderHome/:maderId", element: <MaderHomePage /> },
       {
         path: "maderMyPage/products/selling",
         element: <SellingProductsListPage />,
@@ -108,15 +109,11 @@ const Router = [
         element: <ProductRegisterPage />,
       },
       { path: "maderMyPage/product/modify", element: <ProductModifyPage /> },
-
+      { path: "/api/v1/auth/buyer/test", element: <BeforeLoginPage /> },
       { path: "api/v1/auth/buyer/kakao", element: <KakaoAfterLoginPage/> },
-
       { path: "api/v1/auth/buyer/naver", element: <NaverAfterLoginPage/> },
-
       { path: "api/v1/auth/buyer/google", element: <GoogleAfterLoginPage/> },
-
       { path: "loginselect", element: <LoginSelectPage/> },
-
       { path: "loginbpage", element: <LoginBPage/> },
     ],
     errorElement: <NotFoundPage />,

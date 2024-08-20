@@ -9,15 +9,18 @@ import {
   setPurchaseLastInfo,
 } from "../../state/purchase/purchaseSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultInstance } from "./../../api/axiosInstance";
+import { authInstance, defaultInstance } from "./../../api/axiosInstance";
+import DaumPostcode from "react-daum-postcode";
+import AddressBox from "./components/AddressBox";
+import AddressModal from "./components/AddressModal";
 
 function PurchaseFormPage() {
   const navigate = useNavigate();
   const { productId } = useParams();
-  console.log(productId);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm();
   const dispatch = useDispatch();
@@ -29,15 +32,20 @@ function PurchaseFormPage() {
   const onSubmit = async (data) => {
     await new Promise((r) => setTimeout(r, 1000)); // form 제출 대기
     alert("구매 요청을 제출합니다");
+    const nowPickupOption = isLeftBtnSelected ? "ONLINE" : "OFFLINE";
     const purchaseFormData = {
       name: data.name,
       phoneNumber: data.phoneNum,
-      pickupOption: "ONLINE",
-      address: data.address,
-      detailAddress: data.detailAddress,
+      // online 주문인 경우 그대로 입력된 정보 쓰고, 오프라인 수령 시 지정된 곳으로
+      pickupOption:
+        selectedProduct.pickupOption == "ONLINE" ? "ONLINE" : nowPickupOption,
+      address:
+        nowPickupOption == "ONLINE"
+          ? data.address
+          : selectedProduct.pickupLocation,
+      detailAddress: nowPickupOption == "ONLINE" ? data.detailAddress : null,
       isAgree: data.privacyAgreement,
     };
-    console.log(selectedOptions);
     const purchaseTotalRequestData = {
       purchaseForm: purchaseFormData,
       orderOptions: selectedOptions.map((option, i) => {
@@ -49,8 +57,8 @@ function PurchaseFormPage() {
     };
     console.log(purchaseTotalRequestData);
 
-    const response = await defaultInstance.post(
-      "/api/orders/" + "1/" + productId, //TODO: 일단 buyer id는 1로 고정해서 사용
+    const response = await authInstance.post(
+      "/buyer/orders/" + productId,
       purchaseTotalRequestData
     );
     console.log(response.data.result);
@@ -70,107 +78,156 @@ function PurchaseFormPage() {
 
   const handleRightBtnClick = (e) => {
     e.preventDefault();
+    if (selectedProduct.pickupOption == "ONLINE") {
+      alert("해당 상품은 온라인 수령만 가능합니다.");
+      return;
+    }
     setIsLeftBtnSelected(false);
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nowAddress, setNowAddress] = useState("");
+  const handleComplete = (data) => {
+    console.log(data.address); // 선택된 주소 확인
+    setNowAddress(data.address); // 선택된 주소 처리
+    setIsModalOpen(false); // 모달 닫기
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <S.Container onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Navbar />
-      <S.HeaderBox>
-        <S.HeaderIconBox>
-          <S.HeaderBoxIcon></S.HeaderBoxIcon>
-        </S.HeaderIconBox>
-        <S.HeaderBoxText>구매 폼 작성</S.HeaderBoxText>
-      </S.HeaderBox>
-      <S.MainBox>
-        <PurchaseInput
-          id="name"
-          placeholder="이름 ex) 이찬민"
-          {...register("name", {
-            required: "이름은 필수 입력 항목입니다.",
-            maxLength: {
-              value: 10,
-              message: "이름은 최대 10자까지 입력 가능합니다.",
-            },
-          })}
-        />
-        {errors.name && (
-          <S.MainErrorText>{errors.name.message}</S.MainErrorText>
-        )}
+      <S.Container onSubmit={handleSubmit(onSubmit)}>
+        <S.HeaderBox>
+          <S.HeaderIconBox>
+            <S.HeaderBoxIcon></S.HeaderBoxIcon>
+          </S.HeaderIconBox>
+          <S.HeaderBoxText>구매 폼 작성</S.HeaderBoxText>
+        </S.HeaderBox>
+        <S.MainBox>
+          <PurchaseInput
+            id="name"
+            placeholder="이름 ex) 이찬민"
+            {...register("name", {
+              required: "이름은 필수 입력 항목입니다.",
+              maxLength: {
+                value: 10,
+                message: "이름은 최대 10자까지 입력 가능합니다.",
+              },
+            })}
+          />
+          {errors.name && (
+            <S.MainErrorText>{errors.name.message}</S.MainErrorText>
+          )}
 
-        <PurchaseInput
-          id="phoneNum"
-          placeholder="전화번호 ex) 010-1234-5678"
-          maxLength="13"
-          {...register("phoneNum", {
-            required: "전화번호는 필수 입력 항목입니다.",
-            pattern: {
-              value: /^\d{3}-\d{3,4}-\d{4}$/,
-              message: "전화번호 형식이 올바르지 않습니다.",
-            },
-          })}
-        />
-        {errors.phoneNum && (
-          <S.MainErrorText>{errors.phoneNum.message}</S.MainErrorText>
-        )}
+          <PurchaseInput
+            id="phoneNum"
+            placeholder="전화번호 ex) 010-1234-5678"
+            maxLength="13"
+            {...register("phoneNum", {
+              required: "전화번호는 필수 입력 항목입니다.",
+              pattern: {
+                value: /^\d{3}-\d{3,4}-\d{4}$/,
+                message: "전화번호 형식이 올바르지 않습니다.",
+              },
+            })}
+          />
+          {errors.phoneNum && (
+            <S.MainErrorText>{errors.phoneNum.message}</S.MainErrorText>
+          )}
 
-        <S.MainToggleBox>
-          <S.MainToggleBoxButton
-            onClick={handleLeftBtnClick}
-            isSelected={isLeftBtnSelected}
-          >
-            온라인 수령
-          </S.MainToggleBoxButton>
-          <S.MainToggleBoxButton
-            onClick={handleRightBtnClick}
-            isSelected={!isLeftBtnSelected}
-          >
-            오프라인 수령
-          </S.MainToggleBoxButton>
-        </S.MainToggleBox>
+          <S.MainToggleBox>
+            <S.MainToggleBoxButton
+              onClick={handleLeftBtnClick}
+              isSelected={isLeftBtnSelected}
+            >
+              온라인 수령
+            </S.MainToggleBoxButton>
+            <S.MainToggleBoxButton
+              onClick={handleRightBtnClick}
+              isSelected={!isLeftBtnSelected}
+            >
+              오프라인 수령
+            </S.MainToggleBoxButton>
+          </S.MainToggleBox>
+          {isLeftBtnSelected ? (
+            <>
+              {isModalOpen && (
+                <AddressModal onClose={closeModal}>
+                  <DaumPostcode
+                    onComplete={(data) => {
+                      console.log("data", data);
+                      setValue("address", data.address);
+                      handleComplete(data);
+                      closeModal();
+                    }}
+                  />
+                </AddressModal>
+              )}
+              <PurchaseInput
+                onClick={openModal}
+                placeholder="주소 ex) 경기 성남시 분당구 판교역로 166"
+                readOnly
+                value={nowAddress}
+                {...register("address", {
+                  required: "주소는 필수 입력 항목입니다.",
+                })}
+              />
+              {errors.address && (
+                <S.MainErrorText>{errors.address.message}</S.MainErrorText>
+              )}
 
-        <PurchaseInput
-          placeholder="주소 ex) 경기도 안산시 단원구 중앙대로 918"
-          {...register("address", {
-            required: "주소는 필수 입력 항목입니다.",
-          })}
-        />
-        {errors.address && (
-          <S.MainErrorText>{errors.address.message}</S.MainErrorText>
-        )}
+              <PurchaseInput
+                placeholder="상세주소 ex) 푸르지오 3차 403동 604호"
+                {...register("detailAddress", {
+                  required: "상세주소는 필수 입력 항목입니다.",
+                })}
+              />
+              {errors.detailAddress && (
+                <S.MainErrorText>
+                  {errors.detailAddress.message}
+                </S.MainErrorText>
+              )}
+            </>
+          ) : (
+            <>
+              <S.MainPickUpBox>
+                <div>수령일자 : {selectedProduct.pickupDate}</div> <br></br>{" "}
+                <div>수령장소 : {selectedProduct.pickupLocation}</div>
+              </S.MainPickUpBox>
+            </>
+          )}
 
-        <PurchaseInput
-          placeholder="상세주소 ex) 푸르지오 3차 403동 604호"
-          {...register("detailAddress", {
-            required: "상세주소는 필수 입력 항목입니다.",
-          })}
-        />
-        {errors.detailAddress && (
-          <S.MainErrorText>{errors.detailAddress.message}</S.MainErrorText>
-        )}
+          <S.PrivacyBox>
+            <S.PrivacyBoxTerms>
+              개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을
+              채워주세요. ...
+            </S.PrivacyBoxTerms>
+            <S.PrivacyToggleBox>
+              <input
+                type="checkbox"
+                {...register("privacyAgreement", {
+                  required: "개인정보 수집 및 이용에 동의해야 합니다.",
+                })}
+              />
+              <div>개인정보 수집 및 이용에 동의합니다.</div>
+            </S.PrivacyToggleBox>
+          </S.PrivacyBox>
+          {errors.privacyAgreement && <p>{errors.privacyAgreement.message}</p>}
 
-        <S.PrivacyBox>
-          <S.PrivacyBoxTerms>
-            개인정보 수집 및 이용 약관 내용이 들어갈 자리입니다. 내용을
-            채워주세요. ...
-          </S.PrivacyBoxTerms>
-          <S.PrivacyToggleBox>
-            <input
-              type="checkbox"
-              {...register("privacyAgreement", {
-                required: "개인정보 수집 및 이용에 동의해야 합니다.",
-              })}
-            />
-            <div>개인정보 수집 및 이용에 동의합니다.</div>
-          </S.PrivacyToggleBox>
-        </S.PrivacyBox>
-        {errors.privacyAgreement && <p>{errors.privacyAgreement.message}</p>}
-
-        <S.PurchaseButton type="submit" disabled={isSubmitting}>
-          구매하기
-        </S.PurchaseButton>
-      </S.MainBox>
-    </S.Container>
+          <S.PurchaseButton type="submit" disabled={isSubmitting}>
+            구매하기
+          </S.PurchaseButton>
+        </S.MainBox>
+      </S.Container>
+    </>
   );
 }
 

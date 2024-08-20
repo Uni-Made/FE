@@ -5,11 +5,40 @@ import { defaultInstance, authInstance } from "../../api/axiosInstance";
 // api 비동기 서버 통신 함수 만들고 extrareducer로 정의
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async () => {
-    const pageSize = 10;
-    const response = await defaultInstance.get(
-      `/api/products/list?pageSize=${pageSize}`
-    );
+  async ({ offset, sort, keyword, category, minPrice, maxPrice }) => {
+    console.log(offset, sort, keyword, category, minPrice, maxPrice);
+    const pageSize = 12;
+    let url = `/buyer/product/list?`;
+
+    // 조건부로 URL 파라미터 추가
+    if (sort == null) {
+      url += `&sort=FAVORITE`;
+    }
+    if (offset) {
+      url += `&offset=${offset}`;
+    }
+    if (sort) {
+      url += `&sort=${sort}`;
+    }
+    if (keyword) {
+      url += `&keyword=${keyword}`;
+    }
+    if (category) {
+      category.map((id) => {
+        url += `&categoryIds=${id}`;
+      });
+      console.log(url);
+    }
+    if (minPrice) {
+      url += `&minPrice=${minPrice}`;
+    }
+    if (maxPrice) {
+      url += `&maxPrice=${maxPrice}`;
+    }
+    url += `&pageSize=${pageSize}`;
+    console.log(url);
+
+    const response = await authInstance.get(url);
     // const response = await authInstance.get(
     //   `/api/products/list?pageSize=${pageSize}`
     // );
@@ -24,9 +53,15 @@ const calculateTotalProductsCount = (items) => {
 
 const initialState = {
   products: [], // product 객체의 배열
-  filteredProducts: [], // product 검색 결과 배열
-  isFiltered: false, // 한 번이라도 검색되면 true
-  totalCount: 0,
+  nextOffset: null,
+  isLast: false,
+  // selectedCategories: [], // condition box에서, [id, id, id, ...]
+  // searchKeyword: null, // condition box에서, "keyword"
+  // minPrice: null, // condition box에서, "minPrice"
+  // maxPrice: null, // condition box에서, "maxPrice"
+  filteredProducts: [], // product 검색 결과 배열 // 안씀
+  isFiltered: false, // 한 번이라도 검색되면 true // 안씀
+  totalCount: 0, // 안 씀
   getProductsStatus: "", // getProducts API 호출 상태
 };
 
@@ -66,16 +101,27 @@ const productsSlice = createSlice({
   extraReducers: (builder) => {
     // 프로미스 로딩 (pending) 시점
     builder.addCase(getProducts.pending, (state) => {
-      state.products = [];
-      state.totalCount = 0;
-
       state.getProductsStatus = "pending";
     });
 
     // 프로미스 성공 (fulfilled) 시점
     builder.addCase(getProducts.fulfilled, (state, action) => {
       console.log(action.payload);
-      state.products = action.payload.productsList;
+      // action.payload.productsList.map((item) => {
+      //   console.log(item);
+      //   state.products.push(item);
+      // });
+      // state.products = action.payload.productsList;
+
+      // action.meta.arg.isLoadMore가 true이면 무한 스크롤로 인한 추가 로딩
+      if (action.meta.arg.isLoadMore) {
+        state.products = state.products.concat(action.payload.productsList);
+      } else {
+        // 새로운 데이터를 불러올 때 (기존 데이터를 초기화)
+        state.products = action.payload.productsList;
+      }
+      state.nextOffset = action.payload.nextOffset;
+      state.isLast = action.payload.isLast;
 
       state.getProductsStatus = "fulfilled";
     });

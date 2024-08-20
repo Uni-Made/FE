@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { TbFileText } from "react-icons/tb";
 
 const Container = styled.form`
-  /* width: 90vw;
+  width: 90vw;
   display: flex;
   justify-content: center;
-  align-items: center; */
+  align-items: center;
 
   display: flex;
   flex-direction: column;
@@ -67,6 +67,20 @@ const MainToggleBoxButton = styled.button`
     cursor: pointer;
   }
 `;
+const MainPickUpBox = styled.div`
+  /* gap: px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  background-color: rgba(244, 244, 244, 1);
+  border: none;
+  border-radius: 10px;
+  width: 60%;
+  height: 120px;
+  font-size: 20px;
+  padding: 10px;
+`;
 const MainErrorText = styled.div`
   width: 60%;
   color: ${(props) => (props.isError ? "red" : "rgba(0, 221, 221, 1)")};
@@ -127,6 +141,19 @@ const PurchaseButton = styled.button`
   }
 `;
 
+const AddressButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 export {
   Container,
   HeaderBox,
@@ -136,9 +163,11 @@ export {
   MainBox,
   MainToggleBox,
   MainToggleBoxButton,
+  MainPickUpBox,
   MainErrorText,
   PrivacyBox,
   PrivacyBoxTerms,
   PrivacyToggleBox,
   PurchaseButton,
+  AddressButton,
 };

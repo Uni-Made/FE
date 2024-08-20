@@ -11,7 +11,7 @@ function ProductListCard(props) {
       <S.Image src={imageSrc} />
       <S.FirstTitle>{firstTitle}</S.FirstTitle>
       <S.SecondTitle>{secondTitle}</S.SecondTitle>
-      <S.Price>{price + "원"}</S.Price>
+      <S.Price>{new Intl.NumberFormat("ko-KR").format(price) + "원"}</S.Price>
     </S.Container>
   );
 }

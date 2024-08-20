@@ -23,8 +23,8 @@ export const getProductDetails = createAsyncThunk(
   async (productId) => {
     // const response = await getProductDetailsTest(`/api/products/${productId}`);
     const viewType = "DETAIL";
-    const response = await defaultInstance.get(
-      `/api/products/${productId}?viewType=${viewType}`
+    const response = await authInstance.get(
+      `/buyer/product/${productId}?viewType=${viewType}`
     );
     // const response = await authInstance.get(
     //   `/api/products/${productId}?viewType=${viewType}`

@@ -6,7 +6,7 @@ export const Container = styled.div`
   border-radius: 20px;
   padding: 20px;
   width: 65vw;
-  height: 35vh;
+  /* height: 35vh; */
   display: flex;
 `;
 
@@ -46,8 +46,10 @@ export const CategoryTitle = styled.div`
   width: 20%;
   margin-right: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
+  left: -40px;
 `;
 
 export const CategoryItems = styled.div`
@@ -64,8 +66,7 @@ export const Item = styled.div`
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: ${(props) =>
-    props.selected ? "#24c7c4" : "rgba(0, 221, 221, 0.1)"};
+  background-color: ${(props) => (props.selected ? "#24c7c4" : "none")};
   color: ${(props) => (props.selected ? "#fff" : "#000")};
   /* border: 1px solid #24c7c4; */
   width: 100px;
@@ -82,15 +83,17 @@ export const Label = styled.label`
   font-weight: bold;
   width: 20%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
+  left: -40px;
 `;
 
 export const SearchInput = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 60%;
+  border-radius: 15px;
+  width: 66%;
 `;
 
 export const SearchIcon = styled(CiSearch)`
@@ -105,8 +108,8 @@ export const PriceGroup = styled(InputGroup)`
 
 export const PriceInput = styled.input`
   margin: 0 10px;
-  width: 30%;
-  padding: 5px;
+  width: 26.5%;
+  padding: 5px 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 15px;
 `;

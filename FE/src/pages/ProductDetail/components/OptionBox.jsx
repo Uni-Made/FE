@@ -12,7 +12,7 @@ import {
 } from "../../../state/purchase/purchaseSlice";
 
 const Container = styled.div`
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 `;
 
@@ -27,6 +27,11 @@ const OptionCard = styled(Box)`
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+
+  span {
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const QuantityContainer = styled.div`
@@ -34,17 +39,17 @@ const QuantityContainer = styled.div`
   align-items: center;
 `;
 
-const AmountText = styled(Typography)`
+const AmountText = styled.p`
   margin: 0 10px;
-  font-size: 1.1rem;
+  font-size: 20px;
   width: 40px;
   text-align: center;
 `;
 
-const OptionText = styled(Typography)`
+const OptionText = styled.p`
   flex: 1;
   margin-left: 20px;
-  font-size: 1.1rem;
+  font-size: 20px;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -71,12 +76,15 @@ const ProductOption = ({
           <Add />
         </StyledIconButton>
       </QuantityContainer>
+
       <OptionText>
         {option.values.map((optionItem) => (
           <>{optionItem + " "}</>
         ))}
-        , {option.price}원
+        &nbsp; &nbsp;
+        {new Intl.NumberFormat("ko-KR").format(option.price)}원
       </OptionText>
+
       <StyledIconButton onClick={() => handleRemove(option.optionId)}>
         <Close />
       </StyledIconButton>
@@ -100,7 +108,7 @@ const OptionBox = () => {
     };
   });
   const [optionSet, setOptionSet] = useState(optionSetInitValue);
-  console.log(optionSet);
+  console.log(optionSet, selectedProduct.options);
 
   // optionSet의 모든 카테고리의 값이 채워졌을 때 실행
   const handleSelectOptionSet = (optionSet) => {
@@ -141,39 +149,19 @@ const OptionBox = () => {
 
   const handleSelectChange = (e, idx) => {
     const nowOption = JSON.parse(e.target.value); // 현재 선택한 옵션 가져오기
-    // 마지막 select 태그인 경우
-    if (idx === selectedProduct.options.length - 1) {
-      // optionSet에서 id가 같은 카테고리 객체 값만 변경
-      setOptionSet(
-        optionSet.map((optionSetItem) =>
-          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
-          true
-            ? {
-                ...optionSetItem,
-                nowOptionValue: nowOption.value,
-                nowOptionValueId: nowOption.valueId,
-              }
-            : optionSetItem
-        )
-      );
-      // handleSelectOptionSet(optionSet);
-    }
-    // 마지막 select 태그가 아닐 경우
-    else {
-      // optionSet에서 id가 같은 카테고리 객체 값만 변경
-      setOptionSet(
-        optionSet.map((optionSetItem) =>
-          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
-          true
-            ? {
-                ...optionSetItem,
-                nowOptionValue: nowOption.value,
-                nowOptionValueId: nowOption.valueId,
-              }
-            : optionSetItem
-        )
-      );
-    }
+
+    // optionSet에서 id가 같은 카테고리 객체 값만 변경
+    setOptionSet(
+      optionSet.map((optionSetItem, i) =>
+        i === idx
+          ? {
+              ...optionSetItem,
+              nowOptionValue: nowOption.value, // 선택된 값으로 업데이트
+              nowOptionValueId: nowOption.valueId,
+            }
+          : optionSetItem
+      )
+    );
   };
 
   useEffect(() => {

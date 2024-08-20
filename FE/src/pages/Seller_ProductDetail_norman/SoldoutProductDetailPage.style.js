@@ -68,7 +68,6 @@ const RightContainer = styled.div`
 const LeftMainImage = styled.img`
   width: 90%;
   height: 60%;
-  /* object-fit: cover;  */
 `;
 const LeftSubBox = styled(Slider)`
   width: 80%;
@@ -123,7 +122,7 @@ const RightDetailBox = styled.div`
 const RightDetailBoxItem = styled.div``;
 
 const RightOptionBox = styled.div`
-  height: 35%;
+  height: 33%; // 이거는 원래 상품 상세 페이지랑 조금 다름
   overflow-y: auto;
 `;
 const RightOptionBoxItem = styled.div``;
@@ -149,22 +148,22 @@ const RightPriceBoxItem = styled.div`
 
 const RightPurchaseButton = styled.button`
   height: 10%;
-  background-color: #4cd5d5;
-  color: white;
+  background-color: ${(props) =>
+    props.type == "modify" ? "#FF0099" : "#DDDDDD"};
+  color: ${(props) => (props.type == "modify" ? "white" : "#868686")};
   padding: 10px 20px;
-  border: none;
+  border: ${(props) => (props.type == "modify" ? "1px solid #FF0099" : "none")};
   border-radius: 10px;
   font-size: 26px;
   font-weight: bold;
   cursor: pointer;
   outline: none;
+  margin-bottom: 20px;
 
   &:hover {
-    background-color: #3cb8b8;
-  }
-
-  &:active {
-    background-color: #2fa1a1;
+    color: ${(props) => (props.type == "modify" ? "#FF0099" : "black")};
+    background-color: ${(props) =>
+      props.type == "modify" ? "white" : "#868686"};
   }
 `;
 

@@ -8,7 +8,6 @@ import { Select } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProducts,
@@ -17,96 +16,93 @@ import {
   searchKeywordProducts,
 } from "./../../state/products/productsSlice";
 import { setSelectedProduct } from "../../state/purchase/purchaseSlice";
-
+import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 
 function ProductListPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { products, getProductsStatus, isFiltered, filteredProducts } =
-    useSelector((state) => state.products);
-  console.log(products);
-  const [order, setOrder] = useState("");
+  const {
+    products,
+    getProductsStatus,
+    isFiltered,
+    filteredProducts,
+    nextOffset,
+    isLast,
+  } = useSelector((state) => state.products);
+  console.log(products, nextOffset, isLast);
+  const [selectedOrder, setSelectedOrder] = useState(null); // 실제로 api 보낼 때 order
+
+  // useInView 훅을 사용하여 요소가 뷰포트에 들어왔는지 감지
+  const { ref, inView } = useInView({
+    triggerOnce: false, // 뷰포트에 들어올 때마다 트리거됨
+    threshold: 1.0, // 요소가 완전히 뷰포트에 들어왔을 때 트리거됨
+  });
 
   const handleOrderChange = (event) => {
-    setOrder(event.target.value);
-  };
-
-  const handleOrderBtnClick = (order) => {
-    dispatch(sortProducts(order));
+    setSelectedOrder(event.target.value);
   };
 
   const handleProductCardClick = (selectedId) => {
-    // const selctedProduct = products.find((product) => {
-    //   return product.productId == selectedId;
-    // });
     navigate(`/product/${selectedId}`);
   };
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    console.log("useEffect 실행", selectedOrder, inView, isLast);
+    if (inView && !isLast) {
+      console.log("if문 성공");
+      dispatch(
+        getProducts({
+          offset: products == [] && isLast == true ? null : nextOffset,
+          sort: selectedOrder,
+          // keyword: '',
+          // category: 'your-category'
+          isLoadMore: true,
+        })
+      );
+    }
+  }, [inView]);
 
-  // useEffect(() => {
-  //   dispatch(setSelectedProduct({}));
-  // }, []);
+  useEffect(() => {
+    dispatch(
+      getProducts({
+        sort: selectedOrder,
+        isLoadMore: false,
+      })
+    );
+  }, [selectedOrder]);
 
   return (
     <S.Container>
       <Navbar />
       <ConditionSearchBox />
       <S.OrderBox>
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>정렬</InputLabel>
-          <Select value={order} label="정렬" onChange={handleOrderChange}>
-            <MenuItem
-              value={"인기순"}
-              onClick={() => handleOrderBtnClick("reviews")}
-            >
-              인기순
-            </MenuItem>
-            <MenuItem
-              value={"최신순"}
-              onClick={() => handleOrderBtnClick("deadline")}
-            >
-              최신순
-            </MenuItem>
-            <MenuItem
-              value={"가격낮은순"}
-              onClick={() => handleOrderBtnClick("price")}
-            >
-              가격낮은순
-            </MenuItem>
-          </Select>
-        </FormControl>
+        <select id="sortOptions" onChange={(e) => handleOrderChange(e)}>
+          <option value="FAVORITE" selected>
+            인기순
+          </option>
+          <option value="LATEST">최신순</option>
+          <option value="DEADLINE">마감순</option>
+        </select>
+        <div></div>
       </S.OrderBox>
       <S.ListBox>
         {getProductsStatus != "fulfilled" && <div>로딩중</div>}
-        {isFiltered == false &&
-          products.map((item, idx) => (
-            <ProductListCard
-              key={idx}
-              id={item.productId}
-              imageSrc={item.imgUrl}
-              firstTitle={item.sellerName}
-              secondTitle={item.name}
-              price={item.price}
-              onClick={handleProductCardClick}
-            />
-          ))}
-        {isFiltered == true &&
-          filteredProducts.map((item, idx) => (
-            <ProductListCard
-              key={idx}
-              id={item.productId}
-              imageSrc={item.imgUrl}
-              firstTitle={item.sellerName}
-              secondTitle={item.name}
-              price={item.price}
-              onClick={handleProductCardClick}
-            />
-          ))}
+        {products.map((item, idx) => (
+          <ProductListCard
+            key={idx}
+            id={item.productId}
+            imageSrc={item.imgUrl}
+            firstTitle={item.sellerName}
+            secondTitle={item.name}
+            price={item.price}
+            onClick={handleProductCardClick}
+          />
+        ))}
       </S.ListBox>
+      {products.length == 0 && <div>조건에 맞는 상품 검색결과가 없습니다.</div>}
+      <div ref={ref} style={{ height: "10px" }} />{" "}
+      {/* 이 div가 뷰포트에 들어올 때 데이터 로드 */}
     </S.Container>
   );
 }
