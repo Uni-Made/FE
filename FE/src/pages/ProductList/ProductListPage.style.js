@@ -5,7 +5,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  height: 98vh;
   overflow-y: auto;
   gap: 2vh;
 `;
@@ -36,11 +36,13 @@ const OrderBox = styled.div`
 `;
 
 const ListBox = styled.div`
-  width: 70vw;
+  width: 68vw;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  left: 1vw;
+  /* justify-content: center; */
+  /* align-items: center; */
 `;
 
 export { Container, OrderBox, ListBox };

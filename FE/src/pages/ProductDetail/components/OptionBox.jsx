@@ -108,7 +108,7 @@ const OptionBox = () => {
     };
   });
   const [optionSet, setOptionSet] = useState(optionSetInitValue);
-  console.log(optionSet);
+  console.log(optionSet, selectedProduct.options);
 
   // optionSet의 모든 카테고리의 값이 채워졌을 때 실행
   const handleSelectOptionSet = (optionSet) => {
@@ -149,39 +149,19 @@ const OptionBox = () => {
 
   const handleSelectChange = (e, idx) => {
     const nowOption = JSON.parse(e.target.value); // 현재 선택한 옵션 가져오기
-    // 마지막 select 태그인 경우
-    if (idx === selectedProduct.options.length - 1) {
-      // optionSet에서 id가 같은 카테고리 객체 값만 변경
-      setOptionSet(
-        optionSet.map((optionSetItem) =>
-          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
-          true
-            ? {
-                ...optionSetItem,
-                nowOptionValue: nowOption.value,
-                nowOptionValueId: nowOption.valueId,
-              }
-            : optionSetItem
-        )
-      );
-      // handleSelectOptionSet(optionSet);
-    }
-    // 마지막 select 태그가 아닐 경우
-    else {
-      // optionSet에서 id가 같은 카테고리 객체 값만 변경
-      setOptionSet(
-        optionSet.map((optionSetItem) =>
-          optionSetItem.optionCategoryValueIds.includes(nowOption.valueId) ==
-          true
-            ? {
-                ...optionSetItem,
-                nowOptionValue: nowOption.value,
-                nowOptionValueId: nowOption.valueId,
-              }
-            : optionSetItem
-        )
-      );
-    }
+
+    // optionSet에서 id가 같은 카테고리 객체 값만 변경
+    setOptionSet(
+      optionSet.map((optionSetItem, i) =>
+        i === idx
+          ? {
+              ...optionSetItem,
+              nowOptionValue: nowOption.value, // 선택된 값으로 업데이트
+              nowOptionValueId: nowOption.valueId,
+            }
+          : optionSetItem
+      )
+    );
   };
 
   useEffect(() => {

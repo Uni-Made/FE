@@ -57,6 +57,7 @@ function ProductListPage() {
           sort: selectedOrder,
           // keyword: '',
           // category: 'your-category'
+          isLoadMore: true,
         })
       );
     }
@@ -66,6 +67,7 @@ function ProductListPage() {
     dispatch(
       getProducts({
         sort: selectedOrder,
+        isLoadMore: false,
       })
     );
   }, [selectedOrder]);
@@ -99,7 +101,7 @@ function ProductListPage() {
         ))}
       </S.ListBox>
       {products.length == 0 && <div>조건에 맞는 상품 검색결과가 없습니다.</div>}
-      <div ref={ref} style={{ height: "1px" }} />{" "}
+      <div ref={ref} style={{ height: "10px" }} />{" "}
       {/* 이 div가 뷰포트에 들어올 때 데이터 로드 */}
     </S.Container>
   );

@@ -41,7 +41,7 @@ const TopContainer = styled.div`
   display: flex;
   justify-content: center;
   /* align-items: center; */
-  margin-top: 12vh;
+  /* margin-top: 12vh; */
   gap: 30px;
 `;
 const BottomContainer = styled.div`

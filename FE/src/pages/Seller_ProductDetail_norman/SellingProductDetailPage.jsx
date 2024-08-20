@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails } from "../../state/purchase/purchaseSlice";
 import DetailBox from "./components/DetailBox";
-import Navbar from "../Main/components/Header";
+import Navbar from "../ProductList/components/Navbar";
 import Modal from "../ProductDetail/components/Modal";
 import OptionBox from "../ProductDetail/components/OptionBox";
 import * as S from "./SellingProductDetailPage.style";
@@ -36,21 +36,6 @@ function SellingProductDetailPage() {
     cssEase: "linear",
   };
 
-  // modal 제어 함수들
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
-  const handleHeartClick = async () => {
-    const result = await authInstance.post(
-      "/buyer/product/favorite/" + productId
-    );
-    if (result.data.message == "좋아요 성공") {
-      setIsHeartFilled(true);
-    } else if (result.data.message == "좋아요 취소") {
-      setIsHeartFilled(false);
-    }
-  };
-
   const handleSellerNameClick = () => {
     navigate(`/maderMyPage`);
   };
@@ -63,7 +48,6 @@ function SellingProductDetailPage() {
   return (
     <>
       <Navbar />
-      {/* <Header /> */}
       {getProductDetailsStatus == "fulfilled" && (
         <S.Container>
           <S.TopContainer>
@@ -91,7 +75,8 @@ function SellingProductDetailPage() {
                   ~{selectedProduct.deadline}
                 </S.RightDetailBoxItem>
                 <S.RightDetailBoxItem>
-                  {selectedProduct.price}원
+                  {new Intl.NumberFormat("ko-KR").format(selectedProduct.price)}
+                  원
                 </S.RightDetailBoxItem>
               </S.RightDetailBox>
               <S.RightOptionBox>
@@ -105,7 +90,9 @@ function SellingProductDetailPage() {
               </S.RightPurchaseButton>
               <S.RightPurchaseButton
                 type="check"
-                onClick={() => navigate("/maderMyPage/purchase/requests")}
+                onClick={() =>
+                  navigate("/maderMyPage/purchase/requests/" + productId)
+                }
               >
                 구매 요청 확인
               </S.RightPurchaseButton>
@@ -114,7 +101,6 @@ function SellingProductDetailPage() {
           <S.BottomContainer>
             <DetailBox></DetailBox>
           </S.BottomContainer>
-          <Modal showModal={showModal} handleClose={handleCloseModal} />
         </S.Container>
       )}
     </>

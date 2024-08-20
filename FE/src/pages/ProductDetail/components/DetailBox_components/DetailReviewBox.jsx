@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styled from "styled-components";
 import DetailReviewItem from "./DetailReviewItem";
 import { defaultInstance, authInstance } from "../../../../api/axiosInstance";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 const Container = styled.div`
   margin-top: 40px;
@@ -38,8 +38,7 @@ async function getProductReviews(productId) {
     console.error("Error fetching product reviews:", error);
   }
 }
-
-function DetailReviewBox() {
+const DetailReviewBox = forwardRef((props, ref) => {
   const [productReviews, setProductReviews] = useState(null);
   const { productId } = useParams();
   useEffect(() => {
@@ -50,9 +49,11 @@ function DetailReviewBox() {
 
     fetchReviews();
   }, [productId]);
+  const location = useLocation();
+  console.log(location);
 
   return (
-    <Container>
+    <Container ref={ref}>
       {productReviews != null && (
         <>
           <HeaderBox>
@@ -64,6 +65,9 @@ function DetailReviewBox() {
             </HeaderRight>
           </HeaderBox>
           <ReviewBox>
+            {productReviews.reviewsList.length === 0 && (
+              <div>리뷰가 없습니다.</div>
+            )}
             {productReviews.reviewsList.map((review) => {
               return (
                 <DetailReviewItem
@@ -77,11 +81,16 @@ function DetailReviewBox() {
                 />
               );
             })}
+            <DetailReviewItem
+            // avatar={review.avatar}
+            />
           </ReviewBox>
         </>
       )}
     </Container>
   );
-}
+});
+// displayName 설정
+DetailReviewBox.displayName = "DetailReviewBox";
 
 export default DetailReviewBox;

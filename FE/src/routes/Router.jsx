@@ -75,7 +75,7 @@ const Router = [
         path: "defaultMyPage/purchase/messages",
         element: <NotiMessagesPage />,
       },
-      { path: "maderHome", element: <MaderHomePage /> },
+      { path: "maderHome/:maderId", element: <MaderHomePage /> },
       {
         path: "maderMyPage/products/selling",
         element: <SellingProductsListPage />,
@@ -93,7 +93,7 @@ const Router = [
         element: <SoldoutProductDetailPage />,
       },
       {
-        path: "maderMyPage/purchase/requests",
+        path: "maderMyPage/purchase/requests/:productId",
         element: <PurchaseRequestsPage />,
       },
       {

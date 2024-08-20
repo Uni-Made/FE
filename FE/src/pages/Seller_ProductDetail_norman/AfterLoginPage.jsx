@@ -21,6 +21,7 @@ function AfterLoginPage() {
       try {
         // 브라우저에서 알림 권한 요청
         const permission = await Notification.requestPermission();
+        //TODO: 팝업 알림 허용 alert 추가
         if (permission === "granted") {
           // 알림 권한이 부여된 경우 FCM 토큰을 요청
           console.log("토큰 가져오기 시작");

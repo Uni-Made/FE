@@ -123,7 +123,10 @@ const QnaItem = ({
         <Button onClick={(e) => handleSubmit(e)}>등록</Button>
       </ButtonBox>
 
-      {answers.length > 0 ? <Response></Response> : null}
+      {answers.length > 0 &&
+        answers.map((item, idx) => {
+          return <Response key={idx}>{answers[idx].content}</Response>;
+        })}
     </QnaContainer>
   );
 };

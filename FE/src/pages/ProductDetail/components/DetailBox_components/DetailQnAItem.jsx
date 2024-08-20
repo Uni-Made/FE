@@ -197,7 +197,10 @@ const DetailQnAItem = ({
                   <div>{createdAt.split("T")[0]}</div>
                 </div>
               </Author>
-              {answers[0] && <Response>{answers[0].content}</Response>}
+              {answers.length > 0 &&
+                answers.map((item, idx) => {
+                  return <Response key={idx}>{answers[idx].content}</Response>;
+                })}
             </>
           )}
         </>

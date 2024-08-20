@@ -101,16 +101,25 @@ const productsSlice = createSlice({
   extraReducers: (builder) => {
     // 프로미스 로딩 (pending) 시점
     builder.addCase(getProducts.pending, (state) => {
-      state.products = [];
-      state.totalCount = 0;
-
       state.getProductsStatus = "pending";
     });
 
     // 프로미스 성공 (fulfilled) 시점
     builder.addCase(getProducts.fulfilled, (state, action) => {
       console.log(action.payload);
-      state.products = action.payload.productsList;
+      // action.payload.productsList.map((item) => {
+      //   console.log(item);
+      //   state.products.push(item);
+      // });
+      // state.products = action.payload.productsList;
+
+      // action.meta.arg.isLoadMore가 true이면 무한 스크롤로 인한 추가 로딩
+      if (action.meta.arg.isLoadMore) {
+        state.products = state.products.concat(action.payload.productsList);
+      } else {
+        // 새로운 데이터를 불러올 때 (기존 데이터를 초기화)
+        state.products = action.payload.productsList;
+      }
       state.nextOffset = action.payload.nextOffset;
       state.isLast = action.payload.isLast;
 

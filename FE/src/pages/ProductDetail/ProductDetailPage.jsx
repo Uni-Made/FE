@@ -5,7 +5,12 @@ import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import Navbar from "../ProductList/components/Navbar";
 import Modal from "./components/Modal";
 import DetailBox from "./components/DetailBox";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useNavigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProductDetails,
@@ -17,14 +22,29 @@ import Slider from "react-slick";
 // import "slick-carousel/slick/slick-theme.css";
 import DetailReviewBox from "./components/DetailBox_components/DetailReviewBox";
 
+async function getFavoriteProducts() {
+  const apiResponse = await authInstance.get(
+    "/buyer/favorite-products?pageSize=100"
+  );
+  console.log(apiResponse);
+  return apiResponse.data.result.favoriteProducts;
+}
+
 function ProductDetailPage() {
   const [showModal, setShowModal] = useState(false);
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const { productId } = useParams();
+  const location = useLocation();
+  console.log(location);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedProduct, getProductDetailsStatus, totalPrice } = useSelector(
+  const {
+    selectedProduct,
+    getProductDetailsStatus,
+    totalPrice,
+    selectedOptions,
+  } = useSelector(
     (state) => state.purchase
     // {return state.purchase;}와 똑같음
   );
@@ -42,16 +62,24 @@ function ProductDetailPage() {
   };
 
   // modal 제어 함수들
-  const handleOpenModal = () => setShowModal(true);
+  const handleOpenModal = () => {
+    if (selectedOptions.length == 0) {
+      alert("구매할 상품 옵션을 선택하세요.");
+      return;
+    }
+    setShowModal(true);
+  };
   const handleCloseModal = () => setShowModal(false);
 
-  const handleHeartClick = async () => {
+  const handleHeartClick = async (isChecked) => {
     const result = await authInstance.post(
       "/buyer/product/favorite/" + productId
     );
-    if (result.data.message == "좋아요 성공") {
+    if (!isChecked && result.data.message == "좋아요 성공") {
+      console.log(1);
       setIsHeartFilled(true);
-    } else if (result.data.message == "좋아요 취소") {
+    } else if (isChecked && result.data.message == "좋아요 취소") {
+      console.log(2);
       setIsHeartFilled(false);
     }
   };
@@ -64,6 +92,21 @@ function ProductDetailPage() {
     console.log("getproductDetail호출", productId);
     dispatch(getProductDetails(productId));
   }, [productId, getProductDetails]);
+
+  useEffect(() => {
+    async function fetchNowProductIsFavoriteCheck() {
+      const funcResponse = await getFavoriteProducts();
+      const isFavorite = funcResponse.some(
+        (product) => product.productId == productId
+      );
+      if (isFavorite) {
+        setIsHeartFilled(true);
+      } else {
+        setIsHeartFilled(false);
+      }
+    }
+    fetchNowProductIsFavoriteCheck();
+  }, [productId]);
 
   return (
     <>
@@ -103,7 +146,9 @@ function ProductDetailPage() {
                 <OptionBox></OptionBox>
               </S.RightOptionBox>
               <S.RightPriceBox>
-                <S.RightPriceBoxItem onClick={handleHeartClick}>
+                <S.RightPriceBoxItem
+                  onClick={() => handleHeartClick(isHeartFilled)}
+                >
                   <span>
                     {isHeartFilled ? (
                       <IoMdHeart

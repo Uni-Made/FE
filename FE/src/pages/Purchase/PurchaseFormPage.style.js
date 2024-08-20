@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { TbFileText } from "react-icons/tb";
 
 const Container = styled.form`
-  /* width: 90vw;
+  width: 90vw;
   display: flex;
   justify-content: center;
-  align-items: center; */
+  align-items: center;
 
   display: flex;
   flex-direction: column;
