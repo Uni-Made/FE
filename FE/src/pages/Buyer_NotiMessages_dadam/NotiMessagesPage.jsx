@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MaderHomeHeader from "./components/MaderHomeHeader";
 import {
   CONTAINER,
@@ -8,16 +9,26 @@ import {
   NOTIFICATION_ITEM,
   NOTIFICATION_TITLE,
   MainContainer,
+  NOTIFICATION_BODY,
 } from './NotiMessagesPage.style';
+import { authInstance } from '../../api/axiosInstance'; // axios 인스턴스 가져오기
 
-const renderNotificationList = (title, notifications) => {
+const renderNotificationList = (title, notifications, onNotificationClick) => {
   return (
     <SECTION_CONTAINER>
       <SECTION_TITLE>{title}</SECTION_TITLE>
       <NOTIFICATION_LIST>
         {notifications.map((notification) => (
-          <NOTIFICATION_ITEM key={notification.id}>
-            <NOTIFICATION_TITLE>{notification.title.substring(0, 20)}...</NOTIFICATION_TITLE>
+          <NOTIFICATION_ITEM
+            key={notification.id}
+            onClick={() => onNotificationClick(notification)}
+          >
+            <NOTIFICATION_TITLE>
+              "{notification.body.substring(0, 15)}..."
+            </NOTIFICATION_TITLE>
+            <NOTIFICATION_BODY>
+              {notification.title.substring(0, 35)}
+            </NOTIFICATION_BODY>
           </NOTIFICATION_ITEM>
         ))}
       </NOTIFICATION_LIST>
@@ -25,38 +36,65 @@ const renderNotificationList = (title, notifications) => {
   );
 };
 
-const  NotiMessagesPage = () => {
+const NotiMessagesPage = () => {
   const [notifications, setNotifications] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const mockApiResponse = {
-      code: "200",
-      message: "Success",
-      result: {
-        notificationList: [
-          { id: 1, title: '새로운 상품이 출시되었습니다.', body: '새로운 상품이 출시되었습니다. 많은 관심 부탁드립니다.' },
-          { id: 2, title: '배송 지연 안내', body: '배송이 지연되고 있습니다. 불편을 드려 죄송합니다.' },
-          { id: 3, title: '이벤트 당첨 안내', body: '이벤트에 당첨되셨습니다. 축하드립니다!' },
-          { id: 4, title: '긴급 공지 사항', body: '긴급 공지 사항이 있습니다. 확인 부탁드립니다.' },
-          { id: 5, title: '서비스 점검 안내', body: '서비스 점검이 있을 예정입니다. 이용에 참고하시기 바랍니다.' },
-        ],
-        nextCursor: 0,
-        isLast: true,
+    const userType = localStorage.getItem('userType'); // 로컬 스토리지에서 userType 가져오기
+    const url =
+      userType === 'seller'
+        ? '/seller/notifications/list?pageSize=100'
+        : '/buyer/notifications/list?pageSize=100';
+
+    const fetchNotifications = async () => {
+      try {
+        const response = await authInstance.get(url);
+
+        if (response.status === 200) {
+          const data = response.data;
+          setNotifications(data.result.notificationList);
+        } else {
+          console.error('Failed to fetch notifications:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
       }
     };
 
-    setNotifications(mockApiResponse.result.notificationList);
+    fetchNotifications();
   }, []);
 
+  const handleNotificationClick = (notification) => {
+
+    const productId = notification.id;
+    if (notification.title.includes('리뷰 작성 알림')) {
+      localStorage.setItem("reviewOrderId", notification.extraId);
+      navigate(`/product/${productId}`);
+    }
+  };
+
   if (!notifications) {
-    return <div>Loading...</div>;
+    return (
+      <MainContainer>
+        <MaderHomeHeader />
+        <CONTAINER>
+          <SECTION_CONTAINER>
+            <SECTION_TITLE>알림</SECTION_TITLE>
+            <NOTIFICATION_LIST>
+              온 알림이 없습니다. 
+            </NOTIFICATION_LIST>
+          </SECTION_CONTAINER>
+        </CONTAINER>
+      </MainContainer>
+    );
   }
 
   return (
     <MainContainer>
       <MaderHomeHeader />
       <CONTAINER>
-        {renderNotificationList('알림', notifications)}
+        {renderNotificationList('알림', notifications, handleNotificationClick)}
       </CONTAINER>
     </MainContainer>
   );

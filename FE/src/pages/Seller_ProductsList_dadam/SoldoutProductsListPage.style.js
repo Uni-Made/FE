@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+export const Containersum = styled.div`
+  width:100%;
+`;
 export const MainContainer = styled.div`
   overflow-x: hidden; 
   max-width: 100%;
@@ -48,7 +51,7 @@ export const SECTION_TITLE = styled.div`
 export const GRID_WRAPPER = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 20px; 
+  gap: 20px;
 `;
 
 export const ITEM_CONTAINER = styled.div`
@@ -62,7 +65,7 @@ export const PRODUCT_CARD = styled.div`
   height: 270px; 
   background-color: #f0f0f0;
   background-size: cover;
-  background-position: center;
+  background-position: center; 
   background-repeat: no-repeat; 
 `;
 

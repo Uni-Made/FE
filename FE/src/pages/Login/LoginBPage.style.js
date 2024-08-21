@@ -173,77 +173,86 @@ export const SoLogInContainer = styled.div`
 `;
 
 export const SocialButtonK = styled.div`
+  font-family: 'NanumSquareRoundOTF', sans-serif;
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   // margin-top:150px;
   background-color: #FEE500;
-  color: black;
+  color: #3C1E1E;
   border: none;
   border-radius: 10px;
   font-size: 2.6rem;
-  width: 40vw;
+  width: 32vw;
   height: 11vh;
   font-weight: bold;
   cursor: pointer;
-  margin: 30px 0 0 0;
+  // margin: 30px 0 0 0;
+  padding: 0 30px 0 0; 
+`;
 
-  img {
-    width: 60px;
-    height: 60px;
-    margin:20px;
-    margin-left:100px;
-     margin-right:50px;
-  }
+export const SKimg = styled.img`
+  width: 60px;
+  height: 60px;
+  margin:20px;
+  // margin-left:100px;
+  margin-right:70px;
+
 `;
 
 export const SocialButtonN = styled.div`
+  font-family: 'NanumSquareRoundOTF', sans-serif;
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   // margin-top:150px;
   background-color: #00C73C;
-  color: black;
+  color: #ffffff;
   border: none;
   border-radius: 10px;
   font-size: 2.6rem;
-  width: 40vw;
+  width: 32vw;
   height: 11vh;
   font-weight: bold;
   cursor: pointer;
   margin: 30px 0 0 0;
+  padding: 0 30px 0 0; 
+`;
 
-  img {
-    width: 60px;
-    height: 60px;
-    margin:20px;
-    margin-left:100px;
-     margin-right:50px;
-  }
+export const SNimg = styled.img`
+  width: 60px;
+  height: 60px;
+  margin:20px;
+  // margin-left:100px;
+  margin-right:70px;
+
 `;
 
 export const SocialButtonG = styled.div`
+  font-family: 'NanumSquareRoundOTF', sans-serif;
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   // margin-top:150px;
   background-color: #E6E6E6;
-  color: black;
+  color: #000000;
   border: none;
   border-radius: 10px;
   font-size: 2.6rem;
-  width: 40vw;
+  width: 32vw;
   height: 11vh;
   font-weight: bold;
   cursor: pointer;
   margin: 30px 0 0 0;
+  padding: 0 60px 0 0; 
 
-  img {
-    width: 60px;
-    height: 60px;
-    margin:20px;
-    margin-left:100px;
-     margin-right:50px;
-  }
+`;
+
+export const SGimg = styled.img`
+  width: 60px;
+  height: 60px;
+  margin:20px;
+  // margin-left:100px;
+  margin-right:70px;
 
 `;

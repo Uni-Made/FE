@@ -19,7 +19,7 @@ export const FilterSection = styled.div`
 
 export const SelectedArea = styled.div`
   /* flex: 1; */
-  width: 100px;
+  width: 140px;
   color: white;
   font-weight: bold;
   display: flex;
@@ -69,7 +69,7 @@ export const Item = styled.div`
   background-color: ${(props) => (props.selected ? "#24c7c4" : "none")};
   color: ${(props) => (props.selected ? "#fff" : "#000")};
   /* border: 1px solid #24c7c4; */
-  width: 100px;
+  width: 140px;
 `;
 
 export const InputGroup = styled.div`
@@ -93,7 +93,7 @@ export const SearchInput = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 15px;
-  width: 66%;
+  width: 69%;
 `;
 
 export const SearchIcon = styled(CiSearch)`
@@ -108,7 +108,7 @@ export const PriceGroup = styled(InputGroup)`
 
 export const PriceInput = styled.input`
   margin: 0 10px;
-  width: 26.5%;
+  width: 29.5%;
   padding: 5px 10px;
   border: 1px solid #ccc;
   border-radius: 15px;

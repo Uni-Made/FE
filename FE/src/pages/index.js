@@ -42,3 +42,5 @@ export { default as LoginSelectPage } from "./Login/LoginSelect/LoginSelectPage"
 export { default as LoginBPage } from "./Login/LoginBPage"
 export { default as SignUpBuyerPage } from "./SignUp/SignUpBuyerPage";
 export { default as  SellerInfoUpdate} from "./Seller_InfoUpdate/SellerInfoUpdate";
+export { default as Testtest } from "./ProductDetail/Testtest";
+

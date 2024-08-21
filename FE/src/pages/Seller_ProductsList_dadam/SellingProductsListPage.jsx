@@ -50,6 +50,7 @@ const renderProductList = (title, products, handleProductClick) => {
 
 const fetchProducts = async (page, setSellerData, setHasMore) => {
   console.log("Fetching page:", page);
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const response = await fetch(
       `http://15.165.185.157:8080/seller/myPage/sellingProducts?page=${page}&size=12`,
@@ -57,7 +58,7 @@ const fetchProducts = async (page, setSellerData, setHasMore) => {
         method: "GET",
         headers: {
           accept: "application/json;charset=UTF-8",
-          Authorization: `Bearer ${import.meta.env.VITE_SELLER_API_TEST_KEY}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -111,7 +112,21 @@ const SellingProductsListPage = () => {
   }, [inView, hasMore]);
 
   if (sellerData.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <Containersum>
+      <MaderHomeHeader />
+      <MainContainer>
+        <CONTAINER>
+        <SECTION_CONTAINER>
+          <SECTION_TITLE>판매 중인 상품</SECTION_TITLE>
+          <GRID_WRAPPER>
+            판매 중인 상품이 없습니다.
+          </GRID_WRAPPER>
+          </SECTION_CONTAINER>
+        </CONTAINER>
+      </MainContainer>
+    </Containersum>
+    )
   }
 
   return (

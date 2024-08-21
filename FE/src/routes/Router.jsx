@@ -37,6 +37,7 @@ import {
   LoginBPage,
   SignUpBuyerPage,
   SellerInfoUpdate
+  Testtest,
 } from "../pages";
 
 const Router = [
@@ -117,6 +118,7 @@ const Router = [
       { path: "api/v1/auth/buyer/google", element: <GoogleAfterLoginPage /> },
       { path: "loginselect", element: <LoginSelectPage /> },
       { path: "loginbpage", element: <LoginBPage /> },
+      { path: "/testtest", element: <Testtest /> },
     ],
     errorElement: <NotFoundPage />,
   },
