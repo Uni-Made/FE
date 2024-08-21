@@ -36,6 +36,7 @@ import {
   LoginSelectPage,
   LoginBPage,
   SignUpBuyerPage,
+  SellerInfoUpdate
   Testtest,
 } from "../pages";
 
@@ -68,6 +69,7 @@ const Router = [
       { path: "notice/Board", element: <NoticeBoardPage /> },
       { path: "notice/:noticeId", element: <NoticeDetailPage /> },
       { path: "defaultMyPage/modify/myInfo", element: <BuyerInfoModifyPage /> },
+      { path: "maderMyPage/modify/myInfo", element: <SellerInfoUpdate/> },
       {
         path: "defaultMyPage/favorite/products",
         element: <FavoriteProductsListPage />,
@@ -109,7 +111,7 @@ const Router = [
         path: "maderMyPage/product/register",
         element: <ProductRegisterPage />,
       },
-      { path: "maderMyPage/product/modify", element: <ProductModifyPage /> },
+      { path: "maderMyPage/product/modify/:productId", element: <ProductModifyPage /> },
       { path: "/api/v1/auth/buyer/test", element: <BeforeLoginPage /> },
       { path: "api/v1/auth/buyer/kakao", element: <KakaoAfterLoginPage /> },
       { path: "api/v1/auth/buyer/naver", element: <NaverAfterLoginPage /> },
