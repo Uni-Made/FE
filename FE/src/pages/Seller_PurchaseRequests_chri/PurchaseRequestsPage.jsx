@@ -12,37 +12,55 @@ const Container = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
-  min-width: 70%;
-  font-size: 18px;
+  max-width: 1300px;
+  width: 100%;
+
 `;
 
 const HeaderAndTitle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 20px;
-  margin-top:40px;
+
 `;
 
 const Title = styled.h1`
   color: #FF0099;
   text-align: left;
-  margin: 0;
-  font-size: 45px;
+  font-size: 65px;
+  margin-bottom: 80px;
+  margin-top: 90px;
 `;
 
 const TableWrapper = styled.div`
-  max-height: 64vh; 
+  max-height: 70vh; 
   overflow-y: auto; 
   overflow-x: hidden; 
+  position: relative;
+  font-size: 23px;
+  @media (max-width: 730px) {
+    font-size: 17px;
+  }
+  @media (max-width: 650px) {
+    font-size: 15px;
+  }
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; // Ensure columns are properly aligned
+  border-spacing: 0; // 간격 제거
+
 `;
 
-
+const TableHeader = styled.thead`
+  position: sticky;
+  top: 0;
+  background-color: #f0f0f0;
+  height: 100px;
+  z-index: 1; // z-index 설정
+`;
 
 const Th = styled.th`
   background-color: #f0f0f0;
@@ -66,10 +84,17 @@ const Td = styled.td`
 
 const Tr = styled.tr`
   border-bottom: 1px solid #DDDDDD;
+  
 `;
 
 const OrderIDTd = styled(Td)`
-  font-size: 16px;
+  font-size: 23px;
+  @media (max-width: 730px) {
+    font-size: 17px;
+  }
+  @media (max-width: 650px) {
+    font-size: 15px;
+  }  
 `;
 
 const getStatusText = (status) => {
@@ -92,7 +117,6 @@ const PaymentStatusTd = styled(Td)`
     props.status === 'PENDING' ? 'red' :
     props.status === 'RECEIVED' ? '#FF0099' :
     props.status === 'CANCELLED' ? 'darkgray' :
-
     'black'};
   cursor: pointer; 
 `;
@@ -105,16 +129,18 @@ const PurchaseRequestPage = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const { ref, inView } = useInView();
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   const fetchMoreData = useCallback(async () => {
     if (!hasMore) return;
-  
+
+    setIsLoading(true); // 데이터 로딩 시작 시 로딩 상태를 true로 설정
+
     try {
       const response = await sellerInstance.get(`/seller/product/${productId}?page=${page}`);
-      
       const newData = response.data.content;
       const sortedData = [...data, ...newData].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  
+
       setData(sortedData);
       setHasMore(newData.length > 0);
       setPage(prev => prev + 1);
@@ -128,6 +154,8 @@ const PurchaseRequestPage = () => {
         setHasMore(false); 
       }
       console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 설정
     }
   }, [page, hasMore, data, productId]);
 
@@ -190,13 +218,17 @@ const PurchaseRequestPage = () => {
         </HeaderAndTitle>
         <TableWrapper>
           <Table>
-            <thead>
+            <TableHeader>
               <Tr>
                 <Th>주문ID</Th><Th>상품명</Th><Th>구매요청일</Th><Ta>입금확인</Ta>
               </Tr>
-            </thead>
+            </TableHeader>
             <tbody>
-              {errorMessage ? (
+              {isLoading ? (
+                <Tr>
+                  <Td colSpan={4} style={{ textAlign: 'center' }}>로딩 중...</Td>
+                </Tr>
+              ) : errorMessage ? (
                 <Tr>
                   <Td colSpan={4} style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</Td>
                 </Tr>
@@ -216,7 +248,7 @@ const PurchaseRequestPage = () => {
                   <Td colSpan={4}>구매요청이 없습니다.</Td>
                 </Tr>
               )}
-              {hasMore && (
+              {hasMore && !isLoading && (
                 <Tr ref={ref} key="loading-row">
                   <Td colSpan={4}>로딩 중...</Td>
                 </Tr>
@@ -235,7 +267,6 @@ const PurchaseRequestPage = () => {
       </Container>
     </>
   );
-  
 };
 
 export default PurchaseRequestPage;

@@ -11,10 +11,10 @@ export const Container = styled.div`
 `;
 
 export const NumTitle = styled.h1`
-  font-size: 30px;
+  font-size: 38px;
   font-weight: bold;
-  line-height: 60px;
-  width: 60px;
+  line-height: 76px;
+  width: 76px;
   text-align: center;
   background-color: #FF0099;
   color: white;
@@ -23,11 +23,12 @@ export const NumTitle = styled.h1`
 `;
 
 export const Title = styled.h1`
-  font-size: 30px;
+  font-size: 38px;
   font-weight: bold;
   line-height: 50px;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: 10px;
 `;
 
 export const Input = styled.input`
@@ -36,9 +37,9 @@ export const Input = styled.input`
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 30px;
-  height: 48px; 
+  height: 50px; 
 `;
 
 export const InputWrapper = styled.div`
@@ -52,9 +53,9 @@ export const InputWrapper = styled.div`
 
 export const ErrorMessage = styled.div`
   color: #FF0099;
-  font-size: 12px;
+  font-size: 15px;
   text-align: left;
-  min-height: 20px;
+  min-height: 22px;
 `;
 
 
@@ -83,13 +84,13 @@ export const Select = styled.select`
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 4px;
-  font-size: 16px;
-  height: 48px;
+  font-size: 18px;
+  height: 50px;
 `;
 export const InputWithButton = styled.div`
   position: relative;
   width: 90%;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   
 `;
 
