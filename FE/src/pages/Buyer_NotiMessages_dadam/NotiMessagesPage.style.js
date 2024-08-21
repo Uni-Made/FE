@@ -41,7 +41,13 @@ export const NOTIFICATION_ITEM = styled.li`
   border-radius: 8px;
 `;
 
-export const NOTIFICATION_TITLE = styled.div`
+export const NOTIFICATION_TITLE = styled.span`
+  font-size: 18px;
+  color: #00DDDD;
+  font-weight: bold;
+`;
+
+export const NOTIFICATION_BODY = styled.span`
   font-size: 18px;
   color: #333;
   font-weight: bold;

@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 import MaderHomeHeader from "./components/MaderHomeHeader";
 import SortingDropdown from './components/SortingDropdown';
 import axios from 'axios';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import {
   CONTAINER,
@@ -25,24 +28,29 @@ import {
   PROFILE_CONTAIN,
   CONTAINESUM,
   DROPDOWN,
-  LOAD_MORE_BUTTON,  
 } from './MaderHomePage.style';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const MaderHomePage = () => {
+  const { maderId } = useParams();
+  const navigate = useNavigate();
   const [sellerData, setSellerData] = useState(null);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [sortCriteria, setSortCriteria] = useState('popular');
   const [page, setPage] = useState(0);
-  const [size] = useState(10); 
-  const [hasMore, setHasMore] = useState(true); 
+  const [size] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 1.0,
+  });
 
-  const fetchSellerData = async (reset = false) => {
+  const fetchSellerData = useCallback(async (reset = false) => {
     if (loading) return;
 
     setLoading(true);
+    const accessToken = localStorage.getItem("accessToken");
     try {
-      const response = await axios.get(`http://15.165.185.157:8080/buyer/1`, {
+      const response = await axios.get(`http://15.165.185.157:8080/buyer/${maderId}`, {
         params: {
           sort: sortCriteria,
           page,
@@ -50,21 +58,23 @@ const MaderHomePage = () => {
         },
         headers: {
           'accept': 'application/json;charset=UTF-8',
-          'Authorization':  `Bearer ${import.meta.env.VITE_UNIMADE_ADMIN_API_KEY}`
+          'Authorization': `Bearer ${accessToken}`,
         }
       });
+
+      const newProducts = response.data.products.content;
 
       if (reset) {
         setSellerData({
           ...response.data,
-          sellingProducts: response.data.products.content,
+          sellingProducts: newProducts,
         });
       } else {
         setSellerData(prevData => ({
           ...prevData,
           sellingProducts: [
             ...prevData.sellingProducts,
-            ...response.data.products.content,
+            ...newProducts,
           ],
         }));
       }
@@ -75,21 +85,58 @@ const MaderHomePage = () => {
     } finally {
       setLoading(false);
     }
+  }, [loading, maderId, sortCriteria, page, size]);
+
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const toggleFavorite = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.post(
+        `http://15.165.185.157:8080/buyer/favorite/${maderId}`,
+        {},
+        {
+          headers: {
+            'accept': 'application/json;charset=UTF-8',
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        }
+      );
+      
+      console.log(response.data.message);
+
+      setSellerData(prevData => ({
+        ...prevData,
+        favoriteSeller: !prevData.favoriteSeller
+      }));
+
+    } catch (error) {
+      console.error("좋아요 요청 중 오류 발생:", error);
+    }
   };
 
   useEffect(() => {
-    fetchSellerData(true); 
-  }, [sortCriteria]);
+    fetchSellerData(true);
+  }, [sortCriteria, maderId]);
+
+  useEffect(() => {
+    if (inView && hasMore) {
+      setPage(prevPage => prevPage + 1);
+    }
+  }, [inView, hasMore]);
+
+  useEffect(() => {
+    if (page > 0) {
+      fetchSellerData();
+    }
+  }, [page]);
 
   const handleSortChange = (criteria) => {
     setSortCriteria(criteria);
-    setPage(0); 
-    setHasMore(true); 
-  };
-
-  const loadMoreProducts = () => {
-    setPage(prevPage => prevPage + 1);
-    fetchSellerData(); 
+    setPage(0);
+    setHasMore(true);
   };
 
   const renderProductList = (title, products) => {
@@ -106,7 +153,15 @@ const MaderHomePage = () => {
         <GRID_WRAPPER>
           {products.map((product) => (
             <ITEM_CONTAINER key={product.productId}>
-              <PRODUCT_CARD style={{ backgroundImage: product.imageUrl ? `url(${product.imageUrl})` : 'none', backgroundColor: '#f0f0f0', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+              <PRODUCT_CARD 
+                style={{ 
+                  backgroundImage: product.imageUrl ? `url(${product.imageUrl})` : 'none', 
+                  backgroundColor: '#f0f0f0', 
+                  backgroundSize: 'cover', 
+                  backgroundPosition: 'center' 
+                }} 
+                onClick={() => handleProductClick(product.productId)} 
+              />
               <PRODUCT_DETAILS>
                 <PRODUCT_NAME>{product.name}</PRODUCT_NAME>
                 <PRODUCT_PRICE>{product.price.toLocaleString()}원</PRODUCT_PRICE>
@@ -115,9 +170,6 @@ const MaderHomePage = () => {
           ))}
         </GRID_WRAPPER>
         {loading && <div>로딩 중...</div>}
-        {!loading && hasMore && (
-          <LOAD_MORE_BUTTON onClick={loadMoreProducts}>더 불러오기</LOAD_MORE_BUTTON>
-        )}
       </SECTION_CONTAINER>
     );
   };
@@ -135,7 +187,7 @@ const MaderHomePage = () => {
           <div>
             <PROFILE_CONTAIN>
               <PROFILE_NAME>{sellerData.name}</PROFILE_NAME>
-              <PROFILE_favorite>
+              <PROFILE_favorite onClick={toggleFavorite}>
                 {sellerData.favoriteSeller ? <FaHeart /> : <FaRegHeart />}
               </PROFILE_favorite>
             </PROFILE_CONTAIN>
@@ -146,6 +198,7 @@ const MaderHomePage = () => {
           <SETTINGS_ICON />
         </PROFILE_CONTAINER>
         {renderProductList('판매 중인 상품', sellerData.sellingProducts)}
+        <div ref={ref} style={{ height: '10px' }} />
       </CONTAINER>
     </MainContainer>
   );
