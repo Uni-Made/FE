@@ -40,15 +40,15 @@ function LoginBPage() {
       <S.LogoIcon src={Logo} onClick={handleClickLogo} ></S.LogoIcon>
           <S.SoLogInContainer>
             <S.SocialButtonK onClick={() => handleClickButton("kakao")}>
-              <img src={Kakao} alt="Kakao" />
+              <S.SKimg src={Kakao} alt="Kakao" />
               카카오로 시작하기
             </S.SocialButtonK>
             <S.SocialButtonN onClick={() => handleClickButton("naver")}>
-              <img src={Naver} alt="Naver" />
+              <S.SNimg src={Naver} alt="Naver" />
               네이버로 시작하기
             </S.SocialButtonN>
             <S.SocialButtonG onClick={() => handleClickButton("google")}>
-              <img src={Google} alt="Google" />
+              <S.SGimg src={Google} alt="Google" />
               구글로 시작하기
             </S.SocialButtonG>
           </S.SoLogInContainer>

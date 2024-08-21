@@ -848,6 +848,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@kfonts/nanum-square-round-otf@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kfonts/nanum-square-round-otf/-/nanum-square-round-otf-0.2.0.tgz#1686ebe837b687dd1715261384775fe99d67b532"
+  integrity sha512-qPn5ZsLgMs/QeuZVDnnHvNSEXNZeK9UtMleoQcWLGVNtjE0tdF2Kaa1WzPvldQBDToOuek4d27D1+yP8mA19AA==
+
 "@mapbox/node-pre-gyp@^1.0.0":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.11.tgz#417db42b7f5323d79e93b34a6d7a2a12c0df43fa"
@@ -2211,7 +2216,7 @@ faye-websocket@0.11.4:
     "@react-pdf-viewer/toolbar" "^3.12.0"
     "@reduxjs/toolkit" "^2.2.6"
     axios "^1.7.2"
-    fe "file:../../../../AppData/Local/Yarn/Cache/v6/npm-fe-0.0.0-23636ff1-7588-4455-a629-b8d1d242851c-1724156384402/node_modules/fe"
+    fe "file:../../../../../AppData/Local/Yarn/Cache/v6/npm-fe-0.0.0-2b30b3e7-341f-4989-b877-e5f390bae9a7-1724220368397/node_modules/fe"
     firebase "^10.12.5"
     framer-motion "^11.2.14"
     pdfjs-dist "3.4.120"
