@@ -185,7 +185,15 @@ const Navbar = (type) => {
       </SearchInputContainer>
       <NavLinks>
         <NavLink to="/notice/board">Event</NavLink>
-        <NavLink to="/defaultMyPage">My Page</NavLink>
+        <NavLink
+          to={
+            localStorage.getItem("userType") == "buyer"
+              ? "/defaultMyPage"
+              : "/maderMyPage"
+          }
+        >
+          My Page
+        </NavLink>
         <NavLink to="/">Logout</NavLink>
       </NavLinks>
     </HeaderContainer>

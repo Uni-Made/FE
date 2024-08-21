@@ -2,26 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Container, Title, Form, Label, Input, Button, ErrorMessage } from './UserInfoUpdatePage.style';
 import styled from 'styled-components';
 import axios from 'axios'; // axios를 사용하여 API 호출
+import Navbar from "../ProductList/components/Navbar";
 
 const BuyerInfoModifyPage = () => {
-  const [name, setName] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // 초기 사용자 정보를 불러오기 위한 GET 요청
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('http://15.165.185.157:8080/buyer/info', {
-          headers: {
-            'accept': 'application/json;charset=UTF-8',
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNjQxNTk0NjM1IiwiaWQiOiIzNjQxNTk0NjM1Iiwicm9sZSI6IkJVWUVSIiwiaWF0IjoxNzIzMDA2ODUzLCJleHAiOjE3MjU1OTg4NTN9.QtmQVSuHPE_mhshXcsEPMFPxVIvU_nxXz9ZsKvTiQgQ'
+        const response = await axios.get(
+          "http://15.165.185.157:8080/buyer/info",
+          {
+            headers: {
+              accept: "application/json;charset=UTF-8",
+              Authorization:
+                "Bearer " + import.meta.env.VITE_WOONG_SELLER_API_KEY,
+            },
           }
-        });
+        );
         const { name } = response.data.result;
-        setName(name || '');
+        setName(name || "");
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        console.error("Error fetching user info:", error);
       }
     };
 
@@ -33,17 +38,22 @@ const BuyerInfoModifyPage = () => {
 
     try {
       // 서버로 수정된 정보를 PATCH 요청으로 전송
-      await axios.patch('http://15.165.185.157:8080/buyer/update/info', {
-        name
-      }, {
-        headers: {
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNjQxNTk0NjM1IiwiaWQiOiIzNjQxNTk0NjM1Iiwicm9sZSI6IkJVWUVSIiwiaWF0IjoxNzIzMDA2ODUzLCJleHAiOjE3MjU1OTg4NTN9.QtmQVSuHPE_mhshXcsEPMFPxVIvU_nxXz9ZsKvTiQgQ'
+      await axios.patch(
+        "http://15.165.185.157:8080/buyer/update/info",
+        {
+          name,
+        },
+        {
+          headers: {
+            Authorization:
+              "Bearer " + import.meta.env.VITE_WOONG_SELLER_API_KEY,
+          },
         }
-      });
-      alert('이름이 수정되었습니다.');
+      );
+      alert("이름이 수정되었습니다.");
     } catch (error) {
-      console.error('Error updating user info:', error);
-      setError('이름 수정 중 오류가 발생했습니다.');
+      console.error("Error updating user info:", error);
+      setError("이름 수정 중 오류가 발생했습니다.");
     }
   };
 
@@ -53,7 +63,7 @@ const BuyerInfoModifyPage = () => {
 
   const handleConfirmDelete = () => {
     // 여기에 회원탈퇴 API 호출 로직을 추가하세요
-    alert('회원탈퇴가 완료되었습니다.');
+    alert("회원탈퇴가 완료되었습니다.");
     setIsModalOpen(false);
   };
 
@@ -62,33 +72,36 @@ const BuyerInfoModifyPage = () => {
   };
 
   return (
-    <Container>
-      <Title>이름 수정</Title>
-      <Form onSubmit={handleSubmit}>
-        <Label>이름</Label>
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button type="submit">완료</Button>
-      </Form>
+    <>
+      <Navbar />
+      <Container>
+        <Title>이름 수정</Title>
+        <Form onSubmit={handleSubmit}>
+          <Label>이름</Label>
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Button type="submit">완료</Button>
+        </Form>
 
-      <DeleteButton onClick={handleDeleteAccount}>회원탈퇴</DeleteButton>
+        <DeleteButton onClick={handleDeleteAccount}>회원탈퇴</DeleteButton>
 
-      {isModalOpen && (
-        <ModalOverlay>
-          <ModalContent>
-            <p>회원을 탈퇴하시겠습니까?</p>
-            <ButtonContainer>
-              <ModalButton onClick={handleConfirmDelete}>확인</ModalButton>
-              <ModalButton onClick={handleCancelDelete}>취소</ModalButton>
-            </ButtonContainer>
-          </ModalContent>
-        </ModalOverlay>
-      )}
-    </Container>
+        {isModalOpen && (
+          <ModalOverlay>
+            <ModalContent>
+              <p>회원을 탈퇴하시겠습니까?</p>
+              <ButtonContainer>
+                <ModalButton onClick={handleConfirmDelete}>확인</ModalButton>
+                <ModalButton onClick={handleCancelDelete}>취소</ModalButton>
+              </ButtonContainer>
+            </ModalContent>
+          </ModalOverlay>
+        )}
+      </Container>
+    </>
   );
 };
 

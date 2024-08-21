@@ -5,6 +5,7 @@ export const Container = styled.div`
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  overflow-y: auto;
 `;
 
 export const Title = styled.h1`
