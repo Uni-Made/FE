@@ -7,10 +7,34 @@ const axiosApi = (url) => {
   const instance = axios.create({
     baseURL: url,
     headers: {
-      // "Content-Type": "application/json",
+      "Content-Type": "application/json",
       // "X-CSRFToken": csrftoken,
     },
     // ...options,
+  });
+  return instance;
+};
+
+const axiosSellerApi = (url, options) => {
+  const token = localStorage.getItem("accessToken") || import.meta.env.VITE_WOONG_SELLER_API_KEY;
+  const instance = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    ...options,
+  });
+  return instance;
+};
+
+const axiosBuyerApi = (url, options) => {
+  const token = localStorage.getItem("accessToken") || import.meta.env.VITE_WOONG_BUYER_API_KEY;
+  const instance = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    ...options,
   });
   return instance;
 };
@@ -46,18 +70,10 @@ const axiosAuthApi = (url, options = {}) => {
   return instance;
 };
 
-const axiosSellerApi = (url, options = {}) => {
-  const token = import.meta.env.VITE_REACT_APP_ACCESS_TOKEN;
-  const instance = axios.create({
-    baseURL: url,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    ...options,
-  });
-  return instance;
-};
 
-export const defaultInstance = axiosApi(BASE_URL);
-export const authInstance = axiosAuthApi(BASE_URL);
+
 export const sellerInstance = axiosSellerApi(BASE_URL);
+export const buyerInstance = axiosBuyerApi(BASE_URL);
+export const authInstance = axiosAuthApi(BASE_URL);
+export const defaultInstance = axiosApi(BASE_URL);
+
