@@ -42,7 +42,8 @@ function SellingProductDetailPage() {
 
   useEffect(() => {
     console.log("getproductDetail호출", productId);
-    dispatch(getProductDetails(productId));
+    const userType = localStorage.getItem("userType");
+    dispatch(getProductDetails({ productId, userType }));
   }, [productId, getProductDetails]);
 
   return (

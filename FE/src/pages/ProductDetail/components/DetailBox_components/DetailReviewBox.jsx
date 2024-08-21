@@ -27,11 +27,20 @@ const HeaderRight = styled.div`
 `;
 const ReviewBox = styled.div``;
 
-async function getProductReviews(productId) {
+async function getProductReviews(productId, userType) {
   try {
-    const data = await authInstance.get(
-      "/buyer/product/" + productId + "?viewType=REVIEW"
-    );
+    let data;
+    const viewType = "REVIEW";
+    if (userType == "seller") {
+      data = await authInstance.get(
+        `/seller/myPage/${productId}?viewType=${viewType}`
+      );
+    } else {
+      data = await authInstance.get(
+        `/buyer/product/${productId}?viewType=${viewType}`
+      );
+    }
+
     console.log(data.data.result.reviews);
     return data.data.result.reviews;
   } catch (error) {
@@ -39,18 +48,27 @@ async function getProductReviews(productId) {
   }
 }
 const DetailReviewBox = forwardRef((props, ref) => {
+  const [orderId, setOrderId] = useState(null);
+  if (localStorage.getItem("reviewOrderId")) {
+    const nowOrderId = localStorage.getItem("reviewOrderId");
+    console.log(nowOrderId);
+    setOrderId(nowOrderId);
+    localStorage.removeItem("reviewOrderId");
+  }
+
   const [productReviews, setProductReviews] = useState(null);
   const { productId } = useParams();
   useEffect(() => {
     async function fetchReviews() {
-      const reviews = await getProductReviews(productId);
+      const reviews = await getProductReviews(
+        productId,
+        localStorage.getItem("userType")
+      );
       setProductReviews(reviews);
     }
 
     fetchReviews();
   }, [productId]);
-  const location = useLocation();
-  console.log(location);
 
   return (
     <Container ref={ref}>
@@ -74,16 +92,14 @@ const DetailReviewBox = forwardRef((props, ref) => {
                   key={review.id}
                   stars={review.ratingStar}
                   content={review.content}
-                  option={review.option}
+                  options={review.options}
                   reviewerName={review.buyer}
                   reviewDate={review.createdAt}
-                  // avatar={review.avatar}
+                  avatar={review.imgUrl}
                 />
               );
             })}
-            <DetailReviewItem
-            // avatar={review.avatar}
-            />
+            {orderId && <DetailReviewItem orderId={orderId}></DetailReviewItem>}
           </ReviewBox>
         </>
       )}
