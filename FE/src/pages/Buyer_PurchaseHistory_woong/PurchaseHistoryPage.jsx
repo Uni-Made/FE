@@ -4,7 +4,9 @@ import { Container, Title, Table, Th, Td, ProductImage } from './PurchaseHistory
 
 async function getPurchaseHistory(cursor, pageSize) {
   try {
-    const response = await buyerInstance.get(`/buyer/history?cursor=${cursor}&pageSize=${pageSize}`);
+    const response = await buyerInstance.get(
+      `/buyer/history?pageSize=${pageSize}`
+    );
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -21,15 +23,15 @@ const PurchaseHistoryPage = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await getPurchaseHistory(10, 10); // Adjust cursor and pageSize as needed
+        const response = await getPurchaseHistory(0, 10); // Adjust cursor and pageSize as needed
         if (response && response.result && response.result.orders) {
           setHistory(response.result.orders);
         } else {
-          throw new Error('Unexpected response structure');
+          throw new Error("Unexpected response structure");
         }
       } catch (error) {
-        console.error('Error fetching buyer data:', error);
-        setError('Error loading history data');
+        console.error("Error fetching buyer data:", error);
+        setError("Error loading history data");
       } finally {
         setLoading(false);
       }
@@ -61,10 +63,13 @@ const PurchaseHistoryPage = () => {
         <tbody>
           {history.map((item) => (
             <tr key={item.orderId}>
-              <Td><ProductImage src={item.productImage} alt={item.productName} /></Td>
+              {console.log(item)}
+              <Td>
+                <ProductImage src={item.productImage} alt={item.productName} />
+              </Td>
               <Td>{item.productName}</Td>
               <Td>{new Date(item.orderTime).toLocaleDateString()}</Td>
-              <Td>{item.orderStatus === 'PENDING' ? '대기중' : '확인완료'}</Td>
+              <Td>{item.orderStatus === "PENDING" ? "대기중" : "확인완료"}</Td>
             </tr>
           ))}
         </tbody>

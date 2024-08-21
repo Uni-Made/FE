@@ -33,7 +33,7 @@ export const Td = styled.td`
   text-align: left;
 `;
 
-export const ProductImage = styled.div`
+export const ProductImage = styled.img`
   width: 60px;
   height: 60px;
   background-color: #f0f0f0;
