@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';  // useNavigate 추가
+import { useParams, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MaderHomeHeader from "./components/MaderHomeHeader";
 import SortingDropdown from './components/SortingDropdown';
 import axios from 'axios';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import {
   CONTAINER,
@@ -28,11 +29,10 @@ import {
   CONTAINESUM,
   DROPDOWN,
 } from './MaderHomePage.style';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const MaderHomePage = () => {
   const { maderId } = useParams();
-  const navigate = useNavigate();  // useNavigate 훅 사용
+  const navigate = useNavigate();
   const [sellerData, setSellerData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sortCriteria, setSortCriteria] = useState('popular');
@@ -88,7 +88,33 @@ const MaderHomePage = () => {
   }, [loading, maderId, sortCriteria, page, size]);
 
   const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);  // navigate를 사용하여 페이지 이동
+    navigate(`/product/${productId}`);
+  };
+
+  const toggleFavorite = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.post(
+        `http://15.165.185.157:8080/buyer/favorite/${maderId}`,
+        {},
+        {
+          headers: {
+            'accept': 'application/json;charset=UTF-8',
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        }
+      );
+      
+      console.log(response.data.message);
+
+      setSellerData(prevData => ({
+        ...prevData,
+        favoriteSeller: !prevData.favoriteSeller
+      }));
+
+    } catch (error) {
+      console.error("좋아요 요청 중 오류 발생:", error);
+    }
   };
 
   useEffect(() => {
@@ -134,7 +160,7 @@ const MaderHomePage = () => {
                   backgroundSize: 'cover', 
                   backgroundPosition: 'center' 
                 }} 
-                onClick={() => handleProductClick(product.productId)}  // 클릭 시 handleProductClick 호출
+                onClick={() => handleProductClick(product.productId)} 
               />
               <PRODUCT_DETAILS>
                 <PRODUCT_NAME>{product.name}</PRODUCT_NAME>
@@ -144,9 +170,6 @@ const MaderHomePage = () => {
           ))}
         </GRID_WRAPPER>
         {loading && <div>로딩 중...</div>}
-        {/* {!loading && !hasMore && (
-          <div>모든 상품을 불러왔습니다.</div>
-        )} */}
       </SECTION_CONTAINER>
     );
   };
@@ -164,7 +187,7 @@ const MaderHomePage = () => {
           <div>
             <PROFILE_CONTAIN>
               <PROFILE_NAME>{sellerData.name}</PROFILE_NAME>
-              <PROFILE_favorite>
+              <PROFILE_favorite onClick={toggleFavorite}>
                 {sellerData.favoriteSeller ? <FaHeart /> : <FaRegHeart />}
               </PROFILE_favorite>
             </PROFILE_CONTAIN>
