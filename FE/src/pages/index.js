@@ -41,3 +41,4 @@ export { default as LoginSelectPage } from "./Login/LoginSelect/LoginSelectPage"
 // login 바이어(소셜)
 export { default as LoginBPage } from "./Login/LoginBPage"
 export { default as SignUpBuyerPage } from "./SignUp/SignUpBuyerPage";
+export { default as Testtest } from "./ProductDetail/Testtest";

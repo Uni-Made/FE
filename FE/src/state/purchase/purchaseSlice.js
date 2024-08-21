@@ -20,12 +20,21 @@ const initialState = {
 
 export const getProductDetails = createAsyncThunk(
   "products/getProductDetails",
-  async (productId) => {
+  async ({ productId, userType }) => {
+    console.log(productId, userType);
     // const response = await getProductDetailsTest(`/api/products/${productId}`);
     const viewType = "DETAIL";
-    const response = await authInstance.get(
-      `/buyer/product/${productId}?viewType=${viewType}`
-    );
+    let response;
+    if (userType == "seller") {
+      response = await authInstance.get(
+        `/seller/myPage/${productId}?viewType=${viewType}`
+      );
+    } else {
+      response = await authInstance.get(
+        `/buyer/product/${productId}?viewType=${viewType}`
+      );
+    }
+
     // const response = await authInstance.get(
     //   `/api/products/${productId}?viewType=${viewType}`
     // );

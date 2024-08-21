@@ -32,6 +32,21 @@ const ModalContainer = styled.div`
   text-align: center;
 `;
 
+const ModalTopBox = styled.div`
+  display: flex;
+  height: 90%;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const TotalBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 20%;
+`;
+
 const OptionTextBox = styled.div`
   display: flex;
   justify-content: space-between;
@@ -86,24 +101,30 @@ export default function Modal({ showModal, handleClose }) {
     <>
       <ModalOverlay show={showModal} />
       <ModalContainer show={showModal}>
-        {selectedOptions.map((option, idx) => (
-          <OptionTextBox key={idx}>
-            <p>
-              {option.values.map((optionItem) => (
-                <>{optionItem + " "}</>
-              ))}{" "}
-            </p>
-            <p>{option.amount}개</p>
-          </OptionTextBox>
-        ))}
-        <PriceText>총 {totalPrice}원</PriceText>
-        <h3>상품을 구매하시겠습니까?</h3>
-        <ButtonContainer>
-          <Button primary onClick={handleYesBtnClick}>
-            예
-          </Button>
-          <Button onClick={handleClose}>아니오</Button>
-        </ButtonContainer>
+        <ModalTopBox>
+          <div>
+            {selectedOptions.map((option, idx) => (
+              <OptionTextBox key={idx}>
+                <p>
+                  {option.values.map((optionItem) => (
+                    <>{optionItem + " "}</>
+                  ))}{" "}
+                </p>
+                <p>{option.amount}개</p>
+              </OptionTextBox>
+            ))}
+          </div>
+          <div>
+            <PriceText>총 {totalPrice}원</PriceText>
+            <h3>상품을 구매하시겠습니까?</h3>
+          </div>
+          <ButtonContainer>
+            <Button primary onClick={handleYesBtnClick}>
+              예
+            </Button>
+            <Button onClick={handleClose}>아니오</Button>
+          </ButtonContainer>
+        </ModalTopBox>
       </ModalContainer>
     </>
   );

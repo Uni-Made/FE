@@ -90,7 +90,8 @@ function ProductDetailPage() {
 
   useEffect(() => {
     console.log("getproductDetail호출", productId);
-    dispatch(getProductDetails(productId));
+    const userType = localStorage.getItem("usertype");
+    dispatch(getProductDetails({ productId, userType }));
   }, [productId, getProductDetails]);
 
   useEffect(() => {

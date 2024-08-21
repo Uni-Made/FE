@@ -23,7 +23,7 @@ const QnaTap = styled.div`
 
 async function getProductQNA(productId) {
   const apiResponse = await authInstance.get(
-    "/buyer/product/" + productId + "?viewType=QNA&pageSize=10"
+    "/seller/myPage/" + productId + "?viewType=QNA&pageSize=10"
   );
   return apiResponse.data.result.questions;
 }
