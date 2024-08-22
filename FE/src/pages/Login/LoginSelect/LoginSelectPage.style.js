@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Title = styled.h1`
   font-family: 'Inspiration', cursive;
-  font-size: 200px;
+  font-size: 220px;
   font-weight: 400;
   line-height: 254px;
   text-align: center;
@@ -30,8 +30,6 @@ export const Text = styled.p`
   line-height: 48.41px;
   text-align: center;
   width: 100%;
-  /* 미디어 쿼리 추가 */
-
   @media (max-width: 768px) {
     font-size: 34px; 
   }
@@ -47,7 +45,8 @@ export const Text = styled.p`
 const BaseButton = styled.button`
   width: 100%;
   max-width: 647px; /* 최대 너비 설정 */
-  height: 100px;
+  height: 110px;
+  min-height: 100px;
   margin: 20px auto;
   display: block;
   border-radius: 20px;
@@ -57,10 +56,6 @@ const BaseButton = styled.button`
   color: white;
   cursor: pointer;
   font-size: 30px;
-
-  &:hover {
-    opacity: 0.7;
-  }
 
   &:active {
     opacity: 0.5;
@@ -82,6 +77,11 @@ export const SellerButton = styled(BaseButton)`
   & > span {
     font-weight: bold;
   }
+  &:hover{
+    background-color: white;
+    color: #FF0099;
+    border: 1.5px solid #FF0099;
+  }
 `;
 
 export const BuyerButton = styled(BaseButton)`
@@ -89,4 +89,13 @@ export const BuyerButton = styled(BaseButton)`
   & > span {
     font-weight: bold;
   }
+  &:hover{
+    background-color: white;
+    color: #00DDDD;
+    border: 1.5px solid #00DDDD;
+  }
+`;
+export const Wrap =styled.div`
+  width: 1300px;
+
 `;

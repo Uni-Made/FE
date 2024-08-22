@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaderHomeHeader from "./components/MaderHomeHeader";
+import NotiMessageFooter from "./components/NotiMessageFooter";
 import {
   CONTAINER,
   SECTION_CONTAINER,
@@ -11,7 +12,7 @@ import {
   MainContainer,
   NOTIFICATION_BODY,
 } from './NotiMessagesPage.style';
-import { authInstance } from '../../api/axiosInstance'; // axios 인스턴스 가져오기
+import { authInstance } from '../../api/axiosInstance'; 
 
 const renderNotificationList = (title, notifications, onNotificationClick) => {
   return (
@@ -24,10 +25,12 @@ const renderNotificationList = (title, notifications, onNotificationClick) => {
             onClick={() => onNotificationClick(notification)}
           >
             <NOTIFICATION_TITLE>
-              "{notification.body.substring(0, 15)}..."
+              {notification.body?.name 
+                ? `"${notification.body.name.substring(0, 15)}..."` 
+                : `"${notification.body.substring(0, 15)}..."`}
             </NOTIFICATION_TITLE>
             <NOTIFICATION_BODY>
-              {notification.title.substring(0, 35)}
+              {notification.title?.substring(0, 35)}
             </NOTIFICATION_BODY>
           </NOTIFICATION_ITEM>
         ))}
@@ -41,7 +44,7 @@ const NotiMessagesPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userType = localStorage.getItem('userType'); // 로컬 스토리지에서 userType 가져오기
+    const userType = localStorage.getItem('userType'); 
     const url =
       userType === 'seller'
         ? '/seller/notifications/list?pageSize=100'
@@ -66,9 +69,8 @@ const NotiMessagesPage = () => {
   }, []);
 
   const handleNotificationClick = (notification) => {
-
-    const productId = notification.id;
-    if (notification.title.includes('리뷰 작성 알림')) {
+    const productId = notification.body?.productId;
+    if (productId && notification.title.includes('리뷰 작성 알림')) {
       localStorage.setItem("reviewOrderId", notification.extraId);
       navigate(`/product/${productId}`);
     }
@@ -85,6 +87,7 @@ const NotiMessagesPage = () => {
               온 알림이 없습니다. 
             </NOTIFICATION_LIST>
           </SECTION_CONTAINER>
+          <NotiMessageFooter/>
         </CONTAINER>
       </MainContainer>
     );
@@ -95,7 +98,9 @@ const NotiMessagesPage = () => {
       <MaderHomeHeader />
       <CONTAINER>
         {renderNotificationList('알림', notifications, handleNotificationClick)}
+        <NotiMessageFooter/>
       </CONTAINER>
+      
     </MainContainer>
   );
 };
