@@ -34,6 +34,7 @@ function SellingProductDetailPage() {
     autoplaySpeed: 2000,
     pauseOnHover: true,
     cssEase: "linear",
+    arrows: false,
   };
 
   const handleSellerNameClick = () => {
@@ -85,7 +86,9 @@ function SellingProductDetailPage() {
               </S.RightOptionBox>
               <S.RightPurchaseButton
                 type="modify"
-                onClick={() => navigate("/maderMyPage/product/modify")}
+                onClick={() =>
+                  navigate("/maderMyPage/product/modify" + productId)
+                }
               >
                 수정
               </S.RightPurchaseButton>

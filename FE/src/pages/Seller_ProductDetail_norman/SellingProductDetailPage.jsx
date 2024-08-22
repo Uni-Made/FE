@@ -34,6 +34,7 @@ function SellingProductDetailPage() {
     autoplaySpeed: 2000,
     pauseOnHover: true,
     cssEase: "linear",
+    arrows: false, // 이 부분 추가
   };
 
   useEffect(() => {
@@ -80,7 +81,9 @@ function SellingProductDetailPage() {
               </S.RightOptionBox>
               <S.RightPurchaseButton
                 type="modify"
-                onClick={() => navigate("/maderMyPage/product/modify")}
+                onClick={() =>
+                  navigate("/maderMyPage/product/modify" + productId)
+                }
               >
                 수정
               </S.RightPurchaseButton>

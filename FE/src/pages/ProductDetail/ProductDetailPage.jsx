@@ -59,6 +59,7 @@ function ProductDetailPage() {
     autoplaySpeed: 2000,
     pauseOnHover: true,
     cssEase: "linear",
+    arrows: false, // 이 부분 추가
   };
 
   // modal 제어 함수들

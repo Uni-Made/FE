@@ -42,7 +42,7 @@ const TopContainer = styled.div`
   justify-content: center;
   /* align-items: center; */
   /* margin-top: 12vh; */
-  gap: 30px;
+  gap: 50px;
 `;
 const BottomContainer = styled.div`
   display: flex;
@@ -51,7 +51,7 @@ const BottomContainer = styled.div`
   align-items: center;
 `;
 const LeftContainer = styled.div`
-  width: 54%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -66,11 +66,12 @@ const RightContainer = styled.div`
 `;
 
 const LeftMainImage = styled.img`
-  width: 90%;
+  width: 100%;
   height: 60%;
+  /* object-fit: cover;  */
 `;
 const LeftSubBox = styled(Slider)`
-  width: 80%;
+  width: 100%;
   height: 20%;
   gap: 10px;
 
