@@ -11,10 +11,10 @@ export const Container = styled.div`
 `;
 
 export const NumTitle = styled.h1`
-  font-size: 30px;
+  font-size: 38px;
   font-weight: bold;
-  line-height: 60px;
-  width: 60px;
+  line-height: 76px;
+  width: 76px;
   text-align: center;
   background-color: #00DDDD;
   color: white;
@@ -23,11 +23,12 @@ export const NumTitle = styled.h1`
 `;
 
 export const Title = styled.h1`
-  font-size: 30px;
+  font-size: 38px;
   font-weight: bold;
   line-height: 50px;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: 10px;
 `;
 
 export const Input = styled.input`
@@ -36,9 +37,10 @@ export const Input = styled.input`
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 30px;
-  height: 48px; 
+  height: 50px; 
+
 `;
 
 export const InputWrapper = styled.div`
@@ -52,9 +54,9 @@ export const InputWrapper = styled.div`
 
 export const ErrorMessage = styled.div`
   color:#00DDDD;
-  font-size: 12px;
+  font-size: 15px;
   text-align: left;
-  min-height: 20px;
+  min-height: 22px;
 `;
 
 
@@ -83,8 +85,8 @@ export const Select = styled.select`
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 4px;
-  font-size: 16px;
-  height: 48px;
+  font-size: 18px;
+  height: 50PX;
 `;
 export const InputWithButton = styled.div`
   position: relative;
@@ -103,7 +105,7 @@ export const ButtonInInput = styled.button`
   background-color: rgba(244, 244, 244, 1);
   border: none;
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 17px;
   cursor: pointer;
   &:hover {
     font-weight: bold;
@@ -218,7 +220,6 @@ export const NameGenderWrapper = styled.div`
 export const ProviderButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
   width: 90%;
 `;
 
@@ -229,8 +230,11 @@ export const ProviderButton = styled.button`
   color: ${(props) => (props.$isActive ?  'white' : 'black')}; 
   border: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
+  height: 50px;
+  margin-bottom: 20px;
+
 `;
 
 // 약관 동의 모달 스타일

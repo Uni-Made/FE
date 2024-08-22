@@ -138,7 +138,7 @@ const Header = () => {
         </SearchButton>
       </SearchInputContainer>
       <NavLinks>
-        <NavLink to="/maderMyPage/purchase/requests">Event</NavLink>
+        <NavLink to="/notice/Board">Event</NavLink>
         <NavLink to="/defaultMyPage">My Page</NavLink>
         <NavLink to="/">Logout</NavLink>
       </NavLinks>

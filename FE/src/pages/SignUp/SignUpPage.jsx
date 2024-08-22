@@ -142,9 +142,7 @@ function SignUpPage() {
     if (!password) {
       newErrors.password = (
         <>
-          비밀번호를 입력해주세요.
-        <br />
-          비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
+          비밀번호를 입력해주세요. 비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
         </>
       );
     } else if (!validatePassword(password)) {
@@ -179,7 +177,9 @@ function SignUpPage() {
     // 이메일 유효성 검사
     if (email && validateEmail(email)) {
       delete newErrors.email;
-    } else if (!validateEmail(email)) {
+    } else if (!email) {
+      newErrors.email = "이메일 주소를 입력해주세요.";
+    }else if (!validateEmail(email)) {
       newErrors.email = "유효한 이메일 주소를 입력해주세요.";
     }
 
@@ -189,9 +189,7 @@ function SignUpPage() {
     } else if (!password) {
       newErrors.password = (
         <>
-          비밀번호를 입력해주세요.
-        <br />
-          비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
+          비밀번호를 입력해주세요. 비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
         </>
       );
     }else if (password && !validatePassword(password)) {
@@ -366,7 +364,7 @@ function SignUpPage() {
               </ButtonInInput>
             </InputWithButton>
             <Button onClick={handleSignUpInfoSubmit}>
-              다음
+              다음으로
             </Button>
           </>
         )}
