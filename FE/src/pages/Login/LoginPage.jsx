@@ -95,8 +95,8 @@ function LoginPage() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         // 404 오류일 경우 회원가입 페이지로 리다이렉트
-        alert("사용자를 찾을 수 없습니다. 회원가입 페이지로 이동합니다.");
-        navigate('/signUp');
+        alert("사용자를 찾을 수 없습니다. 회원가입하시는걸 추천드립니다.");
+        // navigate('/signUp');
       } else {
         console.error("로그인 요청 중 오류 발생:", error);
         alert("로그인 중 오류가 발생했습니다.");
