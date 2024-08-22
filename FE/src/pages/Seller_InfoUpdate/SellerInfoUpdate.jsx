@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Container, Title, Form, Label, Input, Button, ErrorMessage, DeleteButton, ModalButton, ModalContent, ModalOverlay, ButtonContainer } from './SellerInfoUpdate.style';
 import { sellerInstance } from '../../api/axiosInstance';
 
@@ -25,6 +26,8 @@ const SellerInfoUpdate = () => {
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
   useEffect(() => {
     const fetchBuyerInfo = async () => {
       try {
@@ -42,24 +45,33 @@ const SellerInfoUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+    if (!newPassword.trim()) {
+      setError('새 비밀번호를 입력해야 합니다.');
+      return;
+    }
+  
+    if (newPassword === password) {
+      setError('이전 비밀번호와 같습니다.');
+      return;
+    }
+    
     if (newPassword !== passwordConfirm) {
       setError('비밀번호가 다릅니다');
       return;
     }
   
     try {
-      // 서버에 전송할 데이터 구조
       const requestData = {
-        name: name.trim(), // 혹시 모를 공백 제거
+        name: name.trim(),
         password,
-        newPassword: newPassword.trim() // 공백 제거
+        newPassword: newPassword.trim()
       };
   
-      // API 호출
       const response = await sellerInstance.patch('/seller/update/info', requestData);
       
       if (response.status === 200) {
         alert('회원정보가 수정되었습니다.');
+        navigate('/maderMyPage'); // Redirect to /maderMyPage
       } else {
         setError('회원정보 수정 중 오류가 발생했습니다.');
       }
@@ -113,7 +125,7 @@ const SellerInfoUpdate = () => {
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button type="submit">수정 완료</Button>
+        <Button type="submit" >수정 완료</Button>
       </Form>
     
       <DeleteButton onClick={handleDeleteAccount}>회원탈퇴</DeleteButton>
