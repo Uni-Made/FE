@@ -12,7 +12,7 @@ import {
   MainContainer,
   NOTIFICATION_BODY,
 } from './NotiMessagesPage.style';
-import { authInstance } from '../../api/axiosInstance'; // axios 인스턴스 가져오기
+import { authInstance } from '../../api/axiosInstance'; 
 
 const renderNotificationList = (title, notifications, onNotificationClick) => {
   return (
@@ -25,10 +25,12 @@ const renderNotificationList = (title, notifications, onNotificationClick) => {
             onClick={() => onNotificationClick(notification)}
           >
             <NOTIFICATION_TITLE>
-              "{notification.body.substring(0, 15)}..."
+              {notification.body?.name 
+                ? `"${notification.body.name.substring(0, 15)}..."` 
+                : `"${notification.body.substring(0, 15)}..."`}
             </NOTIFICATION_TITLE>
             <NOTIFICATION_BODY>
-              {notification.title.substring(0, 35)}
+              {notification.title?.substring(0, 35)}
             </NOTIFICATION_BODY>
           </NOTIFICATION_ITEM>
         ))}
@@ -42,7 +44,7 @@ const NotiMessagesPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userType = localStorage.getItem('userType'); // 로컬 스토리지에서 userType 가져오기
+    const userType = localStorage.getItem('userType'); 
     const url =
       userType === 'seller'
         ? '/seller/notifications/list?pageSize=100'
@@ -67,9 +69,8 @@ const NotiMessagesPage = () => {
   }, []);
 
   const handleNotificationClick = (notification) => {
-
-    const productId = notification.id;
-    if (notification.title.includes('리뷰 작성 알림')) {
+    const productId = notification.body?.productId;
+    if (productId && notification.title.includes('리뷰 작성 알림')) {
       localStorage.setItem("reviewOrderId", notification.extraId);
       navigate(`/product/${productId}`);
     }
