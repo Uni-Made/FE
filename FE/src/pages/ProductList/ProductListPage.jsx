@@ -27,10 +27,10 @@ function ProductListPage() {
     getProductsStatus,
     isFiltered,
     filteredProducts,
-    nextOffset,
+    nextCursor,
     isLast,
   } = useSelector((state) => state.products);
-  console.log(products, nextOffset, isLast);
+  console.log(products, nextCursor, isLast);
   const [selectedOrder, setSelectedOrder] = useState(null); // 실제로 api 보낼 때 order
 
   // useInView 훅을 사용하여 요소가 뷰포트에 들어왔는지 감지
@@ -53,7 +53,7 @@ function ProductListPage() {
       console.log("if문 성공");
       dispatch(
         getProducts({
-          offset: products == [] && isLast == true ? null : nextOffset,
+          cursor: products == [] && isLast == true ? null : nextCursor,
           sort: selectedOrder,
           // keyword: '',
           // category: 'your-category'

@@ -5,8 +5,8 @@ import { defaultInstance, authInstance } from "../../api/axiosInstance";
 // api 비동기 서버 통신 함수 만들고 extrareducer로 정의
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async ({ offset, sort, keyword, category, minPrice, maxPrice }) => {
-    console.log(offset, sort, keyword, category, minPrice, maxPrice);
+  async ({ cursor, sort, keyword, category, minPrice, maxPrice }) => {
+    console.log(cursor, sort, keyword, category, minPrice, maxPrice);
     const pageSize = 12;
     let url = `/buyer/product/list?`;
 
@@ -14,8 +14,8 @@ export const getProducts = createAsyncThunk(
     if (sort == null) {
       url += `&sort=FAVORITE`;
     }
-    if (offset) {
-      url += `&offset=${offset}`;
+    if (cursor) {
+      url += `&cursor=${cursor}`;
     }
     if (sort) {
       url += `&sort=${sort}`;
@@ -53,7 +53,7 @@ const calculateTotalProductsCount = (items) => {
 
 const initialState = {
   products: [], // product 객체의 배열
-  nextOffset: null,
+  nextCursor: null,
   isLast: false,
   // selectedCategories: [], // condition box에서, [id, id, id, ...]
   // searchKeyword: null, // condition box에서, "keyword"
@@ -120,7 +120,7 @@ const productsSlice = createSlice({
         // 새로운 데이터를 불러올 때 (기존 데이터를 초기화)
         state.products = action.payload.productsList;
       }
-      state.nextOffset = action.payload.nextOffset;
+      state.nextCursor = action.payload.nextCursor;
       state.isLast = action.payload.isLast;
 
       state.getProductsStatus = "fulfilled";
