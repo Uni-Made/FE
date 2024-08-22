@@ -112,7 +112,7 @@ const SearchInput = styled.input`
 
 const SearchButton = styled.button`
   position: absolute;
-  right: 15px;
+  right: 35px;
   top: 50%;
   font-size: 20px;
   color: rgba(134, 134, 134, 1);

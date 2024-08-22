@@ -57,8 +57,17 @@ function LoginPage() {
     navigate("/");
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      alert("유효한 이메일 주소를 입력해주세요.");
+      return;
+    }
+
     try {
       const response = await axios.post("http://15.165.185.157:8080/auth/seller/signin", {
         email: email,
@@ -70,40 +79,37 @@ function LoginPage() {
           "accept": "application/json;charset=UTF-8"
         }
       });
-  
+
       if (response.data.code === "OK") {
         const { status, accessToken, refreshToken } = response.data.result;
-        localStorage.removeItem("socialId")
+        localStorage.removeItem("socialId");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("userType");
-  
+
         if (status === 202) {
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
           localStorage.setItem("userType", "seller");
-  
+
           if (rememberMe) {
             localStorage.setItem("rememberedEmail", email);
           } else {
             localStorage.removeItem("rememberedEmail");
           }
-  
+
           navigate("/maderMyPage");
         } 
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // 404 오류일 경우 회원가입 페이지로 리다이렉트
         alert("사용자를 찾을 수 없습니다. 회원가입하시는걸 추천드립니다.");
-        // navigate('/signUp');
       } else {
         console.error("로그인 요청 중 오류 발생:", error);
         alert("로그인 중 오류가 발생했습니다.");
       }
     }
   };
-  
 
   return (
     <S.Container>
@@ -147,7 +153,6 @@ function LoginPage() {
             <S.Sin onClick={handleLogin}>Log in</S.Sin>
           </S.BoxContainer>
     </S.Container>
-    
   );
 };
 
