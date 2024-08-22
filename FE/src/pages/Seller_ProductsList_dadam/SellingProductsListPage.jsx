@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import MaderHomeHeader from "./components/MaderHomeHeader";
+import ProductsFooter from "./components/ProductsFooter";
 import {
   CONTAINER,
   SECTION_CONTAINER,
@@ -123,6 +124,7 @@ const SellingProductsListPage = () => {
             판매 중인 상품이 없습니다.
           </GRID_WRAPPER>
           </SECTION_CONTAINER>
+          <ProductsFooter/>
         </CONTAINER>
       </MainContainer>
     </Containersum>
@@ -136,6 +138,7 @@ const SellingProductsListPage = () => {
         <CONTAINER>
           {renderProductList("판매 중인 상품", sellerData, handleProductClick)}
           <div ref={ref} style={{ height: "10px" }} />
+          <ProductsFooter/>
         </CONTAINER>
       </MainContainer>
     </Containersum>

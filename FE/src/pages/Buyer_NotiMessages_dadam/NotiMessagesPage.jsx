@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaderHomeHeader from "./components/MaderHomeHeader";
+import NotiMessageFooter from "./components/NotiMessageFooter";
 import {
   CONTAINER,
   SECTION_CONTAINER,
@@ -85,6 +86,7 @@ const NotiMessagesPage = () => {
               온 알림이 없습니다. 
             </NOTIFICATION_LIST>
           </SECTION_CONTAINER>
+          <NotiMessageFooter/>
         </CONTAINER>
       </MainContainer>
     );
@@ -95,7 +97,9 @@ const NotiMessagesPage = () => {
       <MaderHomeHeader />
       <CONTAINER>
         {renderNotificationList('알림', notifications, handleNotificationClick)}
+        <NotiMessageFooter/>
       </CONTAINER>
+      
     </MainContainer>
   );
 };

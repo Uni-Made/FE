@@ -85,10 +85,8 @@ function LoginPage() {
   
           if (rememberMe) {
             localStorage.setItem("rememberedEmail", email);
-            localStorage.setItem("rememberedPassword", password);
           } else {
             localStorage.removeItem("rememberedEmail");
-            localStorage.removeItem("rememberedPassword");
           }
   
           navigate("/maderMyPage");

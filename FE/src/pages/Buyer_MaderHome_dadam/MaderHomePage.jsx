@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MaderHomeHeader from "./components/MaderHomeHeader";
+import MaderFooter from "./components/MaderFooter";
 import SortingDropdown from './components/SortingDropdown';
 import axios from 'axios';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
@@ -199,6 +200,7 @@ const MaderHomePage = () => {
         </PROFILE_CONTAINER>
         {renderProductList('판매 중인 상품', sellerData.sellingProducts)}
         <div ref={ref} style={{ height: '10px' }} />
+        <MaderFooter/>
       </CONTAINER>
     </MainContainer>
   );

@@ -189,6 +189,12 @@ export const SocialButtonK = styled.div`
   cursor: pointer;
   // margin: 30px 0 0 0;
   padding: 0 30px 0 0; 
+
+  @media (max-width: 1650px) {
+    font-size: 1.7rem;
+
+  @media (max-width: 1240px) {
+    font-size: 1.0rem;
 `;
 
 export const SKimg = styled.img`
@@ -217,6 +223,12 @@ export const SocialButtonN = styled.div`
   cursor: pointer;
   margin: 30px 0 0 0;
   padding: 0 30px 0 0; 
+
+  @media (max-width: 1650px) {
+    font-size: 1.7rem;
+
+  @media (max-width: 1240px) {
+    font-size: 1.0rem;
 `;
 
 export const SNimg = styled.img`
@@ -245,6 +257,12 @@ export const SocialButtonG = styled.div`
   cursor: pointer;
   margin: 30px 0 0 0;
   padding: 0 60px 0 0; 
+
+  @media (max-width: 1650px) {
+    font-size: 1.7rem;
+
+  @media (max-width: 1240px) {
+    font-size: 1.0rem;
 
 `;
 
