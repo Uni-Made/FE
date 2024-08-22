@@ -115,20 +115,18 @@ const SellingProductsListPage = () => {
   if (sellerData.length === 0) {
     return (
       <Containersum>
-      <MaderHomeHeader />
-      <MainContainer>
-        <CONTAINER>
-        <SECTION_CONTAINER>
-          <SECTION_TITLE>판매 중인 상품</SECTION_TITLE>
-          <GRID_WRAPPER>
-            판매 중인 상품이 없습니다.
-          </GRID_WRAPPER>
-          </SECTION_CONTAINER>
-          <ProductsFooter/>
-        </CONTAINER>
-      </MainContainer>
-    </Containersum>
-    )
+        <MaderHomeHeader />
+        <MainContainer>
+          <CONTAINER>
+            <SECTION_CONTAINER>
+              <SECTION_TITLE>판매 중인 상품</SECTION_TITLE>
+              <GRID_WRAPPER>판매 중인 상품이 없습니다.</GRID_WRAPPER>
+            </SECTION_CONTAINER>
+            {/* <ProductsFooter/> */}
+          </CONTAINER>
+        </MainContainer>
+      </Containersum>
+    );
   }
 
   return (
@@ -138,7 +136,7 @@ const SellingProductsListPage = () => {
         <CONTAINER>
           {renderProductList("판매 중인 상품", sellerData, handleProductClick)}
           <div ref={ref} style={{ height: "10px" }} />
-          <ProductsFooter/>
+          {/* <ProductsFooter/> */}
         </CONTAINER>
       </MainContainer>
     </Containersum>

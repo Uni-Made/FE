@@ -220,23 +220,33 @@ const PurchaseRequestPage = () => {
           <Table>
             <TableHeader>
               <Tr>
-                <Th>주문ID</Th><Th>상품명</Th><Th>구매요청일</Th><Ta>입금확인</Ta>
+                <Th>주문ID</Th>
+                <Th>상품명</Th>
+                <Th>구매요청일</Th>
+                <Ta>입금확인</Ta>
               </Tr>
             </TableHeader>
             <tbody>
               {isLoading ? (
                 <Tr>
-                  <Td colSpan={4} style={{ textAlign: 'center' }}>로딩 중...</Td>
+                  <Td colSpan={4} style={{ textAlign: "center" }}>
+                    로딩 중...
+                  </Td>
                 </Tr>
               ) : errorMessage ? (
                 <Tr>
-                  <Td colSpan={4} style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</Td>
+                  <Td colSpan={4} style={{ color: "red", textAlign: "center" }}>
+                    {errorMessage}
+                  </Td>
                 </Tr>
               ) : data.length > 0 ? (
                 data.map((item, index) => (
                   <Tr key={`${item.orderId}-${index}`}>
-                    <OrderIDTd>{item.orderId}</OrderIDTd><Td>{item.productName}</Td><Td>{new Date(item.createdAt).toLocaleDateString()}</Td><PaymentStatusTd 
-                      status={item.orderStatus} 
+                    <OrderIDTd>{item.orderId}</OrderIDTd>
+                    <Td>{item.productName}</Td>
+                    <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
+                    <PaymentStatusTd
+                      status={item.orderStatus}
                       onClick={() => handleStatusClick(item)}
                     >
                       {getStatusText(item.orderStatus)}
@@ -257,13 +267,13 @@ const PurchaseRequestPage = () => {
           </Table>
         </TableWrapper>
         {selectedItem && (
-          <Modal 
+          <Modal
             item={selectedItem}
             onClose={handleCloseModal}
             onChangeStatus={handleChangeStatus}
           />
         )}
-        <Footer />
+        {/* <Footer /> */}
       </Container>
     </>
   );

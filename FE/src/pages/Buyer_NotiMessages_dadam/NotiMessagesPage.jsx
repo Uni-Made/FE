@@ -83,11 +83,9 @@ const NotiMessagesPage = () => {
         <CONTAINER>
           <SECTION_CONTAINER>
             <SECTION_TITLE>알림</SECTION_TITLE>
-            <NOTIFICATION_LIST>
-              온 알림이 없습니다. 
-            </NOTIFICATION_LIST>
+            <NOTIFICATION_LIST>온 알림이 없습니다.</NOTIFICATION_LIST>
           </SECTION_CONTAINER>
-          <NotiMessageFooter/>
+          {/* <NotiMessageFooter/> */}
         </CONTAINER>
       </MainContainer>
     );
@@ -97,10 +95,9 @@ const NotiMessagesPage = () => {
     <MainContainer>
       <MaderHomeHeader />
       <CONTAINER>
-        {renderNotificationList('알림', notifications, handleNotificationClick)}
-        <NotiMessageFooter/>
+        {renderNotificationList("알림", notifications, handleNotificationClick)}
+        {/* <NotiMessageFooter/> */}
       </CONTAINER>
-      
     </MainContainer>
   );
 };
