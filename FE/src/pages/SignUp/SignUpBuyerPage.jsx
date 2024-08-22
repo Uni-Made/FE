@@ -41,7 +41,7 @@ function SignUpPage() {
     privacy: false,
     marketing: false,
   });
-  //const [isAuthCodeVerified, setIsAuthCodeVerified] = useState(false);
+  const [isAuthCodeVerified, setIsAuthCodeVerified] = useState(false);
   const [isVerificationSuccessful, setIsVerificationSuccessful] = useState(false); // New state for verification status
 
   const [modalContent, setModalContent] = useState("");
@@ -85,7 +85,7 @@ function SignUpPage() {
         privacy: false,
         marketing: false,
       });
-      //setIsAuthCodeVerified(false);
+      setIsAuthCodeVerified(false);
       setSocialId("");
       setName("");
       setEmail("");
@@ -130,7 +130,7 @@ function SignUpPage() {
       console.log("전화번호 인증 확인 응답:", response.data);
       if (response.data.result) {
         alert("전화번호 인증이 완료되었습니다.");
-        // setIsAuthCodeVerified(true);
+        setIsAuthCodeVerified(true);
         setIsVerificationSuccessful(true); 
       } else {
         alert(response.data.message);
@@ -152,11 +152,11 @@ function SignUpPage() {
       setCurrentStep(2);
       }
     // 필수 입력 필드가 모두 채워졌으면 단계 이동
-    // if (Object.keys(newErrors).length === 0 && isAuthCodeVerified) {
-    //   setCurrentStep(2);
-    // } else if (!isAuthCodeVerified) {
-    //   alert("전화번호 인증을 완료해주세요.");
-    // }
+    if (Object.keys(newErrors).length === 0 && isAuthCodeVerified) {
+      setCurrentStep(2);
+    } else if (!isAuthCodeVerified) {
+      alert("전화번호 인증을 완료해주세요.");
+    }
   };
 
   const handleChange = (e) => {
@@ -217,7 +217,7 @@ console.log(response.data.code);
   };
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/loginbpage");
   };
   const handleModalContainerClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -323,7 +323,7 @@ console.log(response.data.code);
             </ProviderButtonContainer>
 
             <Button onClick={handleSignUpInfoSubmit}>
-              다음
+              다음으로
             </Button>
           </>
         )}

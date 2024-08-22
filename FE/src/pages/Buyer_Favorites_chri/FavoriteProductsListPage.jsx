@@ -1,157 +1,166 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import { authInstance } from '../../api/axiosInstance'; 
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 import FavoriteHeader from './components/FavoriteHeader';
-import ProductCard from './components/ProductCard';
 import FavoriteFooter from './components/FavoriteFooter';
+import { FiBox } from 'react-icons/fi'; 
 
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 70%;
-  min-width: 900px;
-`;
+import {
+  CONTAINER,
+  SECTION_CONTAINER,
+  SECTION_TITLE,
+  ITEM_CONTAINER,
+  PRODUCT_CARD,
+  PRODUCT_DETAILS,
+  PRODUCT_NAME,
+  PRODUCT_PRICE,
+  GRID_WRAPPER,
+  MainContainer,
+  PRODUCT_ID,
+  Containersum,
+} from "./FavoriteProductListPage.style";
 
-const FooterWrapper = styled.div`
-  width: 100%;
-`;
+// 상품 리스트 렌더링 컴포넌트
+const renderProductList = (title, products, handleProductClick) => {
+  return (
+    <SECTION_CONTAINER>
+      <SECTION_TITLE>{title}</SECTION_TITLE>
+      <GRID_WRAPPER>
+        {products.map((product, index) => (
+          <ITEM_CONTAINER key={`${product.productId}-${index}`}>
+            <PRODUCT_CARD
+              style={{
+                backgroundImage: product.productImage
+                  ? `url(${product.productImage})`
+                  : "none",
+                backgroundColor: "#f0f0f0",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: product.productImage ? 'block' : 'flex', // 프로덕트 이미지가 없으면 flex로 아이콘을 표시
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: product.productImage ? 'inherit' : '3em', // 아이콘 크기 조정
+                color: '#ccc', // 아이콘 색상
+              }}
+              onClick={() => handleProductClick(product.productId)}
+            >
+              {!product.productImage && <FiBox />} {/* 프로덕트 이미지가 없으면 아이콘 표시 */}
+            </PRODUCT_CARD>
+            <PRODUCT_DETAILS>
+              <PRODUCT_ID>{product.sellerName}</PRODUCT_ID>
+              <PRODUCT_NAME>{product.name}</PRODUCT_NAME>
+              <PRODUCT_PRICE>{product.price.toLocaleString()}원</PRODUCT_PRICE>
+            </PRODUCT_DETAILS>
+          </ITEM_CONTAINER>
+        ))}
+      </GRID_WRAPPER>
+    </SECTION_CONTAINER>
+  );
+};
 
-const Container = styled.div`
-  padding: 10px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  max-height: 50rem;
-  overflow-y: auto;
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 300px; /* 기본 높이 설정 */
-`;
+const fetchProducts = async (cursor, setSellerData, setHasMore, setCursor) => {
+  console.log("Fetching cursor:", cursor);
+  const accessToken = localStorage.getItem("accessToken");
 
-const TitleContainer = styled.div`
-  width: 100%;
-  padding: 0 16px;
-  box-sizing: border-box;
-`;
+  try {
+    const url = `http://15.165.185.157:8080/buyer/favorite-products?pageSize=12${cursor ? `&cursor=${cursor}` : ''}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json;charset=UTF-8",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-const Title = styled.h1`
-  color: #00DDDD;
-  font-size: 2.5rem;
-  margin: 0;
-  text-align: left;
-  margin-bottom: 15px;
-`;
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
 
-const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  flex: 1;
-  min-height: 1px;
-  padding: 0;
-`;
+    const data = await response.json();
+    console.log("Fetched data:", data);
 
-const NoProductsMessage  = styled.p`
-  margin-top: 10px;
-  color: #888;
-`;
+    setSellerData((prevData) => [...prevData, ...data.result.favoriteProducts]);
+
+    if (data.result.isLast) {
+      setHasMore(false);
+    } else {
+      setCursor(data.result.nextCursor);
+    }
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
+};
 
 const FavoriteProductsListPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [sellerData, setSellerData] = useState([]);
+  const [cursor, setCursor] = useState(null); // 초기 cursor 값 설정
   const [hasMore, setHasMore] = useState(true);
-  const [cursor, setCursor] = useState(null);
-  const pageSize = 16;
-  const containerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true); // 초기 로딩 상태 설정
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 1.0,
+  });
 
-  const fetchProducts = async () => {
-    if (!hasMore || loading) return;
+  const navigate = useNavigate();
 
-    setLoading(true);
-    try {
-      const response = await authInstance.get('/buyer/favorite-products', {
-        params: {
-          cursor: cursor || undefined,
-          pageSize: pageSize,
-        },
-      });
-      console.log(response);
-      const { favoriteProducts, nextCursor, isLast } = response.data.result;
-
-      const validatedProducts = favoriteProducts.map(product  => ({
-        ...product,
-        profileImage: product.profileImage || 'default-image-url',
-      }));
-
-      setProducts(prevMaders => [...prevMaders, ...validatedProducts]);
-      setCursor(nextCursor);
-      setHasMore(!isLast);
-    } catch (error) {
-      console.error('데이터 가져오기 오류:', error.message || error);
-      setError(error.message || '데이터 가져오기 오류');
-    } finally {
-      setLoading(false);
-    }
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
   };
 
-  useEffect(() => {
-    fetchProducts(); 
-  }, []);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const handleScroll = () => {
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-          fetchProducts();
-        }
-      };
-
-      container.addEventListener('scroll', handleScroll);
-
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
+  const fetchData = useCallback(async () => {
+    if (hasMore) {
+      await fetchProducts(cursor, setSellerData, setHasMore, setCursor, setIsLoading);
     }
-  }, [hasMore, loading, cursor]);
+  }, [cursor, hasMore]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (inView && hasMore) {
+      fetchData();
+    }
+  }, [inView, fetchData, hasMore]);
+
+  if (isLoading && sellerData.length === 0) {
+    // 로딩 중일 때는 "로딩 중..." 메시지 표시
+    return (
+      <Containersum>
+        <FavoriteHeader />
+        <MainContainer>
+          <CONTAINER>
+            <SECTION_CONTAINER>
+              <SECTION_TITLE>찜한 상품</SECTION_TITLE>
+              <GRID_WRAPPER>로딩 중...</GRID_WRAPPER>
+            </SECTION_CONTAINER>
+            <FavoriteFooter />
+          </CONTAINER>
+        </MainContainer>
+      </Containersum>
+    );
+  }
 
   return (
-    <>
+    <Containersum>
       <FavoriteHeader />
-      <PageWrapper>
-        <TitleContainer>
-          <Title>찜한 상품</Title>
-        </TitleContainer>
-        <Container ref={containerRef}>
-          {loading && <p>Loading...</p>}
-          {error && <p>Error: {error}</p>}
-          {products.length > 0 ? (
-          <ProductGrid>
-            {products.map(product => (
-              <ProductCard
-                key={product.id}
-                image={product.productImage}
-                store={product.sellerName}
-                title={product.name}
-                price={product.price.toString()}
-              />
-            ))}
-          </ProductGrid>
-
+      <MainContainer>
+        <CONTAINER>
+          {sellerData.length === 0 ? (
+            // 데이터가 없을 때 메시지 표시
+            <SECTION_CONTAINER>
+              <SECTION_TITLE>찜한 상품</SECTION_TITLE>
+              <GRID_WRAPPER>찜한 상품이 없습니다.</GRID_WRAPPER>
+            </SECTION_CONTAINER>
           ) : (
-            !loading && <NoProductsMessage>찜한 상품이 없습니다.</NoProductsMessage>
+            renderProductList("찜한 상품", sellerData, handleProductClick)
           )}
-        </Container>
-        <FooterWrapper>
+          <div ref={ref} style={{ height: "10px" }} />
           <FavoriteFooter />
-        </FooterWrapper>
-      </PageWrapper>
-    </>
+        </CONTAINER>
+      </MainContainer>
+    </Containersum>
   );
-}
+};
 
 export default FavoriteProductsListPage;

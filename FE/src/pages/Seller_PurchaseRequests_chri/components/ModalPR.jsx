@@ -22,8 +22,8 @@ const ModalContainer = styled.div`
   width: 500px;
   text-align: center;
   position: relative; 
-  height: 380px;
-
+  height: 420px;
+font-size: 20px;
 `;
 
 const ModalButton = styled.button`
@@ -32,9 +32,9 @@ const ModalButton = styled.button`
   border: none;
   padding: 15px 25px;
   margin: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 18px;
   cursor: pointer;
 
   &:hover {
@@ -51,13 +51,13 @@ const CloseButton = styled.button`
   right: 15px;
   background: transparent;
   border: none;
-  font-size: 30px;
+  font-size: 35px;
   cursor: pointer;
 `;
 
 const ProductImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   margin-bottom: 10px;
 `;
 
