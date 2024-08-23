@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { authInstance } from '../../api/axiosInstance';
-import { PDFDocument } from 'pdf-lib';
+import { useNavigate } from 'react-router-dom';
 import Header from '../ProductList/components/Navbar';
 import {
   CONTAINER,
@@ -91,18 +91,21 @@ async function getProductDetails(productId, cursor, pageSize) {
   try {
     const response = await authInstance.get(`/seller/myPage/${productId}?viewType=DETAIL&cursor=${cursor}&pageSize=${pageSize}`);
 
-    // API 응답을 로그로 출력
     console.log("API response data:", response.data);
 
-    // 필요한 데이터 반환
     if (response.data && response.data.result) {
-      return response.data.result;  // 응답의 result 객체를 반환
+      const productData = response.data.result;
+      
+      // productImages가 null이면 빈 배열로 설정
+      productData.productImages = productData.productImages || [];
+
+      return productData;  // 응답의 result 객체를 반환
     } else {
       console.error("Unexpected response structure or empty result:", response.data);
       throw new Error("Product not found");
     }
   } catch (error) {
-    console.error("Error fetching product details:", error);
+    console.error("Error fetching product details:", error.response ? error.response.data : error.message);
     throw error;
   }
 }
@@ -110,22 +113,28 @@ async function getProductDetails(productId, cursor, pageSize) {
 async function updateProductDetails(productId, data, images = [], pdfImage) {
   try {
     const formData = new FormData();
+    
+    // JSON 데이터를 문자열로 직렬화하여 추가
     formData.append('updateProductDto', JSON.stringify(data));
 
-    // 이미지 배열이 비어있지 않은 경우에만 forEach를 실행
-    images.forEach((image, index) => {
-      formData.append('image', image);
+    // 이미지 파일 추가 (File 객체인 경우에만)
+    images.forEach((image) => {
+      if (image instanceof File) {
+        formData.append('productImages', image);
+      } else if (typeof image === 'string') {
+        // URL인 경우 URL도 함께 추가 (백엔드에서 처리할 수 있을 때)
+        formData.append('productImageUrl', image); 
+      }
     });
 
-    // // 상세 이미지 배열이 비어있지 않은 경우에만 forEach를 실행
-    // detailImages.forEach((image, index) => {
-    //   formData.append('detailImage', image);
-    // });
+    // PDF 이미지 파일 추가 (File 객체인 경우에만)
+    if (pdfImage instanceof File) {
+      formData.append('detailImage', pdfImage);
+    }
 
-    formData.append('detailImage', pdfImage)
+    console.log("콘솔창이다", productId, data, images, pdfImage);
 
-    console.log("콘솔창이다", productId, data, images, pdfImage)
-
+    // 서버에 PATCH 요청
     const response = await authInstance.patch(`/seller/product/${productId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -134,10 +143,11 @@ async function updateProductDetails(productId, data, images = [], pdfImage) {
 
     console.log('Product updated successfully', response.data);
   } catch (error) {
-    console.error("Error updating product", error);
+    console.error("Error updating product:", error.response ? error.response.data : error.message);
     throw error;
   }
 }
+
 
 //-----------------------API
 
@@ -161,7 +171,9 @@ const ProductModifyPage = () => {
   const [accountName, setAccountName] = useState(null);
   const [accountNumber, setAccountNumber] = useState(null);
 
-  const {productId} = useParams();
+  const { productId } = useParams();
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
 
   const sliderRef = useRef(null);
 
@@ -188,16 +200,11 @@ const ProductModifyPage = () => {
           accountNumber: productData.accountNumber
         });
   
-        // 이미지가 배열로 설정되지 않았을 경우를 대비해 배열로 변환
-        const images = Array.isArray(productData.productImage)
-          ? productData.productImage
-          : [productData.productImage];
-  
-        setImages(productData.productImages);
+        setImages(productData.productImages || []);
         setMainImage(productData.productImages[0]);
         setOptions(productData.options || []);
         setPickupOptions([productData.pickupOption]);
-        setPdfImage(productData.detail.detailImages[0] || null);
+        setPdfImage(productData.detail.detailImages[0]);
   
       } catch (error) {
         console.error('Error loading product details:', error);
@@ -208,62 +215,49 @@ const ProductModifyPage = () => {
     };
   
     fetchProductDetails();
-  }, []);
+  }, [productId]);
   
+  // 이미지 업로드 핸들러
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
-    const newImages = files.map(file => URL.createObjectURL(file));
-    setImages([...images, ...newImages]);
-    if (!mainImage) setMainImage(newImages[0]);
-  };
 
-  const handleImageError = (event) => {
-    event.target.src = "";
-    event.target.style.backgroundColor = "#ccc";
-    event.target.style.display = "block";
-    event.target.alt = "Image not available";
-  };
+    setImages([...images, ...files]);
 
-  const handlePdfUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const page = pdfDoc.getPage(0);
-      const { width, height } = page.getSize();
-      const viewport = { width, height };
-
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport,
-      };
-
-      await page.render(renderContext).promise;
-      setPdfImage(canvas.toDataURL('image/png'));
+    if (!mainImage && files.length > 0) {
+      setMainImage(URL.createObjectURL(files[0]));
     }
   };
 
+  // 메인 이미지 변경 핸들러
   const handleMainImageChange = (index) => {
-    setMainImage(images[index]);
+    const image = images[index];
+    if (image instanceof File) {
+      setMainImage(URL.createObjectURL(image));
+    } else {
+      setMainImage(image); // URL일 경우 그대로 사용
+    }
     setCurrentSlide(index);
+  }
+
+  // PDF 이미지 미리보기 처리
+  const handleDetailImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setPdfImage(file);
+    }
   };
 
   const nextSlide = () => {
     if (currentSlide < images.length - 1) {
       setCurrentSlide(currentSlide + 1);
-      setMainImage(images[currentSlide + 1]);
+      setMainImage(URL.createObjectURL(images[currentSlide + 1]));
     }
   };
 
   const prevSlide = () => {
     if (currentSlide > 0) {
       setCurrentSlide(currentSlide - 1);
-      setMainImage(images[currentSlide - 1]);
+      setMainImage(URL.createObjectURL(images[currentSlide - 1]));
     }
   };
 
@@ -343,10 +337,6 @@ const ProductModifyPage = () => {
       ...prevState,
       bankName: bankName
     }));
-    const updatedProductData = {
-      ...product,
-      bankName,
-    };
   };
 
   const handleAccountNumberChange = (e) => {
@@ -355,10 +345,6 @@ const ProductModifyPage = () => {
       ...prevState,
       accountNumber: accountNumber
     }));
-    const updatedProductData = {
-      ...product,
-      accountNumber,
-    };
   };
 
   const handleAccountNameChange = (e) => {
@@ -367,10 +353,6 @@ const ProductModifyPage = () => {
       ...prevState,
       accountName: accountName
     }));
-    const updatedProductData = {
-      ...product,
-      accountName,
-    };
   };
 
   const handleSubmit = async (event) => {
@@ -400,15 +382,18 @@ const ProductModifyPage = () => {
         options: optionsData
       };
   
-      const productDetailImages = []; // 필요한 상세 이미지를 여기에 추가
-  
       await updateProductDetails(productId, updatedProductData, images, pdfImage);
+      
+      alert('수정이 완료되었습니다.'); // 수정 완료 메시지
+
+      // 확인 버튼을 누르면 특정 페이지로 이동
+      navigate(`/maderMyPage/products/selling/${productId}`);
+      
     } catch (error) {
       console.error('Error submitting form:', error);
     }
   };
   
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -449,7 +434,11 @@ const ProductModifyPage = () => {
                       border: currentSlide === index ? '2px solid #ff00a5' : 'none',
                     }}
                   >
-                    <img src={image} alt={`Product ${index + 1}`} />
+                    {image instanceof File ? (
+                      <img src={URL.createObjectURL(image)} alt={`Product ${index + 1}`} />
+                    ) : (
+                      <img src={image} alt={`Product ${index + 1}`} /> // URL일 경우 그대로 사용
+                    )}
                   </SMALL_IMAGE_PREVIEW>
                 ))}
               </div>
@@ -604,11 +593,15 @@ const ProductModifyPage = () => {
           </div>
         </SECTION>
         <LARGE_IMAGE_CONTAINER>
-          {pdfImage ? <img src={pdfImage} alt="PDF Preview" /> : <PLACEHOLDER_IMAGE>PDF Preview</PLACEHOLDER_IMAGE>}
+          {pdfImage && pdfImage instanceof File ? (
+            <img src={URL.createObjectURL(pdfImage)} alt="Detail Image" />
+          ) : (
+            pdfImage ? <img src={pdfImage} alt="Detail Image" /> : <PLACEHOLDER_IMAGE>이미지가 없습니다</PLACEHOLDER_IMAGE>
+          )}
         </LARGE_IMAGE_CONTAINER>
         <PDF_UPLOAD_BUTTON>
-          <input type="file" accept="application/pdf" onChange={handlePdfUpload} />
-          PDF 업로드
+          <input type="file" accept="image/*" onChange={handleDetailImage} />
+          제품 상대내용 업로드
         </PDF_UPLOAD_BUTTON>
         <SUBMIT_BUTTON type="submit">수정</SUBMIT_BUTTON>
       </FORM>

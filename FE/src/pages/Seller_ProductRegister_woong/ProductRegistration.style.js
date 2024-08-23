@@ -305,14 +305,16 @@ export const OPTIONS_SECTION = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 0px;
-  width: 45%;
+  width: 500px;
   magin-top: 5px;
   overflow-x: auto;
+  margin-left: -10px;
 `;
 
 export const OPTION_GROUP = styled.div`
   width: 48%;
   margin-top: 0px;
+  margin-left: 10px;
   position: relative;
 `;
 
@@ -324,7 +326,7 @@ export const OPTION_TITLE = styled.input`
   border: none;
   text-align: center; /* 텍스트를 중앙에 정렬 */
   border-radius: 4px;
-  width: 100%;
+  width: 211px;
   font-size: 1.2em; /* 글자 크기 증가 */
   font-weight: bold; /* 글자 굵기 설정 */
 `;
@@ -361,7 +363,7 @@ export const ADD_OPTION_BUTTON = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
+  width: 239px;
 `;
 
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { authInstance } from '../../api/axiosInstance';
 import * as pdfjsLib from 'pdfjs-dist';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Header from '../ProductList/components/Navbar';
 // PDF.js의 API 버전과 워커 버전이 일치하도록 설정
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -59,7 +60,7 @@ async function createProduct(data, images, jpgImage) {
       formData.append('detailImage', jpgImage, 'detail.jpg');
     }
 
-    // Send POST request to the zAPI endpoint
+    // Send POST request to the API endpoint
     const response = await authInstance.post(
       "http://15.165.185.157:8080/seller/product/create", 
       formData, 
@@ -70,11 +71,12 @@ async function createProduct(data, images, jpgImage) {
       }
     );
     console.log('Product created successfully', response.data);
+    return true;
   } catch (error) {
     console.error("Error creating product", error);
+    return false;
   }
 }
-
 
 const ProductRegisterPage = () => {
   const [product, setProduct] = useState({
@@ -100,47 +102,29 @@ const ProductRegisterPage = () => {
   const [images, setImages] = useState([]);
   const [mainImage, setMainImage] = useState(grayPlaceholder);
   const [pdfImage, setPdfImage] = useState(grayPlaceholder);
+  const [isSubmitted, setIsSubmitted] = useState(false); // State to manage submission confirmation
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     const newImages = files.map(file => file);
     setImages([...images, ...newImages]);
   
-    // mainImage가 현재 기본 이미지일 때만 새로운 이미지로 변경
     if (mainImage === grayPlaceholder) {
       setMainImage(URL.createObjectURL(newImages[0]));
     }
   };
   
-  const handlePdfUpload = async (event) => {
+  const handlePdfUpload = (event) => {
     const file = event.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      const fileReader = new FileReader();
-      fileReader.onload = async function() {
-        const typedArray = new Uint8Array(this.result);
-        const pdf = await pdfjsLib.getDocument(typedArray).promise;
-        const page = await pdf.getPage(1);
-  
-        const viewport = page.getViewport({ scale: 1 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-  
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport
-        };
-  
-        await page.render(renderContext).promise;
-  
-        const imageUrl = canvas.toDataURL();
-        setPdfImage(imageUrl);
-      };
-      fileReader.readAsArrayBuffer(file);
+    
+    if (file && file.type.startsWith('image/')) {  // 이미지 파일일 경우
+      const imageUrl = URL.createObjectURL(file);
+      setPdfImage(imageUrl); // 이미지 URL을 상태로 설정
     }
   };
-
+  
   const handleAddOptionValue = (index) => {
     const newOptions = [...options];
     newOptions[index].values.push({ value: '' });
@@ -229,10 +213,16 @@ const ProductRegisterPage = () => {
       : null;
   
     console.log("콘솔창이다", productWithOptions, imageFilesResolved, pdfBlob);
-    await createProduct(productWithOptions, imageFilesResolved, pdfBlob);
+    const success = await createProduct(productWithOptions, imageFilesResolved, pdfBlob);
+    
+    if (success) {
+      setIsSubmitted(true); // Show the confirmation message
+    }
   };
-  
-  
+
+  const handleConfirmation = () => {
+    navigate('/maderMyPage');
+  };
 
   const handleImageError = (event) => {
     event.target.src = '/path/to/placeholder/image.png'; // 대체할 이미지 경로를 설정합니다.
@@ -242,6 +232,30 @@ const ProductRegisterPage = () => {
     <>
     <Header/>
     <CONTAINER>
+      {isSubmitted && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+        }}>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: '8px',
+            textAlign: 'center',
+          }}>
+            <p>등록이 완료되었습니다.</p>
+            <button onClick={handleConfirmation}>확인</button>
+          </div>
+        </div>
+      )}
       <FORM onSubmit={handleSubmit}>
         <SECTION>
           <IMAGE_UPLOAD_SECTION>
@@ -427,7 +441,7 @@ const ProductRegisterPage = () => {
           <img src={pdfImage} alt="PDF Preview" />
         </LARGE_IMAGE_CONTAINER>
         <PDF_UPLOAD_BUTTON>
-          <input type="file" accept="application/pdf" onChange={handlePdfUpload} />
+          <input type="file" accept="image/*" onChange={handlePdfUpload} />
           PDF 업로드
         </PDF_UPLOAD_BUTTON>
         <SUBMIT_BUTTON type="submit">등록</SUBMIT_BUTTON>
