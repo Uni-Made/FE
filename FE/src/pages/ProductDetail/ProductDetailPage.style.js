@@ -72,22 +72,23 @@ const LeftMainImage = styled.img`
 `;
 const LeftSubBox = styled(Slider)`
   width: 100%;
-  height: 20%;
-  gap: 10px;
+  height: auto; /* 높이를 고정된 퍼센티지 대신 auto로 변경 */
 
-  &:slick-slide {
-    padding-right: 10px; /* 슬라이더 아이템 간의 간격 설정 */
+  .slick-slide {
+    display: flex;
+    justify-content: center; /* 각 슬라이드 내에서 이미지 중앙 정렬 */
   }
 
-  &:slick-list {
-    overflow: visible; /* 슬라이더 overflow 설정 */
+  .slick-list {
+    overflow: visible; /* 슬라이더가 넘칠 때도 내용이 보이도록 설정 */
     display: flex;
-    justify-content: flex-start; /* 슬라이더 아이템들을 왼쪽 정렬 */
+    justify-content: flex-start; /* 아이템들이 왼쪽에서 시작하도록 설정 */
   }
 
-  &:slick-track {
+  .slick-track {
     display: flex;
-    align-items: center;
+    align-items: center; /* 세로로 가운데 정렬 */
+    flex-direction: row; /* 가로 방향으로 정렬되도록 설정 */
   }
 `;
 const LeftSubBoxItem = styled.img`
