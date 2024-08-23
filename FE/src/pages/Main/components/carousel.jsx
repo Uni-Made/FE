@@ -15,17 +15,22 @@ const Gallery = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://15.165.185.157:8080/buyer/product/list', {
-          headers: {
-            'Accept': 'application/json;charset=UTF-8',
-            'Authorization': `Bearer ${import.meta.env.VITE_UNIMADE_ADMIN_API_KEY}`,  // 환경 변수 사용
-          },
-          params: {
-            sort: 'FAVORITE',
-            offset: 0,
-            pageSize: 10,  // 페이지 사이즈 설정 (로드할 데이터 수)
-          },
-        });
+        const response = await axios.get(
+          "http://15.165.185.157:8080/buyer/product/list",
+          {
+            headers: {
+              Accept: "application/json;charset=UTF-8",
+              Authorization: `Bearer ${
+                import.meta.env.VITE_WOONG_BUYER_API_KEY
+              }`, // 환경 변수 사용
+            },
+            params: {
+              sort: "FAVORITE",
+              offset: 0,
+              pageSize: 10, // 페이지 사이즈 설정 (로드할 데이터 수)
+            },
+          }
+        );
 
         const data = response.data;
         if (data.code === 'OK') {

@@ -82,7 +82,7 @@ function SellingProductDetailPage() {
               <S.RightPurchaseButton
                 type="modify"
                 onClick={() =>
-                  navigate("/maderMyPage/product/modify" + productId)
+                  navigate("/maderMyPage/product/modify/" + productId)
                 }
               >
                 수정
