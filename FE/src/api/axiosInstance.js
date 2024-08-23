@@ -16,7 +16,7 @@ const axiosApi = (url) => {
 };
 
 const axiosSellerApi = (url, options) => {
-  const token = localStorage.getItem("accessToken") || import.meta.env.VITE_WOONG_SELLER_API_KEY;
+  const token = localStorage.getItem("accessToken");
   const instance = axios.create({
     baseURL: url,
     headers: {

@@ -12,7 +12,7 @@ function Testtest() {
       <button
         onClick={() => {
           localStorage.setItem("reviewOrderId", alarm.content.orderId);
-          navigate("/product/17");
+          navigate("/product/61");
         }}
       >
         알림보내기

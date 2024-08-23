@@ -24,9 +24,10 @@ const renderNotificationList = (title, notifications, onNotificationClick) => {
             key={notification.id}
             onClick={() => onNotificationClick(notification)}
           >
+            {console.log(notifications)}
             <NOTIFICATION_TITLE>
-              {notification.body?.name 
-                ? `"${notification.body.name.substring(0, 15)}..."` 
+              {notification.body?.name
+                ? `"${notification.body.name.substring(0, 15)}..."`
                 : `"${notification.body.substring(0, 15)}..."`}
             </NOTIFICATION_TITLE>
             <NOTIFICATION_BODY>
