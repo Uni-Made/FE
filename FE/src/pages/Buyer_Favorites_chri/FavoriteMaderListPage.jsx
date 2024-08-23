@@ -131,7 +131,7 @@ const FavoriteSellersListPage = () => {
               <SECTION_TITLE>찜한 메이더</SECTION_TITLE>
               <GRID_WRAPPER>로딩 중...</GRID_WRAPPER>
             </SECTION_CONTAINER>
-            <FavoriteFooter />
+            {/* <FavoriteFooter /> */}
           </CONTAINER>
         </MainContainer>
       </Containersum>
@@ -144,19 +144,19 @@ const FavoriteSellersListPage = () => {
       <Containersum>
         <FavoriteHeader />
         <MainContainer>
-        <CONTAINER>
-          {sellerData.length === 0 ? (
-            // 데이터가 없을 때 메시지 표시
-            <SECTION_CONTAINER>
-              <SECTION_TITLE>찜한 메이더</SECTION_TITLE>
-              <GRID_WRAPPER>찜한 메이더가 없습니다.</GRID_WRAPPER>
-            </SECTION_CONTAINER>
-          ) : (
-            renderSellerList("찜한 메이더", sellerData, handleSellerClick)
-          )}
-          <div ref={ref} style={{ height: "10px" }} />
-          <FavoriteFooter />
-        </CONTAINER>
+          <CONTAINER>
+            {sellerData.length === 0 ? (
+              // 데이터가 없을 때 메시지 표시
+              <SECTION_CONTAINER>
+                <SECTION_TITLE>찜한 메이더</SECTION_TITLE>
+                <GRID_WRAPPER>찜한 메이더가 없습니다.</GRID_WRAPPER>
+              </SECTION_CONTAINER>
+            ) : (
+              renderSellerList("찜한 메이더", sellerData, handleSellerClick)
+            )}
+            <div ref={ref} style={{ height: "10px" }} />
+            {/* <FavoriteFooter /> */}
+          </CONTAINER>
         </MainContainer>
       </Containersum>
     );
@@ -169,7 +169,7 @@ const FavoriteSellersListPage = () => {
         <CONTAINER>
           {renderSellerList("찜한 메이더", sellerData, handleSellerClick)}
           <div ref={ref} style={{ height: "10px" }} />
-          <FavoriteFooter />
+          {/* <FavoriteFooter /> */}
         </CONTAINER>
       </MainContainer>
     </Containersum>

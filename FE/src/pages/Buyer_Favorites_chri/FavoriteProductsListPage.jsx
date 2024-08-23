@@ -134,7 +134,7 @@ const FavoriteProductsListPage = () => {
               <SECTION_TITLE>찜한 상품</SECTION_TITLE>
               <GRID_WRAPPER>로딩 중...</GRID_WRAPPER>
             </SECTION_CONTAINER>
-            <FavoriteFooter />
+            {/* <FavoriteFooter /> */}
           </CONTAINER>
         </MainContainer>
       </Containersum>
@@ -156,7 +156,7 @@ const FavoriteProductsListPage = () => {
             renderProductList("찜한 상품", sellerData, handleProductClick)
           )}
           <div ref={ref} style={{ height: "10px" }} />
-          <FavoriteFooter />
+          {/* <FavoriteFooter /> */}
         </CONTAINER>
       </MainContainer>
     </Containersum>
