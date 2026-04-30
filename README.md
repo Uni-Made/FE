@@ -14,7 +14,7 @@ Uni-Made는 대학생들이 제작한 상품을 판매하는 온라인 플랫폼
 
 ## 💗 FE Member
 
-| <center> 이찬민  </center> | <center> 김다은 </center> | <center> 한수정 </center> | <center> 김진웅 </center> |
+| <center> 이찬민  </center> | <center> 남의서 </center> | <center> 한수정 </center> | <center> 김진웅 </center> |
 | --- | --- | --- | --- | 
 | <center> <img width="150px" src="https://avatars.githubusercontent.com/u/128456374?v=4" /></center> | <center> <img width="150px" src="https://avatars.githubusercontent.com/u/101988147?v=4" /></center> | <center> <img width="150px" src="https://avatars.githubusercontent.com/u/90364839?v=4" /></center> | <center><img width="150px" src="https://avatars.githubusercontent.com/u/88083770?v=4" /></center> |
 | [@ChanMinLee2](https://github.com/ChanMinLee2)  | [@2021147566](https://github.com/2021147566)  | [@hansoojeongsj](https://github.com/hansoojeongsj)  | [@Real-Woong](https://github.com/Real-Woong) | 
